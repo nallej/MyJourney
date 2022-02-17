@@ -2,7 +2,7 @@
 
 #--------------------------------------------------------#
 #  2-install.sh 2.0                                      #
-#  HomeStack project                                     #
+#  MyJourney project                                     #
 #                                                        #
 #  V.1 created by Nalle Juslen on 20.11.2021 as 2 scrips #
 #    - revison 26.1.2022                                 #
@@ -138,7 +138,7 @@ echo ""
 if [[ "$WT" == [yY] ]]; then
     mkdir ~/docker-stack/watchtower
     cd ~/docker-stack/watchtower
-    wget https://raw.githubusercontent.com/nallej/HomeStack/main/Watchtower/docker-compose.yml &> /dev/null
+    wget https://raw.githubusercontent.com/nallej/MyJourney/main/Watchtower/docker-compose.yml &> /dev/null
 #    docker-compose up -d # uncomment if you want to start now
     echo ""
     echo "Watchtower installed"
@@ -152,7 +152,7 @@ echo ""
 if [[ "$DOZ" == [yY] ]]; then
     mkdir ~/docker-stack/dozzle
     cd ~/docker-stack/dozzle
-    wget https://raw.githubusercontent.com/nallej/HomeStack/main/Dozzle/docker-compose.yml &> /dev/null
+    wget https://raw.githubusercontent.com/nallej/MyJourney/main/Dozzle/docker-compose.yml &> /dev/null
 #    sudo docker-compose up -d # uncomment if you want to start now
     echo ""
     echo "Dozzle installed"
@@ -165,7 +165,7 @@ echo ""
 if [[ "$HEIM" == [yY] ]]; then
     mkdir ~/docker-stack/heimdall
     cd ~/docker-stack/heimdall
-    wget https://raw.githubusercontent.com/nallej/HomeStack/main/Heimdall/docker-compose.yml &>/dev/null
+    wget https://raw.githubusercontent.com/nallej/MyJourney/main/Heimdall/docker-compose.yml &>/dev/null
 #    docker-compose up -d # uncomment if you want to start now
     echo ""
     echo "Heimdal installed"

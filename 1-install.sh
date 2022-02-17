@@ -2,7 +2,7 @@
 
 #---------------------------------------------------------#
 #  1-install.sh 2.0                                       #
-#  HomeStack project                                      #
+#  MyJourney project                                      #
 #                                                         #
 #  V.1 Created by Nalle Jusleon 10.1.2022 as 2 scripts    #
 #    -review 9.2.2022                                     #
@@ -39,7 +39,7 @@ lsb_release -a #print lsb-release info
 echo ""
 echo "Preparing the VM"
 # Add bash_aliases ------------------------------------------------------------
-wget https://raw.githubusercontent.com/nallej/HomeStack/main/.bash_aliases &> /dev/null
+wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_aliases &> /dev/null
 . ~/.bashrc
 echo "  - added .bash_aliases"
 # running install -------------------------------------------------------------
@@ -59,7 +59,7 @@ if [[ "$DPI" = [yY] ]]; then
     hyrraPyorii
   echo "  - starting Docker Pre-Install ..."
   echo "**** Docker Pre Install stage ****   ****   ****" >> ~/install.log
-  wget https://github.com/nallej/HomeStack/raw/main/LICENSE &> /dev/null
+  wget https://github.com/nallej/MyJourney/raw/main/LICENSE &> /dev/null
   # set your timezone ---------------------------------------------------------
   echo "  - TZ = Helsinki" # change to your timezone
   sudo timedatectl set-timezone Europe/Helsinki
@@ -106,7 +106,7 @@ if [[ "$DPI" = [yY] ]]; then
 # Giv your stack a name or use default: docker-stack --------------------------
     mkdir docker-stack
     cd docker-stack
-    wget https://raw.githubusercontent.com/nallej/HomeStack/main/docker-install.sh &> /dev/null
+    wget https://raw.githubusercontent.com/nallej/MyJourney/main/2-install.sh &> /dev/null
     chmod +x docker-install.sh
 # =============================================================================
     echo ""
