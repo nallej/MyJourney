@@ -8,7 +8,7 @@
 #    - revison 26.1.2022                                 #
 #                                                        #
 #  V.2 created 15.02.2022 Install basic Docker-Stack     #
-#                                                        #
+#    - revision                                          #
 #--------------------------------------------------------#
 
 # Declare function hyrraPyorii Show a activity spinner --#

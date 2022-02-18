@@ -8,7 +8,7 @@
 #    -review 9.2.2022                                    #
 #                                                        #
 #  V.2 created 10.02.2022 Prepare VM for Docker-Stack    #
-#                                                        #
+#    - revison                                           #
 #--------------------------------------------------------#
 
 # Declare function hyrraPyorii Show a activity spinner --#
