@@ -4,10 +4,10 @@
 #  2-install.sh 2.0                                      #
 #  MyJourney project                                     #
 #                                                        #
-#  V.1 created by Nalle Juslen on 20.11.2021 as 2 scrips #
+#  V.1 created by Nalle Juslen 20.11.2021 as 2 scripts   #
 #    - revison 26.1.2022                                 #
 #                                                        #
-#  V.2 created 15.2.2022 Install basic Docker-Stack      #
+#  V.2 created 15.02.2022 Install basic Docker-Stack     #
 #                                                        #
 #--------------------------------------------------------#
 
