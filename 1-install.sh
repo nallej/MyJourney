@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #--------------------------------------------------------#
-#  1-install.sh 2.0                                      #
-#  MyJourney project                                     #
+#  1-install.sh 2.0   Part 1 of the Journey              #
+#  MyJourney project  homelab.casaursus.net              # 
 #                                                        #
 #  V.1 Created by Nalle Juslen 10.01.2022 as 2 scripts   #
 #    -review 9.2.2022                                    #
