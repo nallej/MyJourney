@@ -107,7 +107,7 @@ if [[ "$DPI" = [yY] ]]; then
     mkdir docker-stack
     cd docker-stack
     wget https://raw.githubusercontent.com/nallej/MyJourney/main/2-install.sh &> /dev/null
-    chmod +x docker-install.sh
+    chmod +x 2-install.sh
 # =============================================================================
     echo ""
     echo ""
