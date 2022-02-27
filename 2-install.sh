@@ -47,7 +47,7 @@ echo "Use Portainer or the Agent "
 read -rp "  - Portainer-ce      [y/n] " POT
 read -rp "  - Portainer Agent   [y/n] " POTA
 echo ""
-echo "Recommended apps:" 
+echo "Recommended apps:"
 read -rp " WatchTower           [y/n] " WT
 read -rp " Dozzle               [y/n] " DOZ
 echo ""
@@ -68,14 +68,15 @@ if [[ "$DOCE" == [yY] ]]; then
     echo "  - Docker-ce installed. "
     echo "  - Starting docker."
     echo ""
+    sleep 10s
     sudo systemctl enable docker
     sudo systemctl enable containerd.service
     sudo systemctl start docker
     sleep 5s
     docker -v 
-    sleep 5s
-    sudo usermod -aG docker "${USER}" # you do not need to sudo to run docker commands after re-login
     sleep 2s
+    sudo usermod -aG docker "${USER}" # you do not need to sudo to run docker commands after re-login
+    sleep 1s
     sudo docker network create -d bridge kadulla  &> /dev/null #frontend  
     sudo docker network create -d bridge pihalla  &> /dev/null #backbone
     echo "  $USER added to docker group"
