@@ -82,8 +82,8 @@ if [[ "$DOCE" == [yY] ]]; then
     echo "  $USER added to docker group"
     echo ""
     echo "  Internal networks created:"
-    echo "    - frontend "
-    echo "    - backbone "
+    echo "    - kadulla = frontend "
+    echo "    - pihalla = backbone "
     echo ""
 fi
 echo ""
@@ -139,7 +139,7 @@ echo ""
 if [[ "$WT" == [yY] ]]; then
     mkdir ~/docker-stack/watchtower
     cd ~/docker-stack/watchtower
-    wget https://raw.githubusercontent.com/nallej/MyJourney/main/Watchtower/docker-compose.yml &> /dev/null
+    wget https://raw.githubusercontent.com/nallej/MyJourney/main/watchtower/docker-compose.yml &> /dev/null
 #    docker-compose up -d # uncomment if you want to start now
     echo ""
     echo "Watchtower installed"
@@ -153,7 +153,7 @@ echo ""
 if [[ "$DOZ" == [yY] ]]; then
     mkdir ~/docker-stack/dozzle
     cd ~/docker-stack/dozzle
-    wget https://raw.githubusercontent.com/nallej/MyJourney/main/Dozzle/docker-compose.yml &> /dev/null
+    wget https://raw.githubusercontent.com/nallej/MyJourney/main/dozzle/docker-compose.yml &> /dev/null
 #    sudo docker-compose up -d # uncomment if you want to start now
     echo ""
     echo "Dozzle installed"
@@ -166,7 +166,7 @@ echo ""
 if [[ "$HEIM" == [yY] ]]; then
     mkdir ~/docker-stack/heimdall
     cd ~/docker-stack/heimdall
-    wget https://raw.githubusercontent.com/nallej/MyJourney/main/Heimdall/docker-compose.yml &>/dev/null
+    wget https://raw.githubusercontent.com/nallej/MyJourney/main/heimdall/docker-compose.yml &>/dev/null
 #    docker-compose up -d # uncomment if you want to start now
     echo ""
     echo "Heimdal installed"
