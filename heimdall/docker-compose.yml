@@ -1,0 +1,27 @@
+---
+version: '3'
+# a dashboard with status indications
+services:
+  heimdall:
+    image: lscr.io/linuxserver/heimdall
+    container_name: heimdall
+#configur your environment
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=Europe/Helsinki
+    volumes:
+      - ./config:/config
+# use your port numbers if using direct access
+    ports:
+      - 9080:80
+      - 9088:443
+    restart: unless-stopped
+# insert your internal network for reverse proxy use
+    networks:
+      - kadulla
+# networks to be used by service
+networks:
+  kadulla:
+    external: true
+...      
