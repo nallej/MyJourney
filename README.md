@@ -7,4 +7,4 @@ Make the script executable : `chmod +x 1-install.sh`
 
 ## Other
 
-Add to or change the bash commands: `wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_aliases`
+Add to or change the bash commands: `wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_aliases -O .bash_aliases`
