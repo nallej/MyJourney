@@ -40,7 +40,7 @@ echo ""
 echo "Preparing the VM"
 # Add bash_aliases ------------------------------------------------------------
 wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_aliases &> /dev/null
-. ~/.bashrc
+ . ~/.bash_aliases
 echo "  - added .bash_aliases"
 # running install -------------------------------------------------------------
 echo ""
