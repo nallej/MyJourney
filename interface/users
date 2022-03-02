@@ -1,0 +1,34 @@
+#---------------------------------------------------------------------------#
+#                         Users Database List                               #
+#                                                                           #
+# This file can be used if you do not have an LDAP set up.                  #
+#                                                                           #
+# docker run authelia/authelia:latest authelia hash-password 'password'     #
+#                                                                           #
+#---------------------------------------------------------------------------#
+
+# List of users
+users:
+  pomo:
+    displayname: "Authelia User"
+    # Password is authelia
+    password: "$argon2id$v=19$m=65536,t=1,p=8$VDhpQnRsN2Jjbm05bVpKRw$l/d/aDI8N8DqIM/lQLstnDvxgvaWLGW2Rm8UAM9XXtc"
+    email: authelia@authelia.com
+    groups:
+      - admins
+      - dev
+
+  user1:
+    displayname: "User of power"
+    password: "$argon2id$v=19$m=65536,t=1,p=8$VDhpQnRsN2Jjbm05bVpKRw$l/d/aDI8N8DqIM/lQLstnDvxgvaWLGW2Rm8UAM9XXtc"
+    email: user@example.com
+    groups:
+      - admins
+      - superusers
+      - users
+      - dev
+
+#---------------------------------------------------------------------------#
+# Use a password site with argon2 (see filesfor settings)                   #
+# docker run authelia/authelia:latest authelia hash-password 'password'     #
+#---------------------------------------------------------------------------#
