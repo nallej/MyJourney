@@ -1,0 +1,137 @@
+###############################################################
+#  Authelia configuration | example.com ** EDIT befor use     #
+###############################################################
+
+server:
+  host: 0.0.0.0
+  port: 9091 # change to port in docker-compose.yml
+#  read_buffer_size: 4096
+#  write_buffer_size: 4096
+# For using your logo.png and favicon.ico
+#  asset_path: /config/assets/
+
+jwt_secret: miro6Roswejapr9mlt0eveb9WrLtR1
+
+default_redirection_url: https://ws.example.com
+
+totp:
+  issuer: example.com
+  period: 30
+  skew: 1
+
+#duo_api:     ## You can use this api if you want push notifications of auth attempts
+#  hostname: api-123456789.example.com
+#  integration_key: ABCDEF
+#  secret_key: your syper secret and super string (characters and numbers and symbols)
+
+access_control:
+  default_policy: deny # NginX domains are denied unless added below
+  #networks:
+  #  - name: internal
+  #    networks:
+  #      - 192.168.1.0/24
+  #      - 172.17.0.0/24
+  #      - 172.18.0.0/24
+  #      - 172.19.0.0/24
+  rules:
+    # Rules applied to everyone
+    - domain: 
+      - auth.example.com
+      - www.example.com
+      - whoogle.example.com
+      - techblog.example.com
+      policy: bypass
+
+    - domain:
+      - test.example.com
+      - hakuna.example.com
+      - stargate.example.com
+      policy: one_factor
+
+    - domain:
+      - heimdall.example.com
+      - ntop.example.com
+      - nextcloud.example.com
+      - ghost.example.com
+      policy: two_factor
+
+authentication_backend:
+  disable_reset_password: false
+  file:
+    path: /config/users.yml
+    password:
+      algorithm: argon2id
+      #iterations: 1
+      ##key_lenght 32
+      #memory: 64
+      #parallelism: 8
+      ##salt_string: 
+      #salt_lenght: 16
+
+session:
+  name: authelia_session
+  # This secret can also be set using the env variables AUTHELIA_SESSION_SECRET_FILE
+  secret: aComplicatedString30CharactersAndNumpers
+  expiration: 1h # 3600# 1h or  600 10m
+  inactivity: 7200 # 2h or 300  5m
+  domain: example.com # your root protected domain
+
+  redis:
+    host: authelia_redis
+    port: 6379
+    # This secret can also be set using the env variables AUTHELIA_SESSION_REDIS_PASSWORD_FILE
+    # The service will run without a password
+    password: "SetYourPa$$wordForRedis" #authelia
+
+regulation:
+  max_retries: 3
+  find_time: 120 #2m
+  ban_time: 600 #10m
+
+#storage:
+#  encryption_key: aSecret666StringUsedForEncryptionSeed
+#  local:
+#    path: /config/db.sqlite3
+storage:
+  encryption_key: "you_must_generate_a_random_string_of_more_than_twenty_chars_and_configure_this"
+  mysql:
+    host: authelia_db
+    database: authelia
+    username: authelia
+    password: "Pa$$word"
+
+# Logging is set here
+log:
+  level: info
+  format: text
+  #file_path: /config/authelia.log
+  
+# Apperance of Authelia vcan be light or dark ---------------------------------------
+theme: dark   #  dark / light
+
+# Optional if your system has ntp  implemented --------------------------------------
+ntp:
+  address: "time.cloudflare.com:123"
+  version: 3
+  max_desync: 3s
+  disable_startup_check: false
+  disable_failure: false
+
+# Notification by e-mail or file ----------------------------------------------------
+notifier:
+  disable_startup_check: false #true/false
+#  filesystem:
+#    filename: /config/notification.txt #if you want the psw into a file not in email
+  smtp:
+    username: admin@example.com
+    password: your-mail-passwd
+    host: mail.example.com
+    port: 587  # 25 non-ssl, 443 ssl, 587 tls 
+    sender: admin@example.com
+    subject: "[Authelia] {title}"
+    disable_require_tls: false # set to true if your domain uses no tls or ssl only
+    disable_html_emails: false # set to true if you don't want html in your emails
+    tls:
+      server_name: mail.example.com
+      skip_verify: false
+      minimum_version: TLS1.2
