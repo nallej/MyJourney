@@ -1,0 +1,67 @@
+version: '3.3'
+
+services:
+#Authelia will give authentication support to NPM
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    volumes:
+      - ./config:/config
+# Ports will only be used if not in the same VM
+#    ports:
+#      - 9091:9091
+    restart: unless-stopped #allways
+    healthcheck:
+      disable: true
+    #healthcheck:
+    #  test: ["CMD", "curl", "--fail", "http://auth.example.com"]
+    #  interval: 1m30s
+    #  timeout: 10s
+    #  retries: 3  
+    environment:
+      - TZ=Europe/Helsinki
+    depends_on:
+      - redis
+      - db
+    networks:
+      - kadulla
+      - pihalla
+# Redis is needed to run Authelia
+  redis:
+    image: redis:alpine
+    command: redis-server --requirepass "4u7x!A%D*G-KaPdSgVkXp2s5v8y/B?E("
+    container_name: authelia_redis
+    volumes:
+      - ./redis:/data
+    expose:
+      - 6379
+    restart: unless-stopped #always
+    environment:
+      - TZ=Europe/Helsinki
+    networks:
+      - pihalla
+# MariaDB is needed to run Authelia
+  db:
+    image: mariadb
+    container_name: authelia_db
+    restart: unless-stopped #always
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 55 # We do not edit the db
+      #MYSQL_ROOT_PASSWORD: 'LongComplicatedPa$$word' # replace-with-secure-password ${MYSQL_ROOT_>
+      #MYSQL_ROOT_PASSWORD__FILE: /run/secrets/DB_ROOT_PWD
+      MYSQL_DATABASE: 'authelia'ThisIsA_VeryLongAndSuper
+      MYSQL_USER: 'authelia'
+      MYSQL_PASSWORD: 'A_ComplicatedPa$$word' # replace-with-secure-password ${MYSQL_PASSWORD}
+      #MYSQL_PASSWORD__FILE: /run/secrets/MYSQL_PWD
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - pihalla
+    
+# networks the services will use
+networks:
+  kadulla:          #frontend
+    external: true
+  pihalla:          #backend
+    external: true
+...
