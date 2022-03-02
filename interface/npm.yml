@@ -1,0 +1,32 @@
+---
+version: '3.7'
+
+services:
+# Nginx Proxy Manager
+  npm:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: npm
+    restart: unless-stopped #always
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    # Add any other Stream port you want to expose
+    # - '21:21' # FTP
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+#      - ./letsencrypt.ini:/etc/letsencrypt.ini:rw
+    networks:
+      - kadulla
+
+# MariaDB if needed for corporate use
+
+# Networks for the services
+networks:
+  kadulla:
+    external: true
+#  pihalla:
+#    external: true
+
+...
