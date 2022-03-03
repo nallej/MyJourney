@@ -20,12 +20,26 @@ services:
     networks:
       - kadulla
 
-# MariaDB if needed for corporate use
+## MariaDB if needed for corporate use
+#    depends_on:
+#      - db
+#
+#  db:
+#    image: 'jc21/mariadb-aria:latest'
+#    restart: unless-stopped
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 'SuperSecurePa$$word'
+#      MYSQL_DATABASE: 'npm'
+#      MYSQL_USER: 'npm'
+#      MYSQL_PASSWORD: 'npmPa$$word'
+#    volumes:
+#      - ./data/mysql:/var/lib/mysql
 
 # Networks for the services
 networks:
   kadulla:
     external: true
+## activate if using db
 #  pihalla:
 #    external: true
 
