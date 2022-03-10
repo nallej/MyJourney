@@ -1,0 +1,58 @@
+---
+version: '3'
+
+services:
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - kadulla
+    depends_on:
+      - influxdb  
+      
+  influxdb:
+    image: influxdb:2.1-alpine
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - '8086:8086'
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      #- ./influxdb-data:/var/lib/influxdb2
+      - /etc/influxdb2:/etc/influxdb2
+      # # (optional) If you're using self-signed certs
+      # - /etc/ssl/cert.pem/:/etc/ssl/cert.pem
+      # - /etc/ssl/cert-key.pem/:/etc/ssl/cert-key.pem
+    networks:
+       - kadulla
+    # # Automatically setup influxdb
+    # TODO: not tested...
+    # environment:
+    #   - DOCKER_INFLUXDB_INIT_MODE=setup
+    #   - DOCKER_INFLUXDB_INIT_USERNAME=my-user
+    #   - DOCKER_INFLUXDB_INIT_PASSWORD=my-password
+    #   - DOCKER_INFLUXDB_INIT_ORG=my-org
+    #   - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+    # # (optional) Configure Data Retention
+    #   - DOCKER_INFLUXDB_INIT_RETENTION=1w
+    # # (optional) Admin Token
+    #   - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-auth-token
+    # # (optional) If you're using self-signed certs
+    # command: influxd --tls-cert=/etc/ssl/cert.pem --tls-key=/etc/ssl/cert-key.pem
+    
+# Netwoirks to be used  
+networks:
+  kadulla:
+    external: true
+    
+# Volumes to use
+volumes:
+  grafana-data:
+    driver: local   
+  influxdb-data:
+    driver: local
