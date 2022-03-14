@@ -1,0 +1,79 @@
+---
+version: '3'
+ 
+services:
+  pihole:
+    container_name: pihole
+    hostname: pihole
+    image: pihole/pihole:latest
+    networks:
+      kadulla:
+        ipv4_address: 172.18.0.250
+    ports:
+    - "53:53/tcp"
+    - "53:53/udp"
+    - "80:80/tcp"
+    - "443:443/tcp"
+    environment:
+    - 'TZ=Europe/Helsinki'
+    - 'WEBPASSWORD=SecretPa$$word'
+    - 'DNS1=172.18.0.251#5053' 
+    - 'DNS2=no'
+    volumes:
+    - './etc-pihole/:/etc/pihole/'
+    - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    restart: unless-stopped
+    depends_on:
+      - unbound
+# DNS server
+  unbound:
+    container_name: piunbound
+    image: mvance/unbound:latest
+    networks:
+      kadulla:
+        ipv4_address: 172.18.0.251
+    volumes:
+    - ./unbound:/opt/unbound/etc/unbound
+    - ./unbound/a-records.conf:/opt/unbound/etc/unbound/a-records.conf:ro
+    ports:
+    - "5053:5053/tcp"
+    - "5053:5053/udp"
+    healthcheck:
+      disable: true
+    restart: unless-stopped
+# VPN server for road warriors
+  pivpn:
+    container_name: pivpn  
+    image: pivpn/pivpn.io
+    image: archef2000/pivpn
+    hostname: pivpn
+    volumes:
+      - ./ovpns:/home/pivpn/ovpns
+      - ./openvpn:/etc/openvpn
+      - ./pivpn:/etc/pivpn/openvpn
+    environment:
+      - HOST=myserver.lan
+      - PROTO=udp # or tcp
+      - VPN=openvpn
+      - PORT=1194 # change this for security
+    # optionals - you edit for your environment
+      - CLIENT_NAME=pivpn
+      - NET=10.9.8.0
+      - TWO_POINT_FOUR=1 # or 0 
+      - DNS1=1.1.1.1 # Client DNS
+      - DNS2=9.9.9.9 # Client DNS
+      - INTERFACE=eth0 # your Interface
+      - ENCRYPT=521 # 256, 384, or 521 
+        # if TWO_POINT_FOUR=0 then ENCRYPT needs to be 2048, 3072, or 4096
+    privileged: true # True to run Openvpn
+    restart: unless-stopped
+    networks:
+      kadulla:
+        ipv4_address: 172.18.0.252
+
+# Networks to be used
+networks:
+  kadulla:
+    external:
+      'true'
+...
