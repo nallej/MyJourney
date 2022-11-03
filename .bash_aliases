@@ -1,5 +1,5 @@
 # some more aliases
-# restart by source .bashrc
+# restart by source .bashrc or restart
 # restart by . ~/.bash_aliases
 ## ls commands
 alias ls='ls --color=auto'
@@ -26,8 +26,11 @@ alias sr='sudo reboot'
 alias bye='sudo poweroff'
 alias update='sudo apt update'
 alias upgrade='sudo apt upgrade'
-alias upall='sudo apt update && sudo apt upgrade'
+alias upall='sudo apt update && sudo apt upgrade -y'
 alias nhost='sudo nano /etc/hosts'
+alias df='df -h'
+alias free="free -mt"
+alias hw="hwinfo --short"
 ## cd aliases
 alias 'cd..'='cd ..'
 alias ..='cd ..'
@@ -39,3 +42,37 @@ alias lanip="ip a | grep inet | awk '{print $2}' | cut -f2 -d:"
 alias wanip="echo WanIp: $(curl ipinfo.io/ip)"
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+#alias sää='curl wttr.in'
+#alias mikä='curl cheat.sh/'
+alias netspeed='sudo curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -'
+# Extracting archive files
+# # usage: ex <file>
+ex ()
+{
+  if [ -f $1 ] ; then
+    case $1 in
+      *.tar.bz2)   tar xjf $1   ;;
+      *.tar.gz)    tar xzf $1   ;;
+      *.bz2)       bunzip2 $1   ;;
+      *.rar)       unrar x $1   ;;
+      *.gz)        gunzip $1    ;;
+      *.tar)       tar xf $1    ;;
+      *.tbz2)      tar xjf $1   ;;
+      *.tgz)       tar xzf $1   ;;
+      *.zip)       unzip $1     ;;
+      *.Z)         uncompress $1;;
+      *.7z)        7z x $1      ;;
+      *.deb)       ar x $1      ;;
+      *.tar.xz)    tar xf $1    ;;
+      *.tar.zst)   tar xf $1    ;;
+      *)           echo "'$1' cannot be extracted via ex()" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+# Use Personal Prompt
+source ~/.bash_prompt
+
+
