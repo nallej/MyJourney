@@ -47,6 +47,10 @@ qm set 9000 --onboot 1
 qm set 9000 --agent 1
 #qm set 9100 --agent 1
 
+# Set OS type Linux 5.x kernel 2.6 - default is other
+qm set 9000 --ostype l26
+#qm set 9100 --ostype l26
+
 # End of code
 
 echo ""
