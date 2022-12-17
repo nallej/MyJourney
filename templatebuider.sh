@@ -29,6 +29,12 @@ qm set 9100 --boot c --bootdisk scsi0
 # Add serial console, to be able to see console output!
 qm set 9000 --serial0 socket --vga serial0
 qm set 9100 --serial0 socket --vga serial0
+# Autostart vm at boot
+#qm set 9000 --autostart 1
+#qm set 9100 --autostart 1
+# Use Qemu Guest Agent
+qm set 9000 --agent 1
+qm set 9100 --agent 1
 # End of code
 echo ""
 echo "Thats it. Remenmer do NOT start the VM"
