@@ -1,5 +1,6 @@
 #!/bin/bash
-#templatebuilder for Ubuntu 22.04 Servers
+## templatebuilder.sh for Ubuntu 22.04 Servers
+## A basic set of command, for more see: https://pve.proxmox.com/pve-docs/qm.conf.5.html
 # Get the cloud image of choise
 wget https://cloud-images.ubuntu.com/minimal/releases/jammy/release/ubuntu-22.04-minimal-cloudimg-amd64.img
 wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
@@ -10,8 +11,8 @@ qm create 9100 --memory 1024 --core 1 --name ubuntu-2204-server --net0 virtio,br
 mv ubuntu-22.04-minimal-cloudimg-amd64.img ubuntu-22.04.mini.qcow2
 mv jammy-server-cloudimg-amd64.img ubuntu-22-04.qcow2
 # Resize to your taste
-qemu-img resize ubuntu-22.04.mini.qcow2 32G
-qemu-img resize ubuntu-22.04.qcow2 32G
+qemu-img resize ubuntu-22.04.mini.qcow2 16G
+qemu-img resize ubuntu-22.04.qcow2 16G
 # Import the disc to the base of the template
 #qm importdisk 9000 jammy-server-cloudimg-amd64.img local-lvm
 qm importdisk 9000 ubuntu-22.04.mini.qcow2
