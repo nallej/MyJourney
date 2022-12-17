@@ -51,6 +51,10 @@ qm set 9000 --agent 1
 qm set 9000 --ostype l26
 #qm set 9100 --ostype l26
 
+# Set dhcp on - default static with no address
+update VM 9000: -ipconfig0 ip=dhcp
+#update VM 9100: -ipconfig0 ip=dhcp
+
 # End of code
 
 echo ""
