@@ -51,9 +51,19 @@ qm set 9000 --agent 1
 qm set 9000 --ostype l26
 #qm set 9100 --ostype l26
 
-# Set dhcp on - default static with no address
-update VM 9000: -ipconfig0 ip=dhcp
-#update VM 9100: -ipconfig0 ip=dhcp
+# Set dhcp on
+qm set 9000 --ipconfig0="dhcp"
+#qm set 9100 --ipconfig0="dhcp"
+
+## More automation could be added
+#qm set 9000 --ciuser "admin"           # use your imagination
+#qm set 9000 --cipassword  "Pa$$w0rd"   # use a super complicated one
+#qm set 9000 --sshkey ~/.ssh/id_rsa.pub # sets the current users key to the vm
+
+## Alternatine to the qm set ip address
+## Set dhcp on - default static with no address
+##update VM 9000: -ipconfig0 ip=dhcp
+##update VM 9100: -ipconfig0 ip=dhcp
 
 # End of code
 
@@ -62,5 +72,9 @@ echo "Thats it. Remenmer do NOT start the VM"
 echo ""
 echo "WARNING - Do  NOT  start the VM - WARNING"
 sleep 5
-echo "Edit the Cloud-Init NOW"
-sleep 
+echo ""
+echo "Edit the Cloud-Init NOW..."
+sleep 5
+echo ""
+echo " ... then clone your VM's"
+sleep 10
