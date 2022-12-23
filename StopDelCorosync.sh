@@ -14,3 +14,11 @@ rm -r /etc/corosync/*
 
 killall pmxcfs
 systemctl start pve-cluster
+
+# Remove any left over .conf files
+echo ""
+echo ""
+echo "Remove any *.conf left in /etc/pve/qemu-server"
+echo "Remove any *.conf left in /etc/pve/lxc"
+echo "Remove any *.conf left in /etc/nodes/<OLD NODE>/qemu-server"
+echo ""
