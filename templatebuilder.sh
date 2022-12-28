@@ -3,12 +3,15 @@
 ## A basic set of commands, for more see: https://pve.proxmox.com/pve-docs/qm.conf.5.html
 
 #=============================================================================#
-# Get the cloud image of choise, Ubuntu as example
+# Get the cloud image of choise, Ubuntu as example, it's a .qcow2 fil with the extension img - we turn it back to .qcow2
 wget -O base.qcow2 https://cloud-images.ubuntu.com/minimal/releases/jammy/release/ubuntu-22.04-minimal-cloudimg-amd64.img
 #wget -O base.qcow2 https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
 #-----------------------------------------------------------------------------#
 # Resize the disk to your needs, 8 - 32G is normal
 qemu-img resize base.qcow2 16G
+# Add QEMU Guest Agent and any other packages you’d like in your base image.
+# libguestfs-tools has to be installed on the node
+# virt-customize --install qemu-guest-agent -a base.qcow2
 #=============================================================================#
 #                                                                             #
 # Create the template ========================================================#
