@@ -44,11 +44,13 @@ qm set 9000 --ipconfig0 ip="dhcp"
 #                                                                             #
 ## More automation can be added to cloud-init, examplesbelow -----------------#
 # 1. copy your key to the node or to the VM 
-#ssh-copy-id our_username@other_machine
+#ssh-copy-id -i ~/.ssh/id_ed25519  our_username@other_machine
 # 2. set up credentials
 #qm set 9000 --ciuser "admin"           # use your imagination
 #qm set 9000 --cipassword  "Pa$$w0rd"   # use a super complicated one
 #qm set 9000 --sshkey ~/.ssh/my_key     # sets the users key to the vm
+# 3. use a bootstrap file at the initial boot
+#qm set 9000 --cicustom "vendor=local:snippets/vendor.yaml"
 #-----------------------------------------------------------------------------#
 # Create the template 9000 
 #qm template 9000
