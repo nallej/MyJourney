@@ -53,10 +53,10 @@ qm set 9000 --ipconfig0 ip="dhcp"
 #qm set 9000 --cipassword  "Pa$$w0rd"   # use a super complicated one
 #qm set 9000 --sshkey ~/.ssh/my_key     # sets the users key to the vm
 # 3. use a bootstrap file at the initial boot <directory> that can have snippets.
-# You need to check the status of the Storage Manager
-# pvesm status
-#qm set 9000 --cicustom "vendor=<local>:snippets/vendor.yaml"
+# You need to check the status of the Storage Manager and set according to yours
+#pvesm status
 #pvesm set local --content backup,iso,snippets,vztmpl
+#qm set 9000 --cicustom "vendor=<local>:snippets/vendor.yaml"
 #-----------------------------------------------------------------------------#
 # Create the template 9000 
 #qm template 9000
