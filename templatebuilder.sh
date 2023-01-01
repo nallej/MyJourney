@@ -11,6 +11,8 @@ wget -O base.qcow2 https://cloud-images.ubuntu.com/minimal/releases/jammy/releas
 qemu-img resize base.qcow2 16G
 # Add QEMU Guest Agent and any other packages you’d like in your base image.
 # libguestfs-tools has to be installed on the node
+#apt-get update && apt-get install libguestfs-tools
+# Add the QEMU-Guest-Agent to auto install
 # virt-customize --install qemu-guest-agent -a base.qcow2
 #=============================================================================#
 #                                                                             #
