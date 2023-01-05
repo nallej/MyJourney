@@ -4,19 +4,17 @@
 #  myUpdater.sh                                                    #
 #  Part of the MyJourney project @ homelab.casaursus.net           #
 #                                                                  #
-#  V.1 Created by Nalle @ 29.11.2022                               #
+#  V.1 Created by Nalle Juslén 29.11.2022                          #
 #    -review 1.12.2022                                             #
 #                                                                  #
-#  V.2 Created by Nalle @ 4.1.2023                                 #
+#  V.2 Created by Nalle Juslén 4.1.2023                            #
 #    - revison                                                     #
 #                                                                  #
 # Date format and >>>> ---- <<<< **** for easy sorting             #
 #   Updates for Debian (apt) and Redhat (dnf) based VM's           #
-#                                                                  #
-# NOTE  You NEED to run this script as SUDO !                      #
 #------------------------------------------------------------------#
 
-# Function hyrraPyorii. Show a activity spinner 
+# Function hyrraPyorii. Show a activity spinner
 hyrraPyorii ()
 {
    pid=$!   # PID of the previous running command
@@ -32,7 +30,7 @@ hyrraPyorii ()
 }
 #------------------------------------------------------------------#
 
-# Function end_msg 
+# Function end_msg
 end_msg ()
 {
   if [ $? -ne 0 ]
@@ -51,7 +49,7 @@ end_msg ()
 }
 #------------------------------------------------------------------#
 
-# Function start_log 
+# Function start_log
 start_log ()
 {
     echo ">>>> Update started    @ $(date +"%F %T") ****  ****" >$ok_log
@@ -69,18 +67,18 @@ ei_log=/var/log/updater/"$pvm"_update_error.log
 if [ ! -d "/var/log/updater/" ]
 then
   sudo mkdir /var/log/updater
-  sudo chown :users /var/log/updater
+  sudo chown $me:users /var/log/updater
   sudo chmod g+w /var/log/updater
 fi
 if [ ! -f $ok_log ]
 then
   sudo touch $ok_log
-  sudo chown :users $ok_log
+  sudo chown $me:users $ok_log
 fi
 if [ ! -f $ei_log ]
 then
   sudo touch $ei_log
-  sudo chown :users $ei_log
+  sudo chown $me:users $ei_log
 fi
 #------------------------------------------------------------------#
 }
@@ -103,18 +101,18 @@ then
   sudo dnf upgrade -y 1>>$ok_log 2>>$ei_log
 else
   echo ""
-  echo "WARNING - Wrong OS for this version of myUpdater!"
+  echo "WARNING - Wrong OS for myUpdater!"
   echo ""
 fi
 }
 
-# Main =========================================================== #
+# Main ==============================================================#
 clear
+me="${SUDO_USER:-${USER}}"
 echo ""
-echo "You are running:"
+echo "You, $me are running:"
 grep -E '^(VERSION|NAME)=' /etc/os-release
 echo ""
-echo "You need to run myUpdater as SUDO!"
 echo ""
 read -rp "Do you want to upgrade this VM [y/N]: " UPG
 echo ""
@@ -136,4 +134,4 @@ if [[ "$UPG" = [yY] ]]; then
      cat $ok_log
   fi
 fi
-# ================================================================ #
+# ====================================================================#
