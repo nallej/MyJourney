@@ -287,10 +287,10 @@ installAPT() # Function for installing on Debian or Ubuntu
       echo ""
       # Start installing WatchTower, auto update ------------------------------------
       if [[ "$WT" == [yY] ]]; then
-          mkdir ~/docker-stack/watchtower
-          cd ~/docker-stack/watchtower
+          mkdir ~/docker/watchtower
+          cd ~/docker/watchtower
           wget https://raw.githubusercontent.com/nallej/MyJourney/main/watchtower/docker-compose.yml &> /dev/null
-      #    docker-compose up -d # uncomment if you want to start now
+          # docker-compose up -d # uncomment if you want to start now
           echo ""
           echo "Watchtower installed"
           echo "  - Updating images daily 04.00 "
@@ -302,8 +302,8 @@ installAPT() # Function for installing on Debian or Ubuntu
       echo ""
       # Start installing Dozzle, log reader -----------------------------------------
       if [[ "$DOZ" == [yY] ]]; then
-          mkdir ~/docker-stack/dozzle
-          cd ~/docker-stack/dozzle
+          mkdir ~/docker/dozzle
+          cd ~/docker/dozzle
           wget https://raw.githubusercontent.com/nallej/MyJourney/main/dozzle/docker-compose.yml &> /dev/null
           # sudo docker-compose up -d # uncomment if you want to start now
           echo ""
@@ -316,8 +316,8 @@ installAPT() # Function for installing on Debian or Ubuntu
       echo ""
       # Start installing Heimdall, internal portal ----------------------------------
       if [[ "$HEIM" == [yY] ]]; then
-          mkdir ~/docker-stack/heimdall
-          cd ~/docker-stack/heimdall
+          mkdir ~/docker/heimdall
+          cd ~/docker/heimdall
           wget https://raw.githubusercontent.com/nallej/MyJourney/main/heimdall/docker-compose.yml &>/dev/null
           # docker-compose up -d # uncomment if you want to start now
           echo ""
