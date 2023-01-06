@@ -106,7 +106,7 @@ log:
   format: text
   #file_path: /config/authelia.log
   
-# Apperance of Authelia vcan be light or dark ---------------------------------------
+# Apperance of Authelia can be light or dark ---------------------------------------
 theme: dark   #  dark / light
 
 # Optional if your system has ntp  implemented --------------------------------------
