@@ -30,7 +30,7 @@ askOS() #Function to get the OS
       if grep -q "debian" $os_rel
         then
           myOS=1
-      elif grep -q "CentOs" $os_rel || grep -q "Fedora" $os_rel || grep -q "redhat"
+y      elif grep -q "CentOs" $os_rel || grep -q "Fedora" $os_rel || grep -q "redhat"
         then
           myOS=2
       else
@@ -136,14 +136,14 @@ initUpdater() # Function initUpdater - initialize variables and log-files
 
 startUpdater() # Function startUpdater
     {
-      if $myOS=1 #grep -q "debian" $os_rel # Debian/Ubuntu/PopOS based
+      if [[ $myOS -eq 1 ]] #grep -q "debian" $os_rel # Debian/Ubuntu/PopOS based
         then
           echo -e "\b You are running a Debian based OS - Debian, Ubuntu, PopOS ..."
           sudo apt-get update 1>>$ok_log 2>>$ei_log
           sudo echo "---- Upgrade started   @ $(date +"%F %T") ****  ****" >>$ok_log
           sudo echo "---- Upgrade started   @ $(date +"%F %T") ****  ****" >>$ei_log
           sudo apt-get dist-upgrade -y 1>>$ok_log 2>>$ei_log
-      elif $myOS=2 #grep -q "CentOs" $os_rel || grep -q "Fedora" $os_rel || grep -q "redhat" # Redhat/Fedora/CentOS
+      elif [[ $myOS -eq 2 ]] #grep -q "CentOs" $os_rel || grep -q "Fedora" $os_rel || grep -q "redhat" # Redhat/Fedora/CentOS
         then
           echo -e "\b You are running a Fedora or Redhat 8 based OS"
           sudo dnf upgrade -y 1>>$ok_log 2>>$ei_log
@@ -360,7 +360,7 @@ installPOTA() # Function installing Portainer Agent on this VM
 
 installWT() # Function installing WatchTower on this VM
     {
-      if [ -d "~/docker/watchtower/" ]; then
+      if [[ ! -d "~/docker/watchtower/" ]]; then
          mkdir ~/docker/watchtower
       fi
       #cd ~/docker/watchtower
@@ -376,7 +376,7 @@ installWT() # Function installing WatchTower on this VM
 
 installDOZ() # Function installing Dozzle log reader on this VM
     {
-      if [ -d "~/docker/dozzle/" ]; then
+      if [[ ! -d "~/docker/dozzle/" ]]; then
          mkdir ~/docker/dozzle
       fi
       wget -P ~/docker/dozzle https://raw.githubusercontent.com/nallej/MyJourney/main/dozzle/docker-compose.yml &> /dev/null
@@ -397,7 +397,7 @@ installDOZ() # Function installing Dozzle log reader on this VM
 
 installHEIM() # Function installing Heimdall Dashboard app on this VM
     {
-      if [ -d "~/docker/heimdall/" ]; then
+      if [[ ! -d "~/docker/heimdall/" ]]; then
          mkdir ~/docker/heimdall
       fi
       wget -P ~/docker/heimdall https://raw.githubusercontent.com/nallej/MyJourney/main/heimdall/docker-compose.yml &>/dev/null
@@ -420,7 +420,7 @@ installHEIM() # Function installing Heimdall Dashboard app on this VM
 
 installNPM() # Funtion for installing NGinX Proxy Manager on this VM
     {
-      if [ -d "~/docker/npm/" ]; then
+      if [[ ! -d "~/docker/npm/" ]]; then
             mkdir ~/docker/npm
       fi
       curl -o ~/docker/npm/docker-compose.yml https://raw.githubusercontent.com/nallej/MyJourney/main/interface/npm.yml &>/dev/null
@@ -444,9 +444,9 @@ installNPM() # Funtion for installing NGinX Proxy Manager on this VM
 
 installAUTH() # Function to install Authelia on this VM
     {
-    if [ -d "~/docker/authelia/" ]; then
+    if [[ ! -d "~/docker/authelia/" ]]; then
             mkdir ~/docker/authelia
-            mktir ~/docker/authelia/config
+            mkdir ~/docker/authelia/config
             mkdir ~/docker/authelia/config/assets/
             mkdir ~/docker/authelia/npm-advanced-cfgs
       fi
@@ -464,7 +464,7 @@ installDNS() #Function  to install Bind9 DNS server
 {
     if [ -d "~/docker/dns/" ]; then
             mkdir ~/docker/dns
-            mktir ~/docker/dns/cache
+            mkdir ~/docker/dns/cache
             mkdir ~/docker/dns/config
             mkdir ~/docker/dns/records
             mkdir ~/docker/dns/dhcp 
