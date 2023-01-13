@@ -1,0 +1,27 @@
+; Create a reverse lookup zone
+
+$TTL 2d
+
+@               IN      SOA     ns1.lab.example.com. admin.example.com (
+                                2023011200      ; serial number
+                                12h             ; refresh
+                                15m             ; retry
+                                3w              ; expire
+                                2h              ; minimum ttl
+                                )
+
+@                IN      NS      ns1.lab.example.com.
+
+; -- add reverse dns records below
+
+3               IN      PTR     ns1.lab.example.com.
+41              IN      PTR     pve1.lab.example.com.
+42              IN      PTR     pve2.lab.example.com.
+43              IN      PTR     pve3.lab.example.com.
+44              IN      PTR     pve4.lab.example.com.
+45              IN      PTR     pve5.lab.example.com.
+46              IN      PTR     pve6.lab.example.com.
+49              IN      PTR     pbs.lab.example.com.
+50              IN      PTR     nas.lab.example.com.
+
+; -- lab servers for testing ar in the db.10.10.20 file 

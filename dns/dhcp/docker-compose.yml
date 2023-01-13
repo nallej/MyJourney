@@ -1,0 +1,13 @@
+version: '3'
+services:
+#
+# Your DNS stuff here
+#
+dhcp:
+  image: networkboot/dhcpd
+  container_name: dhcpd
+  volumes:
+    - ./dhcp/data:/data
+  network_mode: "host"
+  restart: unless-stopped
+  # Using port 67/udp
