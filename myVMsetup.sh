@@ -460,7 +460,7 @@ installAUTH() # Function to install Authelia on this VM
       sleep 3
     }
 
-installDNS() Function  to install Bind9 DNS server
+installDNS() #Function  to install Bind9 DNS server
 {
     if [ -d "~/docker/dns/" ]; then
             mkdir ~/docker/dns
