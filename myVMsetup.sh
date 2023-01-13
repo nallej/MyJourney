@@ -30,7 +30,7 @@ askOS() #Function to get the OS
       if grep -q "debian" $os_rel
         then
           myOS=1
-y      elif grep -q "CentOs" $os_rel || grep -q "Fedora" $os_rel || grep -q "redhat"
+      elif grep -q "CentOs" $os_rel || grep -q "Fedora" $os_rel || grep -q "redhat"
         then
           myOS=2
       else
@@ -49,7 +49,6 @@ askTZ() #Function - get the TimeZone variable
       read -rp "  Your area (Europe):   " YA
       read -rp "  Your City (Helsinki): " YC
       myTZ=$YA/$YC
-      #echo "  Your TZ will be $myTZ"
       echo ""
       PS3="TZ = $myTZ - is this correct? [1=No 2=Yes] "
       select _ in \
@@ -77,7 +76,7 @@ nextPart() #Function to install needed parts
          then
            installDNF
       else
-          echo "  Error - Invalid OS# "
+          echo "  Error - Invalid OS "
           exit
       fi
     }
@@ -115,19 +114,16 @@ initUpdater() # Function initUpdater - initialize variables and log-files
       pvm=`date "+%Y-%m-%d"`
       ok_log=/var/log/updater/"$pvm"_update_ok.log
       ei_log=/var/log/updater/"$pvm"_update_error.log
-      if [ ! -d "/var/log/updater/" ]
-        then
+      if [[ ! -d "/var/log/updater/" ]]; then
           sudo mkdir /var/log/updater
           sudo chown $me:users /var/log/updater
           sudo chmod g+w /var/log/updater
       fi
-      if [ ! -f $ok_log ]
-        then
+      if [[ ! -f $ok_log ]]; then
           sudo touch $ok_log
           sudo chown $me:users $ok_log
       fi
-      if [ ! -f $ei_log ]
-        then
+      if [[ ! -f $ei_log ]]; then
           sudo touch $ei_log
           sudo chown $me:users $ei_log
       fi
@@ -185,7 +181,7 @@ installBaseApps() # Function installs basic apps and features
              sudo apt-get clean >> ~/install.log 2>&1
              sudo apt-get autoremove >> ~/install.log 2>&1
           fi
-          if [ -d "~/docker/" ]; then
+          if [[ ! -d "~/docker/" ]]; then
              mkdir ~/docker
              echo "  + Added the dir [~/docker] for the Docker-stack "
           fi
