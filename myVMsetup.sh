@@ -5,7 +5,7 @@
 #  Part of the MyJourney project @ homelab.casaursus.net           #
 #                                                                  #
 #  V.1 Created by Nalle @ 5.1.2023                                 #
-#    -review                                                       #
+#    -review 9.1.2023                                              #
 #                                                                  #
 #------------------------------------------------------------------#
 
@@ -168,8 +168,9 @@ installBaseApps() # Function installs basic apps and features
         if [[ "$DPI" = [yY] ]]; then
            echo "  - Running VM updates and installs ..."
            echo "  - The logfile is opend in your home directory - install.log"
-          # Add bash_aliases ------------------------------------------------------------
+          # Add bash_aliases and prompt--------------------------------------------------
           wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_aliases &> /dev/null
+          wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_prompt &> /dev/null
           (. ~/.bash_aliases) >> ~/install.log 2>&1
           echo "  - added .bash_aliases"
           # Add bash_aliases ------------------------------------------------------------
@@ -219,14 +220,14 @@ askAPPS() #Function - What to install
           echo "Note -> Docker-compose appears to be installed."
           echo ""
     fi
-    echo "Chose apps to install:"
+    echo "You need to install these apps:"
     read -rp "  Docker-ce              [y/n] " DOCE
     read -rp "  Docker-Compose         [y/n] " DOCO
-    echo "Use Portainer or the Agent "
+    echo "Good to have: Portainer or it's Agent "
     read -rp "  - Portainer-ce         [y/n] " POT
     read -rp "  - Portainer Agent      [y/n] " POTA
     echo ""
-    echo "Apps can be set up via Portainer or Docker-Compose."
+    echo "Apps you can set up via Portainer or Docker-Compose."
     echo "Recommended apps:"
     read -rp "  WatchTower, updater    [y/n] " WT
     read -rp "  Dozzle, reading logs   [y/n] " DOZ
@@ -234,8 +235,8 @@ askAPPS() #Function - What to install
     echo "Optional apps "
     read -rp "  -  NGinX Proxy Manager [y/n] " NPM
     read -rp "  -  Heimdall            [y/n] " HEIM
-    echo "Authelia is comming later"
     read -rp "  -  Authelia            [y/n] " AUTH
+    read -rp "  -  Bind9 DNS, ICS-DHCP [y/N] " DNS
   }
 
 
@@ -267,6 +268,9 @@ doAppInstall() # Function to install the Apps
       fi
       if [[ "$AUTH" == [yY] ]]; then
         installAUTH
+      fi
+      if [[ "$DNS" == [yY] ]]; then
+        installDNS
       fi
 
       echo ""
@@ -436,6 +440,8 @@ installNPM() # Funtion for installing NGinX Proxy Manager on this VM
       echo ""
       sleep 3
     }
+
+
 installAUTH() # Function to install Authelia on this VM
     {
     if [ -d "~/docker/authelia/" ]; then
@@ -453,6 +459,38 @@ installAUTH() # Function to install Authelia on this VM
       echo ""
       sleep 3
     }
+
+installDNS() Function  to install Bind9 DNS server
+{
+    if [ -d "~/docker/dns/" ]; then
+            mkdir ~/docker/dns
+            mktir ~/docker/dns/cache
+            mkdir ~/docker/dns/config
+            mkdir ~/docker/dns/records
+            mkdir ~/docker/dns/dhcp 
+            mkdir ~/docker/dns/dhcp/data
+      fi
+      wget -P ~/docker/dns/ https://raw.githubusercontent.com/nallej/MyJourney/main/dns/docker-compose.yml &>/dev/null
+      wget -P ~/docker/dns/config/ https://raw.githubusercontent.com/nallej/MyJourney/main/dns/config/db.lab-example-com.zones &>/dev/null
+      wget -P ~/docker/dns/config/ https://raw.githubusercontent.com/nallej/MyJourney/main/dns/config/db.182.168.1 &>/dev/null
+      wget -P ~/docker/dns/config/ https://raw.githubusercontent.com/nallej/MyJourney/main/dns/config/named.conf &>/dev/null
+      wget -P ~/docker/dns/dhcp/ https://raw.githubusercontent.com/nallej/MyJourney/main/dns/dhcp/docker-compose.yml &>/dev/null
+      wget -P ~/docker/dns/dhcp/data/ https://raw.githubusercontent.com/nallej/MyJourney/main/dns/dhcp/data/dhcp.conf &>/dev/null
+      echo "Bind 9 files are installed"
+      echo "  - Edit the files in ~/docker/dns/config before starting"
+      echo "    - db.lab-example-com.zones db.192.168.1 & named.conf"
+      echo "  - Edit resolved.conf"
+      echo "    - sudo nano /etc/systemd/resolved.conf"
+      echo "    - sudo systemctl restart systemd-resolved"
+      echo "    - sudo systemctl status systemd-resolved"
+      echo "  - Start your Bind9 DNS"
+      echo ""
+      echo "  Optional ICS-DHCP"
+      echo "  - Edit ~/dns/docker-compose.yml"
+      echo "    - Edit the ~/docker/dnd/dhcp/data/dhcpd.conf"
+      echo "  - Start ICS-DHCP"
+      sleep 3
+}
 
 
 # Main =======================================================
