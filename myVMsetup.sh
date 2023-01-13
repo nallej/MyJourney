@@ -44,24 +44,24 @@ askOS() #Function to get the OS
 
 askTZ() #Function - get the TimeZone variable
     {
-      echo ""
-      echo "What TimeZone (TZ) do you use"
-      read -rp "  Your area (Europe):   " YA
-      read -rp "  Your City (Helsinki): " YC
-      myTZ=$YA/$YC
-      echo ""
-      PS3="TZ = $myTZ - is this correct? [1=No 2=Yes] "
-      select _ in \
-        " No  - incorrect location" \
-        " Yes - this is my place" \
-        " Exit"
-      do
-        case $REPLY in
-          1) askTZ ;;
-          2) nextPart ;;
-          *) echo "  Invalid selection, please try again " ;;
-        esac
-     done
+        echo ""
+        echo "What Time zone (TZ) do you use"
+        read -rp "  Your area (Europe):   " YA
+        read -rp "  Your City (Helsinki): " YC
+        myTZ=$YA/$YC
+        echo ""
+        PS3="TZ = $myTZ - is this correct? [1=No 2=Yes] "
+        select _ in \
+          " No  - incorrect location" \
+          " Yes - this is my place" \
+          " Exit"
+        do
+          case $REPLY in
+            1) askTZ ;;
+            2) nextPart ;;
+            *) echo "  Invalid selection, please try again " ;;
+          esac
+        done
     }
 
 
@@ -150,6 +150,7 @@ startUpdater() # Function startUpdater
         exit
       fi
     }
+
 
 installBaseApps() # Function installs basic apps and features
     {
@@ -277,7 +278,7 @@ doAppInstall() # Function to install the Apps
       echo "  - please reboot node befor starting apps"
       echo ""
       echo "Rememper to have fun! Learn new things and love the CLI."
-    echo ""
+      echo ""
     exit
     }
 
@@ -288,7 +289,7 @@ installDOCE() # Funtion installing Docker-ce on this VM
       sudo curl -fsSL https://get.docker.com | sh >> ~/install.log 2>&1 & hyrra
       echo ""
       echo "  - Docker-ce installed. "
-      echo "  - Starting docker."
+      echo "    - Starting docker."
       echo ""
       (sleep 10s
       sudo systemctl enable docker
@@ -301,11 +302,11 @@ installDOCE() # Funtion installing Docker-ce on this VM
       sleep 1s) >> ~/install.log 2>&1 & hyrra
       sudo docker network create -d bridge kadulla  &> /dev/null #frontend
       sudo docker network create -d bridge pihalla  &> /dev/null #backbone
-      echo "  $me added to the docker group"
+      echo "    - $me added to the docker group (active after next login)."
       echo ""
-      echo "  Internal networks created:"
-      echo "    - kadulla = frontend "
-      echo "    - pihalla = backbone "
+      echo "    - Internal networks created:"
+      echo "      - kadulla = frontend "
+      echo "      - pihalla = backbone "
       echo ""
     }
 
@@ -313,7 +314,6 @@ installDOCE() # Funtion installing Docker-ce on this VM
 installDOCO() # Funtion installing Docker-Compose on this VM
     {
       ( sudo apt install -q docker-compose -y ) >> ~/install.log 2>&1 #& hyrra
-      echo ""
       echo "  - Docker-Compose installed."
       echo ""
       sleep 2
@@ -458,7 +458,7 @@ installAUTH() # Function to install Authelia on this VM
 
 installDNS() #Function  to install Bind9 DNS server
 {
-    if [ -d "~/docker/dns/" ]; then
+    if [[ ! -d "~/docker/dns/" ]]; then
             mkdir ~/docker/dns
             mkdir ~/docker/dns/cache
             mkdir ~/docker/dns/config
@@ -485,6 +485,7 @@ installDNS() #Function  to install Bind9 DNS server
       echo "  - Edit ~/dns/docker-compose.yml"
       echo "    - Edit the ~/docker/dnd/dhcp/data/dhcpd.conf"
       echo "  - Start ICS-DHCP"
+      echo ""
       sleep 3
 }
 
@@ -535,11 +536,10 @@ if [[ "$UPG" = [yY] ]]
          cat $ok_log
       fi
   else
-    if [[ $myOS = 1 ]]
-      then
-        (echo "apt-update " & sudo apt-get update &> /dev/null) &  hyrra
+    if [[ $myOS = 1 ]]; then
+        echo "  - Performing apt-update "
+        (sudo apt-get update &> /dev/null) &  hyrra
     else
-        sudo dnf upgrade
         sudo dnf upgrade
         echo "  Please reboot the VM"
         echo "    - and then test for errors: "
@@ -548,4 +548,11 @@ if [[ "$UPG" = [yY] ]]
 fi
 
 # Starting installation of apps
-askTZ
+echo ""
+echo "Current system Time zone (TZ) is: $(cat /etc/timezone)" 
+read -rp "  - Do you want to change [y/N] " CTZ
+if [[ "$CTZ" = [yY] ]]; then
+    askTZ
+  else
+    nextPart
+fi    
