@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Obsolete see the newmyVMsetup.sh 
 #--------------------------------------------------------#
 #  1-install.sh 2.0   Part 1 of the Journey              #
 #  MyJourney project  homelab.casaursus.net              # 

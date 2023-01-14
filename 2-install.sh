@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Obsolete see the newmyVMsetup.sh 
 #--------------------------------------------------------#
 #  2-install.sh 2.0                                      #
 #  MyJourney project                                     #

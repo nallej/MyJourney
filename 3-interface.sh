@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Obsolete see the newmyVMsetup.sh 
 #--------------------------------------------------------#
 #  3-interface.sh 1.0                                    #
 #  MyJourney project | Web facing apps NPM, Authelia     #
