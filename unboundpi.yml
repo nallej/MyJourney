@@ -44,7 +44,7 @@ services:
 # VPN server for road warriors
   pivpn:
     container_name: pivpn  
-    image: pivpn/pivpn.io
+    #image: pivpn/pivpn.io
     image: archef2000/pivpn
     hostname: pivpn
     volumes:
