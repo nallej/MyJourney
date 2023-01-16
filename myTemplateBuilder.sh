@@ -106,7 +106,7 @@ createTemplate() # Create the template ex. 9000
 {
         if [[ $tok == [yY] ]]; then
             qm template $tno
-            sleep 5
+            sleep 3
         fi
 }
 
@@ -117,8 +117,8 @@ createClones() #Cloning the template
             while [ $x -lt $ctno ]
             do
                 xx=$(($fcno + $x))
-                qm clone $tno $xx --name $cname$x --full
                 x=$(( $x + 1 ))
+                qm clone $tno $xx --name $cname$x --full
             done
         fi
 }
@@ -133,8 +133,8 @@ echo "NOTE libguestfs-tools is needed to be installed on Proxmox!"
 echo ""
 echo " Install this script by: "
 echo "   - open a terminal into the Proxmox node as root"
-echo "   - run wget://https://raw.githubusercontent.com/nallej/MyJourney/main/templatebuilder.sh"
-echo "   - chmod +x templatebuilder.sh"
+echo "   - run wget://https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh"
+echo "   - chmod +x myTemplateBuilder.sh"
 echo ""
 
 read -rp "  Install the libguestfs-tools Now  [y/N] : " gfs
@@ -152,12 +152,13 @@ read -rp "  - Create as a Template id $tno [y/N] : " tok
 if [[ $tok == [yY] ]]; then
     read -rp "  - Create # clones of $tno 0=no clones: " ctno
     if [[ $ctno -gt 0 ]]; then
-        read -rp "    - ID number for first clone        : " fcno
+        read -rp "    - ID number for first clone   5000 : " fcno
         xz=$(($fcno + $ctno))
         read -rp "    - name of clone's Pod1 to Pod$ctno     : " cname
         echo "  Creating Template with ID $tno"
         echo "    - creating cloned VM's $fcno - $xz"
-        echo "    - named as  $cname$fcno - $cname$xz"
+        y=1
+        echo "    - named as  $cname$y - $cname$ctno"
     fi
 else
     echo ""
@@ -175,7 +176,7 @@ if [[ $ok == [yY] ]]; then
     fi
     sleep 2
     (getUbuntu >> ~/installMTB.log 2>&1) & hyrra #&> /dev/null & hyrra
-    echo "  - Base.qcov2 image created"
+    echo "  - Base.qcow2 image created"
     echo "---- * base.qcov2 image    @ $(date +"%F %T") ****  ****" > ~/installMTB.log
     (createVM >> ~/installMTB.log 2>&1) & hyrra #&> /dev/null & hyrra
     echo "  - VM created"
