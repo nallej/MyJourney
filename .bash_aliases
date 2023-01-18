@@ -17,7 +17,7 @@ alias fgrep='fgrep --color=auto'
 ## docker related
 alias dcn='nano docker-compose.yml'
 alias dcup='docker-compose up -d'
-alias dcupl=docker-compose up -d && docker-compose logs -f
+alias dcupl='docker-compose up -d && docker-compose logs -f'
 alias dcr='docker-compose restart'
 alias dcd='docker-compose down'
 ## system related
