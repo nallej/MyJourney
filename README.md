@@ -18,4 +18,4 @@ And also the personal bash prompt:<br>`wget https://raw.githubusercontent.com/na
 
 
 Automate template creation
-Get it to yor node: `wget https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh`
+Get it to yor node:<br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh`
