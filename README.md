@@ -17,5 +17,4 @@ Add to or change the bash commands:<br>`wget https://raw.githubusercontent.com/n
 And also the personal bash prompt:<br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_prompt`
 
 
-Automate template creation
-Get it to yor node:<br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh`
+Automate template creation. Get it to yor node(s):<br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh`
