@@ -8,7 +8,7 @@
 #    -review 1.12.2022                                                        #
 #                                                                             #
 #  V.2 Created by Nalle Juslén 4.1.2023                                       #
-#    - revison 9.1.2023                                                       #
+#    - revison 9.1.2023, 29.1.2023                                            #
 #                                                                             #
 # For more info see: https://pve.proxmox.com/pve-docs/qm.conf.5.html          #
 # Date format and >>>> ---- <<<< **** for easy sorting                        #
@@ -30,6 +30,11 @@ hyrra() # Function hyrraPyorii. Show a activity spinner
         printf "\r  "
 }
 
+guestfs() # Function to install the
+{
+        apt-get update
+        apt-get install libguestfs-tools -y
+}
 
 getUbuntu() # Function to get a cloud image, Ubuntu as example, it's a .qcow2 fil with the extension img - we turn it back to .qcow2
 {
@@ -84,8 +89,8 @@ createVM() # Funtion creating aVM or Template
         qm set $tno --ipconfig0 ip="dhcp"
 
     ## More automation can be added to cloud-init, examplesbelow -----------------#
-        # 1. copy your key to the node or to the VM
-                #ssh-copy-id -i ~/.ssh/id_ed25519  our_username@other_machine
+        # 1. copy your public key to the node or copy it later to the VM
+                #ssh-copy-id -i ~/.ssh/id_ed25519 username@pve.lab.example.com
 
         # 2. set up credentials
         qm set $tno --ciuser $ciu     #"admin"       # use your imagination
@@ -123,20 +128,19 @@ createClones() #Cloning the template
         fi
 }
 
-
 # Main =======================================================================#
 clear
 echo ">>>> Started the Install   @ $(date +"%F %T") ****  ****" > ~/installMTB.log
 echo "This script will create templates and or VM's for your node."
 echo ""
-echo "NOTE libguestfs-tools is needed to be installed on Proxmox!"
+echo "NOTE - libguestfs-tools is needed to be installed on Proxmox!"
+echo "     - copy your privet key to the file ~/.ssh/my_key"
 echo ""
 echo " Install this script by: "
 echo "   - open a terminal into the Proxmox node as root"
 echo "   - run wget://https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh"
 echo "   - chmod +x myTemplateBuilder.sh"
 echo ""
-
 read -rp "  Install the libguestfs-tools Now  [y/N] : " gfs
 echo ""
 echo "  Do you want to install Standard or a minimimal Ubuntu 22.04 image"
@@ -170,27 +174,27 @@ read -rp "Start install [y/N] : " ok
 if [[ $ok == [yY] ]]; then
 # Execute the functions ------------------------------------------------------#
     if [[ $gfs == [yY] ]]; then
-        (apt-get update && apt-get install libguestfs-tools)  &> /dev/null & hyrra
+        (guestfs >> ~/installMTB.log 2>&1) & hyrra
         echo "Installed libguestfs-tools"
-        echo "---- * libguestfs-tools    @ $(date +"%F %T") ****  ****" > ~/installMTB.log
+        echo "---- * libguestfs-tools    @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
     fi
     sleep 2
     (getUbuntu >> ~/installMTB.log 2>&1) & hyrra #&> /dev/null & hyrra
     echo "  - Base.qcow2 image created"
-    echo "---- * base.qcov2 image    @ $(date +"%F %T") ****  ****" > ~/installMTB.log
+    echo "---- * base.qcov2 image    @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
     (createVM >> ~/installMTB.log 2>&1) & hyrra #&> /dev/null & hyrra
     echo "  - VM created"
-    echo "---- * VM Created      $(date +"%F %T") ****  ****" > ~/installMTB.log
+    echo "---- * VM Created      $(date +"%F %T") ****  ****" >> ~/installMTB.log
     if [[ $tok == [yY] ]]; then
         createTemplate &> /dev/null & hyrra
         echo "  - Template created"
-        echo "---- * Template created    @ $(date +"%F %T") ****  ****" > ~/installMTB.log
+        echo "---- * Template created    @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
 
     fi
     if [[ $ctno -gt 0 ]]; then
         createClones &> /dev/null & hyrra
         echo "  - Clone(s) created"
-        echo "---- * Clones created      @ $(date +"%F %T") ****  ****" > ~/installMTB.log
+        echo "---- * Clones created      @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
     fi
     # End message ----------------------------------------------------------------#
     echo ""
@@ -199,13 +203,13 @@ if [[ $ok == [yY] ]]; then
     echo "WARNING - Do  NOT  start the VM - WARNING"
     sleep 2
     echo ""
-    echo "Log created: ~/install.log"
+    echo "Log created: ~/installMTB.log"
     echo ""
     echo "Edit the Cloud-Init NOW ... then clone your VM's"
-    echo "<<<< Install ended OK     @ $(date +"%F %T") ****  ****" > ~/installMTB.log
+    echo "<<<< Install ended OK     @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
     sleep 5
   else
-        echo "<<<< Exited the Install   @ $(date +"%F %T") ****  ****" > ~/installMTB.log
+        echo "<<<< Exited the Install   @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
 fi
 
 # End of script ======================================================#
