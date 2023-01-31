@@ -52,7 +52,7 @@ getUbuntu() # Function to get a cloud image, Ubuntu as example, it's a .qcow2 fi
         virt-customize --install git -a base.qcow2
 }
 
-createVM() # Funtion creating aVM or Template
+createVM() # Funtion creating a VM or a Template
 {
         # Choose RAM, Disk size, # of cores, what bridge to use. virtio is mandatory
         if [[ $mini == [yY] ]]; then
@@ -198,9 +198,13 @@ if [[ $ok == [yY] ]]; then
     fi
     # End message ----------------------------------------------------------------#
     echo ""
+    tput setaf 3
     echo "Remenmer do NOT start the VM before making it into a template !"
+    tput sgr0
     echo ""
+    tput setaf 1
     echo "WARNING - Do  NOT  start the VM - WARNING"
+    tput sgr0
     sleep 2
     echo ""
     echo "Log created: ~/installMTB.log"
