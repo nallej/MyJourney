@@ -2,9 +2,11 @@
 #
 clear
 echo " Adding aliases to your bash and a new prompt"
+# Add bat
+apt update && apt install -y bat
 # Add to or change the bash commands:
 wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_aliases
 # And also the personal bash prompt:
 wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_prompt
 # Activate the changes
-echo "To execute type: . .bash_aliases"
+echo "To start the new bash type: . .bash_aliases"
