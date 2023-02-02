@@ -7,7 +7,7 @@ alias ll='ls -alFh --color=auto'
 alias la='ls -A'
 alias l='ls -CF'
 ## confirm before overwriting something
-alias cp="cp -i"
+alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 ## Colorize grep output (good for log files)
@@ -21,9 +21,9 @@ alias dcupl='docker-compose up -d && docker-compose logs -f'
 alias dcr='docker-compose restart'
 alias dcd='docker-compose down'
 ## system related
-alias bat="batcat"
-#alias cat="batcat"
-#alias catt="cat"
+alias bat='batcat'
+#alias cat='batcat'
+#alias catt='cat'
 alias sr='sudo reboot'
 alias bye='sudo poweroff'
 alias update='sudo apt update'
@@ -31,17 +31,16 @@ alias upgrade='sudo apt upgrade'
 alias upall='sudo apt update && sudo apt upgrade -y'
 alias nhost='sudo nano /etc/hosts'
 alias df='df -h'
-alias free="free -mt"
-alias hw="hwinfo --short"
-## cd aliases
+alias free='free -m'
+'## cd aliases
 alias 'cd..'='cd ..'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 ## IP related
-alias myip="echo My LAN-ip: $(ip a | grep 192 | awk '{print $2}')" #192 for 192.168.1.0
-alias lanip="ip a | grep inet | awk '{print $2}' | cut -f2 -d:"
-alias wanip="echo WanIp: $(curl ipinfo.io/ip)"
+alias myip='echo My LAN-ip: $(ip a | grep 192 | awk '{print $2}')' # 192 for 192.168.1.0
+alias lanip='ip a | grep inet | awk '{print $2}' | cut -f2 -d:'
+alias wanip='echo WanIp: $(curl ipinfo.io/ip)'
 alias netspeed='sudo curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -'
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
