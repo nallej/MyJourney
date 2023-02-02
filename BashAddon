@@ -5,8 +5,20 @@ echo " Adding aliases to your bash and a new prompt"
 # Add bat
 apt update && apt install -y bat
 # Add to or change the bash commands:
-wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_aliases
+wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_aliases 2>>wget_error.log
 # And also the personal bash prompt:
-wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_prompt
+wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_prompt 2>>wget_error.log
 # Activate the changes
-echo "To start the new bash type: . .bash_aliases"
+echo ""
+echo ""
+echo ""
+echo ""
+echo "Restarting bash"
+source ~/.bash_aliases
+sleep 2
+echo "Edit your new bash by nano .bash_aliases and make it yours"
+echo "  - change the IP settings"
+echo "  - add any alias you like"
+echo "  - comment out what you do not like"
+echo ""
+echo "  To restart the new bash type: . .bash_aliases (note the periods)"
