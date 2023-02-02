@@ -13,6 +13,8 @@ Make the script executable : `chmod +x 1-install.sh`
 
 ## Other
 
+Updat Proxmox bash with my preferenses:<br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/BashAddon`<br> 
+
 Add to or change the bash commands:<br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_aliases`<br>
 And also the personal bash prompt:<br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_prompt`
 
