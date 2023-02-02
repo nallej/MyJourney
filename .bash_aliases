@@ -21,6 +21,9 @@ alias dcupl='docker-compose up -d && docker-compose logs -f'
 alias dcr='docker-compose restart'
 alias dcd='docker-compose down'
 ## system related
+alias bat="batcat"
+#alias cat="batcat"
+#alias catt="cat"
 alias sr='sudo reboot'
 alias bye='sudo poweroff'
 alias update='sudo apt update'
