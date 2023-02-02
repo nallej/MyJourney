@@ -32,7 +32,7 @@ alias upall='sudo apt update && sudo apt upgrade -y'
 alias nhost='sudo nano /etc/hosts'
 alias df='df -h'
 alias free='free -m'
-'## cd aliases
+## cd aliases
 alias 'cd..'='cd ..'
 alias ..='cd ..'
 alias ...='cd ../..'
