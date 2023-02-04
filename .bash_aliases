@@ -38,7 +38,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 ## IP related
-alias myip="echo My LAN-ip: $(ip a | grep 192 | awk '{print $2}')" # 192 for 192.168.1.0
+alias myip="echo My LAN-ip: $(ip a | grep 192 | awk '{print $2}')" # 192 for 192.168.1.0 - Use your subnet here
 alias lanip="ip a | grep inet | awk '{print $2}' | cut -f2 -d:"
 alias wanip='echo WanIp: $(curl ipinfo.io/ip)'
 alias netspeed='sudo curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -'
@@ -46,6 +46,9 @@ alias netspeed='sudo curl -s https://raw.githubusercontent.com/sivel/speedtest-c
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 #alias sää='curl wttr.in'
 #alias mikä='curl cheat.sh/'
+## ssh related -  This is for 192.168.1.0 - Use your subnet here
+ssh 192.168.1."$1"
+sftp 192.168.1."$1"
 # Extracting archive files
 # # usage: ex <file>
 ex ()
