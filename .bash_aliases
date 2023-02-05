@@ -47,8 +47,8 @@ alias netspeed='sudo curl -s https://raw.githubusercontent.com/sivel/speedtest-c
 #alias sää='curl wttr.in'
 #alias mikä='curl cheat.sh/'
 ## ssh related -  This is for 192.168.1.0 - Use your subnet here
-ssh 192.168.1."$1"
-sftp 192.168.1."$1"
+alias sshr=ssh root@192.168.1."$1"
+alias sftpr=sftp root@192.168.1."$1"
 # Extracting archive files
 # # usage: ex <file>
 ex ()
