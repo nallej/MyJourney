@@ -6,6 +6,7 @@ alias ls='ls --color=auto'
 alias ll='ls -alFh --color=auto'
 alias la='ls -A'
 alias l='ls -CF'
+alias lsd='lsblk -o +MODEL,SERIAL'
 ## confirm before overwriting something
 alias cp='cp -i'
 alias mv='mv -i'
