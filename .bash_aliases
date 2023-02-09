@@ -7,6 +7,8 @@ alias ll='ls -alFh --color=auto'
 alias la='ls -A'
 alias l='ls -CF'
 alias lsd='lsblk -o +MODEL,SERIAL'
+alias exa='exa --long --icons'
+alias exat='exa --long --icons --tree '
 ## confirm before overwriting something
 alias cp='cp -i'
 alias mv='mv -i'
