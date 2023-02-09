@@ -1,0 +1,5 @@
+# My personal aliases
+
+# ls commands
+alias exa='exa --long --icons'
+alias exat='exa --long --icons --tree '
