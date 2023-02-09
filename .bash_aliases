@@ -7,6 +7,7 @@ alias ll='ls -alFh --color=auto'
 alias la='ls -A'
 alias l='ls -CF'
 alias lsd='lsblk -o +MODEL,SERIAL'
+#### Remvove the --icons if or install a Nerdfont
 alias exa='exa --long --icons'
 alias exat='exa --long --icons --tree '
 ## confirm before overwriting something
