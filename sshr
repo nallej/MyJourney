@@ -1,0 +1,5 @@
+#!/bin/bash
+# SSH into a VM
+# Activate by mv sshr .bin/ (or cp sshr .bin/)
+# Useage: sshr 55 -> ssh pomo@182.168.1.55
+ssh root@192.168.1.$1
