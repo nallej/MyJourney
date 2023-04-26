@@ -1,6 +1,6 @@
 ---
 version: '3'
-# log reader
+# Log reader, deploy from Portainer or by hand
 services:
   dozzle:
     container_name: dozzle
@@ -11,9 +11,9 @@ services:
       - 9999:8080
     restart: unless-stopped
     networks:
-      - backbone
+      - pihalla
 # networks to be used by service
 networks:
-  backbone:
+  pihalla:
     external: true
 ...
