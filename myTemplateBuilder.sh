@@ -146,9 +146,9 @@ echo ""
 echo "  Do you want to install Standard or a minimimal Ubuntu 22.04 image"
 read -rp "  - Change to minimal Ubuntu    [y/N] : " mini
 echo ""
-read -rp "  - Set VM or Template ID     ex. 9000 : " tno
-read -rp "  - Storage to use VM    ex. local-zfs : " storage
-read -rp "  - Create with CI user      ex. admin : " ciu
+read -rp "  - Set VM or Template ID    e.g. 9000 : " tno
+read -rp "  - Storage to use VM   e.g. local-zfs : " storage
+read -rp "  - Create with CI user     e.g. admin : " ciu
 read -rp "  - Create with CI user password       : " cip
 read -rp "  - set key from ~/.ssh/my_key   [y/N] : " my_key
 echo ""
