@@ -336,4 +336,9 @@ fi
 # Show the Cursor Again
 tput cnorm
 
+read -rp "Print the log [Y/n] : " pl
+if [[ $pl -eq '' || $pl = [yY] ]]; then
+   cat ~/installMTB.log
+fi
+
 # End of script ======================================================#
