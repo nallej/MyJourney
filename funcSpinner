@@ -1,0 +1,21 @@
+spinner() # Function to display a animated spinner
+{
+    # The different Spinner Arrays to choose from
+    local array1=("◐" "◓" "◑" "◒")
+    local array2=("░" "▒" "▓" "█")
+    local array3=("╔" "╗" "╝" "╚")
+    local array4=("┌" "┐" "┘" "└")
+    local array5=("▄" "█" "▀" "█")
+    local array6=("-" "\" "|" "/")
+    local array9=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
+
+    local delays=0.1 # Delay between each characte
+    tput civis # Hide cursor and spinn
+    while :; do
+        for character in "${array9[@]}"; do # Use Array #
+            printf "%s" "$character"
+            sleep "$delays"
+            printf "\b"  # Move cursor back
+        done
+    done
+}
