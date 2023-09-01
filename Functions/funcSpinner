@@ -21,6 +21,12 @@ spinner() # Function to display a animated spinner
     done
 }
 
+Start the spinner when needed
+# Run the spinner in the background and Save the PID
+spinner &
+spinner_pid=$!
+
+
 Stop the Spinner when not needed any more and return of the cursor
 # Terminate the Spinner
 kill "$spinner_pid"
