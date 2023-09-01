@@ -20,3 +20,11 @@ spinner() # Function to display a animated spinner
         done
     done
 }
+
+Stop the Spinner when not needed any more and return of the cursor
+# Terminate the Spinner
+kill "$spinner_pid"
+wait "$spinner_pid" 2>/dev/null
+# Show the Cursor Again
+tput cnorm
+
