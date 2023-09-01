@@ -1,0 +1,16 @@
+# Function I am root ----------------------------------------------------------#
+setroot() {
+if [[ "$EUID" = 0 ]]; then
+    echo -e "\nInitialaizing:"          # I am root
+else
+    sudo -k
+    if sudo true; then                  # Correct password
+        clear
+        echo -e "\nStart My Code what ever it's"
+        echo -e "\nInitialaizing..."
+    else
+        echo "wrong password!"
+        exit                            #exit if 3 times wrong
+    fi
+fi
+}
