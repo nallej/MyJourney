@@ -186,7 +186,7 @@ done # -----------------------------------------------------------------------#
 
 useColors        # Use color codes
 clear            # Clear the screan
-if nic=false; then myNIC=$( ls /sys/class/net | grep ^e); fi  #NIC AutoDetect
+if [ $nic == false ]; then myNIC=$( ls /sys/class/net | grep ^e); fi  #NIC AutoDetect
 
 # Main Script ================================================================#
 
