@@ -11,7 +11,7 @@
 #    - revison 9.1.2023, 29.1.2023                                            #
 #                                                                             #
 #  V.3 Created by Nalle Juslén 30.5.2023                                      #
-#    - revison 31.5.2023, 1.6.2023                                            #
+#    - revison 31.5.2023, 1.6.2023, 12.10.2023                                #
 #                                                                             #
 # For more info see: https://pve.proxmox.com/pve-docs/qm.conf.5.html          #
 # Date format and >>>> ---- <<<< **** for easy sorting                        #
@@ -97,29 +97,30 @@ getUbuntu() # Function to get a cloud image, Ubuntu as example, it's a .qcow2 fi
 {
     if [[ $mini == [yY] ]]; then
        if [[ -f "mini.qcow2" && $upd == [yY] ]]; then
-	      cp mini.qcow2 base.qcow2
-	   else
+              cp mini.qcow2 base.qcow2
+           else
           wget -O mini.qcow2 https://cloud-images.ubuntu.com/minimal/releases/jammy/release/ubuntu-22.04-minimal-cloudimg-amd64.img
           cp mini.qcow2 base.qcow2
-	   fi
+           fi
     else
-	  if [[ -f std.qcow2 && $upd == [yY] ]]; then
-	     cp std.qcow2 base.qcow2
-	  else
+          if [[ -f std.qcow2 && $upd == [yY] ]]; then
+             cp std.qcow2 base.qcow2
+          else
          wget -O std.qcow2 https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
          cp std.qcow2 base.qcow2
-	  fi
+          fi
     fi
 }
 
-createBase() # Create a fully loaded base ISO ### Set the Disk size ### set the apps needed ####
+createBase() # Function: create a fully loaded base ISO ### Set the Disk size ### set the apps needed ####
 {
     qemu-img resize base.qcow2 $ds #16G is typical - Resize the disk to your needs, 8 - 32G is normal
     # Add QEMU Guest Agent and any other packages you’d like in your base image.
     # libguestfs-tools has to be installed on the node.
-    # Add or delete according to your needs  
+    # Add or delete according to your needs
     virt-customize --install qemu-guest-agent -a base.qcow2
     virt-customize --install nano -a base.qcow2
+    #virt-customize --install ncurses-term -a base.qcow2
     virt-customize --install git -a base.qcow2
     virt-customize --install unattended-upgrades -a base.qcow2
     virt-customize --install fail2ban -a base.qcow2
@@ -128,13 +129,13 @@ createBase() # Create a fully loaded base ISO ### Set the Disk size ### set the 
     virt-customize --install mailutils -a base.qcow2
 }
 
-createVM() # Funtion creating a VM or a Template
+createVM() # Funtion: creat a VM or a Template
 {
         # Choose RAM, Disk size, # of cores, what bridge to use. virtio is mandatory
         if [[ $mini == [yY] ]]; then
-                qm create $tno --memory $ms --core $cc --name ubuntu-mini --net0 virtio,bridge=$vmbr
+                qm create $tno --memory $ms --core $cc --name ubuntu-mini --net0 virtio,bridge=$vmbr,tag=$vlan
           else
-                qm create $tno --memory $ms --core $cc --name ubuntu-std --net0 virtio,bridge=$vmbr
+                qm create $tno --memory $ms --core $cc --name ubuntu-std --net0 virtio,bridge=$vmbr,tag=$vlan
         fi
 
         # Import the disc to the base of the template. Where to put the VM local-lvm
@@ -223,18 +224,22 @@ echo ""
 echo -e "\e[1;35m Creating the Base Image from a Cloud-Image\e[0m"
 read -rp "  - Change to minimal Ubuntu      [y/N] : " mini
 read -rp "    - Use existing ISO-image      [y/N] : " upd
-read -rp "    - Disk size (8, 16 or 32G)   e.g 8G : " ds
+read -rp "    - Disk size (8, 16 or 32G) e.g   8G : " ds
 read -rp "    - Memory (1024 is plenty)  e.g.1024 : " ms
 read -rp "    - Core count (1 is plenty)   e.g. 1 : " cc
 read -rp "    - Set vmbr to be used    e.g. vmbr2 : " vmbr
+read -rp "      - Set vlan tag         e.g.     1 : " vlan
 echo -e "\e[1;35m  Settings for the VM or Template and VMs\e[0m"
 read -rp "  - Set VM or Template ID    e.g. 9000 : " tno
 read -rp "  - Storage to use VM   e.g. local-lvm : " storage
 read -rp "  - Create with CI user     e.g. admin : " ciu
-read -rp "  - Create with CI user password       : " cip
-read -rp "  - set key from ~/.ssh/my_key   [y/N] : " my_key
+#echo -n "    - create with CI user password     : "
+read -sp "    - create with CI user password     : " cip
+echo
+read -rp "    - set key from ~/.ssh/my_key [y/N] : " my_key
 echo -e "\e[1;35m  Settings for Template and VMs\e[0m"
 read -rp "  - Create as a Template id $tno [y/N] : " tok
+if [[ $vlan < 1 ]]; then vlan=1; fi
 if [[ $tok == [yY] ]]; then
     read -rp "  - Create # clones of $tno 0=no clones: " ctno
     if [[ $ctno -gt 0 ]]; then
@@ -272,7 +277,7 @@ if [[ $ok == [yY] ]]; then
         echo "---- * libguestfs-tools    @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
     fi
     sleep .5
-    (getUbuntu >> ~/installMTB.log 2>&1) #& hyrra 
+    (getUbuntu >> ~/installMTB.log 2>&1) #& hyrra
     printf "\b" #\n"
     echo "  - Cloud Image downloaded"
     echo "---- * CloudImage    @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
@@ -280,7 +285,7 @@ if [[ $ok == [yY] ]]; then
     printf "\b" #\n"
     echo "  - Base.qcow2 image created"
     echo "---- * base.qcov2 $ds image     @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
-    (createVM >> ~/installMTB.log 2>&1) #& hyrra 
+    (createVM >> ~/installMTB.log 2>&1) #& hyrra
     printf "\b" # \n"
     echo "  - VM created, $ds"
     echo "---- * VM Created      $(date +"%F %T") ****  ****" >> ~/installMTB.log
@@ -340,5 +345,3 @@ read -rp "Print the log [Y/n] : " pl
 if [[ $pl -eq '' || $pl = [yY] ]]; then
    cat ~/installMTB.log
 fi
-
-# End of script ======================================================#
