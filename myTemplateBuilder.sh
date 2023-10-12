@@ -120,7 +120,7 @@ createBase() # Function: create a fully loaded base ISO ### Set the Disk size ##
     # Add or delete according to your needs
     virt-customize --install qemu-guest-agent -a base.qcow2
     virt-customize --install nano -a base.qcow2
-    #virt-customize --install ncurses-term -a base.qcow2
+    virt-customize --install ncurses-term -a base.qcow2
     virt-customize --install git -a base.qcow2
     virt-customize --install unattended-upgrades -a base.qcow2
     virt-customize --install fail2ban -a base.qcow2
