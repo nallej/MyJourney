@@ -35,21 +35,7 @@
 
 # Functions ==================================================================#
 
-hyrra() # Function hyrraPyorii. Show a activity spinner
-{
-    pid=$!   # PID of the previous running command
-    x='-\|/' # hyrra in its elements
-    i=0
-        while kill -0 $pid 2>/dev/null
-            do
-                i=$(( (i+1) %4 ))
-                printf "\r  ${x:$i:1}"
-                sleep .1
-            done
-        printf "\r  "
-}
-
-usecolors() # Function define colors
+usecolors() # Function: define colors
 {
     red=$'\e[1;31m'
     grn=$'\e[1;32m'
@@ -62,7 +48,7 @@ usecolors() # Function define colors
     #Use them to print with colours: printf "%s\n" "Text in white ${blu}blue${end}, white and ${mag}magenta${end}."
 }
 
-spinner() # Function to display a animated spinner
+spinner() # Function: display a animated spinner
 {
 # The different Spinner Arrays to choose from
 local array1=("◐" "◓" "◑" "◒")
@@ -87,13 +73,13 @@ tput civis # Hide cursor and spinn
   done
 }
 
-guestfs() # Function to install the
+guestfs() # Function: install the libguestfs-tools
 {
     apt-get update
     apt-get install libguestfs-tools -y
 }
 
-getUbuntu() # Function to get a cloud image, Ubuntu as example, it's a .qcow2 fil with the extension img - we turn it back to .qcow2
+getUbuntu() # Function: get a cloud image, Ubuntu as example, it's a .qcow2 fil with the extension img - we turn it back to .qcow2
 {
     if [[ $mini == [yY] ]]; then
        if [[ -f "mini.qcow2" && $upd == [yY] ]]; then
@@ -118,15 +104,15 @@ createBase() # Function: create a fully loaded base ISO ### Set the Disk size ##
     # Add QEMU Guest Agent and any other packages you’d like in your base image.
     # libguestfs-tools has to be installed on the node.
     # Add or delete according to your needs
-    virt-customize --install qemu-guest-agent -a base.qcow2
-    virt-customize --install nano -a base.qcow2
-    virt-customize --install ncurses-term -a base.qcow2
-    virt-customize --install git -a base.qcow2
-    virt-customize --install unattended-upgrades -a base.qcow2
-    virt-customize --install fail2ban -a base.qcow2
-    virt-customize --install clamav -a base.qcow2
-    virt-customize --install clamav-demon -a base.qcow2
-    virt-customize --install mailutils -a base.qcow2
+    virt-customize --install qemu-guest-agent -a base.qcow2     # Highly recommended
+    virt-customize --install nano -a base.qcow2                 # I like it
+    virt-customize --install ncurses-term -a base.qcow2         # needed for terminals
+    virt-customize --install git -a base.qcow2                  # moustly needed 
+    virt-customize --install unattended-upgrades -a base.qcow2  # good feature
+    virt-customize --install fail2ban -a base.qcow2             # highly recommended
+    virt-customize --install clamav -a base.qcow2               # highly recommended
+    virt-customize --install clamav-demon -a base.qcow2         # linked to above
+    virt-customize --install mailutils -a base.qcow2            # might be needed
 }
 
 createVM() # Funtion: creat a VM or a Template
@@ -153,8 +139,8 @@ createVM() # Funtion: creat a VM or a Template
         # Add serial console, to be able to see console output!
         qm set $tno --serial0 socket --vga serial0
 
-        # Autostart vm at boot - default is 0
-        #qm set $tno --onboot 1
+        # Autostart vm at boot - default is 0 - Ususlly most VM's are allway running
+        qm set $tno --onboot 1
 
         # Use Qemu Guest Agent - default is 0
         qm set $tno --agent 1
@@ -184,7 +170,7 @@ createVM() # Funtion: creat a VM or a Template
 
 }
 
-createTemplate() # Create the template ex. 9000
+createTemplate() # Functin: Create the template ex. 9000
 {
     if [[ $tok == [yY] ]]; then
         qm template $tno
@@ -192,7 +178,7 @@ createTemplate() # Create the template ex. 9000
     fi
 }
 
-createClones() #Cloning the template
+createClones() # Functin: Cloning the template
 {
     if [[ $ctno -gt 0 ]]; then
         x=0
@@ -221,7 +207,7 @@ echo ""
 echo -e "\e[1;33mStart the configuration\e[0m"
 read -rp "  Install the libguestfs-tools Now  [y/N] : " gfs
 echo ""
-echo -e "\e[1;35m Creating the Base Image from a Cloud-Image\e[0m"
+echo -e "\e[1;35m Creating the Base Image from a Cloud image\e[0m"
 read -rp "  - Change to minimal Ubuntu      [y/N] : " mini
 read -rp "    - Use existing ISO-image      [y/N] : " upd
 read -rp "    - Disk size (8, 16 or 32G) e.g   8G : " ds
@@ -249,7 +235,7 @@ if [[ $tok == [yY] ]]; then
         else
            xz=$(($fcno + $ctno))
         fi
-        read -rp "    - name of clone's Pod1 to Pod$ctno     : " cname
+        read -rp "    - name of clone's pod1 to pod$ctno     : " cname
         echo -e "\e[1;33m  Creating Template with ID $tno, $ds"
         echo "    - creating cloned VM's $fcno - $xz"
         y=1
