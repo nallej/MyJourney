@@ -13,6 +13,8 @@
 #  V.3 Created by Nalle Juslén 30.5.2023                                      #
 #    - revison 31.5.2023, 1.6.2023, 12.10.2023                                #
 #                                                                             #
+#  V.4 is soon to be released                                                 #
+#                                                                             #
 # For more info see: https://pve.proxmox.com/pve-docs/qm.conf.5.html          #
 # Date format and >>>> ---- <<<< **** for easy sorting                        #
 #-----------------------------------------------------------------------------#
@@ -111,7 +113,7 @@ createBase() # Function: create a fully loaded base ISO ### Set the Disk size ##
     virt-customize --install unattended-upgrades -a base.qcow2  # good feature
     virt-customize --install fail2ban -a base.qcow2             # highly recommended
     virt-customize --install clamav -a base.qcow2               # highly recommended
-    virt-customize --install clamav-demon -a base.qcow2         # linked to above
+    virt-customize --install clamav-daemon -a base.qcow2         # linked to above
     virt-customize --install mailutils -a base.qcow2            # might be needed
 }
 
