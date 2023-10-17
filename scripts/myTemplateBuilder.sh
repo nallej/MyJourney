@@ -37,7 +37,7 @@
 # This script generate a workin VM or a Template or a set of VMs 
 # The functionallity is detemend by your Y/N answers 
 
-# Functions ==================================================================#
+# Global Functions ===========================================================#
 
 useColors() # Function: define colors to be used
 {
@@ -78,7 +78,7 @@ tput civis # Hide cursor and spinn
   done
 }
 
-# Local Functionas ========================================#
+# Local Functions =========================================#
 
 guestfs() # Function: install the libguestfs-tools
 {
@@ -123,7 +123,8 @@ createBase() # Function: create a fully loaded base ISO ### Set the Disk size ##
     if [[ $o7 == [yY] ]]; then virt-customize -a base.qcow2 --install clamav, clamav-daemon ; fi # o6 highly recommended
     if [[ $o9 == [yY] ]]; then virt-customize -a base.qcow2 --install mailutils ; fi             # o7 might be needed
     if [[ $o8 == [yY] ]]; then
-       virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get install wget curl containerd software-properties-common'
+       virt-customize -a base.qcow2 --firstboot-command 'sudo apt update'
+       virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get install containerd curl software-properties-common'
        virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update'
        virt-customize -a base.qcow2 --firstboot-command 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg'
        virt-customize -a base.qcow2 --firstboot-command 'echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list'
