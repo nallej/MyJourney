@@ -124,7 +124,7 @@ createBase() # Function: create a fully loaded base ISO ### Set the Disk size ##
     if [[ $o9 == [yY] ]]; then virt-customize -a base.qcow2 --install mailutils ; fi             # o7 might be needed
     if [[ $o8 == [yY] ]]; then
        virt-customize -a base.qcow2 --firstboot-command 'sudo apt update'
-       virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get install containerd curl software-properties-common'
+       virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get install -y containerd curl software-properties-common'
        virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update'
        virt-customize -a base.qcow2 --firstboot-command 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg'
        virt-customize -a base.qcow2 --firstboot-command 'echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list'
@@ -136,6 +136,9 @@ createBase() # Function: create a fully loaded base ISO ### Set the Disk size ##
        virt-customize -a base.qcow2 --firstboot-command 'sed -i "s/^\( *SystemdCgroup = \)false/\1true/" /etc/containerd/config.toml'
        virt-customize -a base.qcow2 --firstboot-command 'sed -i -e "/#net.ipv4.ip_forward=1/c\net.ipv4.ip_forward=1" etc/sysctl.conf'
        virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update && sudo apt install -y kubeadm kubectl kubelet'
+       virt-customize -a base.qcow2 --firstboot-command 'sudo truncate -s 0 /etc/machine-id'
+       virt-customize -a base.qcow2 --firstboot-command 'sudo rm /var/lib/dbus/machine-id'
+       virt-customize -a base.qcow2 --firstboot-command 'sudo ln -s /etc/machine-id /var/lib'
     fi
 }    
 
