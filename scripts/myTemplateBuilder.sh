@@ -3,7 +3,7 @@
 # myTempBuilder.sh
 # Part of the MyJourney project @ homelab.casaursus.net
 # - https://homelab.casaursus.net/proxmox-automation  
-# - https://homelab.casaursus.net//setting-up-kubernetes-k8s
+# - https://homelab.casaursus.net/setting-up-kubernetes-k8s
 #
 # Created by Nalle Juslén version 1.0 29.11.2022, v. 1.1 1.12.2022
 #   version 2.0 4.1.2023, v. 2.1 9.1.2023, v. 2.2 29.1.2023
