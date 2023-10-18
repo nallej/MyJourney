@@ -2,7 +2,7 @@
 
 #-----------------------------------------------------------------------------#
 #  myTempBuilder.sh for Ubuntu 22.04 Servers                                  #
-#  Part of the MyJourney project @ homelab.casaursus.net                      #
+#  Part of the MyJourney project @ homelab.casaursus.net/proxmox-automation   #
 #                                                                             #
 #  V.1 Created by Nalle Juslén 29.11.2022                                     #
 #    -review 1.12.2022                                                        #
@@ -13,7 +13,7 @@
 #  V.3 Created by Nalle Juslén 30.5.2023                                      #
 #    - revison 31.5.2023, 1.6.2023, 12.10.2023                                #
 #                                                                             #
-#  V.4 is soon to be released                                                 #
+#  V.4 is released  See the scripts section                                   #
 #                                                                             #
 # For more info see: https://pve.proxmox.com/pve-docs/qm.conf.5.html          #
 # Date format and >>>> ---- <<<< **** for easy sorting                        #
@@ -21,7 +21,7 @@
 
 # Install this script by:
 #  - open a terminal into the Proxmox node as root
-#  - run wget://https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh
+#  - run wget://https://raw.githubusercontent.com/nallej/MyJourney/main/scripts/myTemplateBuilder.sh
 #  - chmod +x myTemplateBuilder.sh
 #
 
