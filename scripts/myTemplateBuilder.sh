@@ -229,14 +229,15 @@ createClones() # Function: Cloning the template
 }
 
 # Code Section ===============================================================#
-
 useColors        # Use color codes
 clear            # Clear the screan
 #Init the log
 echo ">>>> Started the Install  @ $(date +"%F %T") ****  ****" > ~/installMTB.log
+printf ${blub}
 c-info
 sleep 2
 # Main Script ================================================================#
+printf ${yelb}
 header
 # Main menu ------------------------------------------------------------------#
 printf ${mag}" This script will create Templates and or VM's for your node."${end}
