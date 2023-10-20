@@ -20,3 +20,5 @@ And also the personal bash prompt:<br>`wget https://raw.githubusercontent.com/na
 
 
 Automate template creation. Get it to yor node(s):<br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh`
+
+<sub><div align="center"> Proxmox® is a registered trademark of Proxmox Server Solutions GmbH. </div></sub>
