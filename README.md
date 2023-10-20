@@ -5,9 +5,10 @@ To host the Docker Compose files for the blog on homelab.casaursus.net
 My newest scripts will be found in the **SCRIPTS** section
 - My new Template builder script can be or pulled by git or downloaded from <br>
 https://raw.githubusercontent.com/nallej/MyJourney/main/scripts/myTemplateBuilder.sh?ref=homelab.casaursus.net
+- It automate template creation for VMs and K8s clusters
 
 
-### Older scrips
+### Other scripts
 New setup script myVMsetup is recommended over the 3 part scripts.
 Get it to your VM pull: <br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/myVMsetup.sh`
 
@@ -26,6 +27,5 @@ Add to or change the bash commands:<br>`wget https://raw.githubusercontent.com/n
 And also the personal bash prompt:<br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/.bash_prompt`
 
 
-Automate template creation. Get it to yor node(s):<br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh`
 # 
 <sub><div align="center"> Proxmox® is a registered trademark of Proxmox Server Solutions GmbH. </div></sub>
