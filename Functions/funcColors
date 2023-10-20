@@ -8,6 +8,8 @@ useColors() # Function: define colors to be used
     mag=$'\e[35m'; magb=$'\e[1;35m' # call as magenta $mag as bold magenta $magb
     cyn=$'\e[36m'; cynb=$'\e[1;36m' # call as cyan $cyn as cyan bold $cynb
     end=$'\e[0m'
+    cmOK="${grnb}✓${end}"
+    cmNok="${redb}✗${end}"
 
     # Use them to print with colours: 
     # printf "%s\n" "Text in white ${blu}blue${end}, white and ${mag}magenta${end}."
