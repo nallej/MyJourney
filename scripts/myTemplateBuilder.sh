@@ -1,22 +1,5 @@
 #!/bin/bash
 
-# myTempBuilder.sh
-# Part of the MyJourney project @ homelab.casaursus.net
-# - https://homelab.casaursus.net/proxmox-automation  
-# - https://homelab.casaursus.net/setting-up-kubernetes-k8s
-#
-# Created by Nalle Juslén version 1.0 29.11.2022, v. 1.1 1.12.2022
-#   version 2.0 4.1.2023, v. 2.1 9.1.2023, v. 2.2 29.1.2023
-#   version 3.0 30.5.2023, v. 3.1 31.5.2023, v. 3.2 1.6.2023, v. 3.3 12.10.2023
-#   version 4.0 12.10.2023
-#
-# Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
-# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-#
-# This is free software; you are free to change and redistribute it.
-# There is NO WARRANTY, to the extent permitted by law.
-#
-
 #-----------------------------------------------------------------------------#
 # For more info see: https://pve.proxmox.com/pve-docs/qm.conf.5.html          #
 # Date format and >>>> ---- <<<< **** for easy sorting                        #
@@ -40,6 +23,43 @@
 # The functionallity is detemend by your Y/N answers 
 
 # Global Functions ===========================================================#
+
+copyright-info() {
+  clear
+  cat <<"EOF"
+
+  Copyright (c) 2021-2023 CasaUrsus
+  Author: nallej (CasaUrsus)
+  License: MIT
+  https://github.com/nallej/MyJourney/raw/main/LICENSE
+  
+  myTempBuilder.sh
+  Part of the MyJourney project @ homelab.casaursus.net
+  - https://homelab.casaursus.net/proxmox-automation  
+  - https://homelab.casaursus.net/setting-up-kubernetes-k8s
+
+    Version History:
+    Version 1.0 29.11.2022  v1.1 01.12.2022
+    version 2.0 04.01.2023  v2.1 09.01.2023  v2.2 29.01.2023
+    version 3.0 30.05.2023  v3.1 31.05.2023  v3.2 01.06.2023  v3.3 12.10.2023
+    version 4.0 12.10.2023
+  
+EOF
+}
+
+header() {
+  clear
+  cat <<"EOF"
+
+    ____                _   _
+   / ___|__ _ ___  __ _| | | |_ __ ___ _   _ ___
+  | |   / _` / __|/ _` | | | | '__/ __| | | / __|
+  | |__| (_| \__ \ (_| | |_| | |  \__ \ |_| \__ \
+   \____\__,_|___/\__,_|\___/|_|  |___/\__,_|___/
+
+  
+EOF
+}
 
 useColors() # Function: define colors to be used
 {
@@ -88,7 +108,7 @@ guestfs() # Function: install the libguestfs-tools
     apt-get install -y libguestfs-tools
 }
 
-getUbuntu() # Function: get a Cloud Image, Ubuntu as example, CIs are allway up to date 
+getUbuntu() # Function: get a Cloud Image, Ubuntu as example, CIs are allway up to date
 # It's a .qcow2 fil with the extension .img - we turn it back to .qcow2
 {
     if [[ $mini == [yY] ]]; then
@@ -117,9 +137,9 @@ createBase() # Function: create a fully loaded base ISO ### Set the Disk size ##
 {
     qemu-img resize base.qcow2 $ds #16G is typical - Resize the disk to your needs, 8 - 32G is normal
 
-    if [[ $o1 == [yY] ]]; then virt-customize -a base.qcow2 --install qemu-guest-agent ; fi      # o1 Highly recommended    
+    if [[ $o1 == [yY] ]]; then virt-customize -a base.qcow2 --install qemu-guest-agent ; fi      # o1 Highly recommended
     if [[ $o2 == [yY] ]]; then virt-customize -a base.qcow2 --install nano, ncurses-term ; fi    # o2 I like it
-    if [[ $o4 == [yY] ]]; then virt-customize -a base.qcow2 --install git ; fi                   # o3 moustly needed 
+    if [[ $o4 == [yY] ]]; then virt-customize -a base.qcow2 --install git ; fi                   # o3 moustly needed
     if [[ $o5 == [yY] ]]; then virt-customize -a base.qcow2 --install unattended-upgrades ; fi   # o4 good feature
     if [[ $o6 == [yY] ]]; then virt-customize -a base.qcow2 --install fail2ban ; fi              # o5 highly recommended
     if [[ $o7 == [yY] ]]; then virt-customize -a base.qcow2 --install clamav, clamav-daemon ; fi # o6 highly recommended
@@ -142,7 +162,7 @@ createBase() # Function: create a fully loaded base ISO ### Set the Disk size ##
        virt-customize -a base.qcow2 --firstboot-command 'sudo rm /var/lib/dbus/machine-id'
        virt-customize -a base.qcow2 --firstboot-command 'sudo ln -s /etc/machine-id /var/lib'
     fi
-}    
+}
 
 createVM() # Funtion: creat a VM or a Template using a CI #### EDIT THE DEFAULTS ####
 {
@@ -214,13 +234,14 @@ useColors        # Use color codes
 clear            # Clear the screan
 #Init the log
 echo ">>>> Started the Install  @ $(date +"%F %T") ****  ****" > ~/installMTB.log
-
+c-info
+sleep 2
 # Main Script ================================================================#
-
+header
 # Main menu ------------------------------------------------------------------#
 printf ${mag}" This script will create Templates and or VM's for your node."${end}
 echo " "
-echo -e " ${redb}NOTE${end} - libguestfs-tools is needed. Pls installe it on the this node"
+echo -e " ${redb}NOTE${end} - libguestfs-tools is needed. Please install it on the this node"
 echo -e "${cyn}"
 echo "  Remember to edit the script before executing: "
 echo "    - base settings are 1 core and 1024M RAM"
