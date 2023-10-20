@@ -3,8 +3,11 @@ To host the Docker Compose files for the blog on homelab.casaursus.net
 
 ## Newest scripts 
 My newest scripts will be found in the **SCRIPTS** section
+- My new Template builder script can be or pulled by git or downloaded from <br>
+https://raw.githubusercontent.com/nallej/MyJourney/main/scripts/myTemplateBuilder.sh?ref=homelab.casaursus.net
 
 
+### Older scrips
 New setup script myVMsetup is recommended over the 3 part scripts.
 Get it to your VM pull: <br>`wget https://raw.githubusercontent.com/nallej/MyJourney/main/myVMsetup.sh`
 
