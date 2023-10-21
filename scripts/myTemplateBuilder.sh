@@ -109,7 +109,7 @@ guestfs() # Function: install the libguestfs-tools
 }
 
 getUbuntu() # Function: get a Cloud Image, Ubuntu as example, CIs are allway up to date
-# It's a .qcow2 fil with the extension .img - we turn it back to .qcow2
+# It's a QCow2 fil with the extension .img - we turn it back to .qcow2
 {
     if [[ $mini == [yY] ]]; then
        if [[ -f "mini.qcow2" && $upd == [yY] ]]; then
@@ -122,7 +122,7 @@ getUbuntu() # Function: get a Cloud Image, Ubuntu as example, CIs are allway up 
           if [[ -f std.qcow2 && $upd == [yY] ]]; then
              cp std.qcow2 base.qcow2
           else
-         wget -O std.qcow2 https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
+         wget -O std.qcow2 https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img
          cp std.qcow2 base.qcow2
           fi
     fi
