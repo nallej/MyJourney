@@ -24,7 +24,7 @@
 
 # Global Functions ===========================================================#
 
-copyright-info() {
+c-info() {
   clear
   cat <<"EOF"
 
