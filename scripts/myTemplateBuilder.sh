@@ -7,7 +7,7 @@
 
 # Install this script by:
 #  - open a terminal in the Proxmox node as root
-#  - run wget://https://raw.githubusercontent.com/nallej/MyJourney/main/scripts/myTemplateBuilder.sh
+#  - run wget://https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh
 #  - chmod +x myTemplateBuilder.sh
 #
 
@@ -16,7 +16,8 @@
 #  - # of cores
 #  - what apps do you need
 #  - VM settings
-#  or upload your puplic key to use for auto creation to:
+#  - place of key
+#    or upload your puplic key to use for auto creation to:
 #  - ~/.ssh/my_key
 
 # This script generate a workin VM or a Template or a set of VMs 
@@ -109,7 +110,7 @@ guestfs() # Function: install the libguestfs-tools
 }
 
 getUbuntu() # Function: get a Cloud Image, Ubuntu as example, CIs are allway up to date
-# It's a QCow2 fil with the extension .img - we turn it back to .qcow2
+            # It's a .qcow2 fil with the extension .img - we turn it back to .qcow2
 {
     if [[ $mini == [yY] ]]; then
        if [[ -f "mini.qcow2" && $upd == [yY] ]]; then
@@ -136,53 +137,57 @@ createBase() # Function: create a fully loaded base ISO ### Set the Disk size ##
              # virt-customize -a base.qcow2 --firstboot.sh
 {
     qemu-img resize base.qcow2 $ds #16G is typical - Resize the disk to your needs, 8 - 32G is normal
-
-    if [[ $o1 == [yY] ]]; then virt-customize -a base.qcow2 --install qemu-guest-agent ; fi      # o1 Highly recommended
-    if [[ $o2 == [yY] ]]; then virt-customize -a base.qcow2 --install nano, ncurses-term ; fi    # o2 I like it
-    if [[ $o4 == [yY] ]]; then virt-customize -a base.qcow2 --install git ; fi                   # o3 moustly needed
-    if [[ $o5 == [yY] ]]; then virt-customize -a base.qcow2 --install unattended-upgrades ; fi   # o4 good feature
-    if [[ $o6 == [yY] ]]; then virt-customize -a base.qcow2 --install fail2ban ; fi              # o5 highly recommended
-    if [[ $o7 == [yY] ]]; then virt-customize -a base.qcow2 --install clamav, clamav-daemon ; fi # o6 highly recommended
-    if [[ $o9 == [yY] ]]; then virt-customize -a base.qcow2 --install mailutils ; fi             # o7 might be needed
+    # Add QEMU Guest Agent and any other packages you’d like in your base image.
+    # libguestfs-tools has to be installed on the node.
+    # Add or delete according to your needs
+    if [[ $o1 == [yY] ]]; then virt-customize -a base.qcow2 --install qemu-guest-agent ; fi     # o1 Highly recommended
+    if [[ $o2 == [yY] ]]; then virt-customize -a base.qcow2 --install nano,ncurses-term ; fi    # o2 I like it
+    if [[ $o3 == [yY] ]]; then virt-customize -a base.qcow2 --install git ; fi                  # o3 moustly needed
+    if [[ $o4 == [yY] ]]; then virt-customize -a base.qcow2 --install unattended-upgrades ; fi  # o4 good feature
+    if [[ $o5 == [yY] ]]; then virt-customize -a base.qcow2 --install fail2ban ; fi             # o5 highly recommended
+    if [[ $o6 == [yY] ]]; then virt-customize -a base.qcow2 --install clamav,clamav-daemon ; fi # o6 highly recommended
+    if [[ $o7 == [yY] ]]; then virt-customize --install mailutils -a base.qcow2; fi             # o7 might be needed
     if [[ $o8 == [yY] ]]; then
-       virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update' 
-       virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get install -y wget curl containerd software-properties-common'
-       virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update'
-       virt-customize -a base.qcow2 --firstboot-command 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg'
-       virt-customize -a base.qcow2 --firstboot-command 'echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list'
-       #virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update && sudo apt-get upgrade'
-       virt-customize -a base.qcow2 --firstboot-command 'sudo swapoff -a'
-       virt-customize -a base.qcow2 --mkdir /etc/containerd
-       virt-customize -a base.qcow2 --firstboot-command 'containerd config default | sudo tee /etc/containerd/config.toml'
-       virt-customize -a base.qcow2 --firstboot-command 'echo "br_netfilter" > /etc/modules-load.d/k8s.conf'
-       virt-customize -a base.qcow2 --firstboot-command 'sed -i "s/^\( *SystemdCgroup = \)false/\1true/" /etc/containerd/config.toml'
-       virt-customize -a base.qcow2 --firstboot-command 'sed -i -e "/#net.ipv4.ip_forward=1/c\net.ipv4.ip_forward=1" etc/sysctl.conf'
-       virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update && sudo apt install -y kubeadm kubectl kubelet'
-       virt-customize -a base.qcow2 --firstboot-command 'sudo truncate -s 0 /etc/machine-id'
-       virt-customize -a base.qcow2 --firstboot-command 'sudo rm /var/lib/dbus/machine-id'
-       virt-customize -a base.qcow2 --firstboot-command 'sudo ln -s /etc/machine-id /var/lib'
+        #virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update'
+        virt-customize -a base.qcow2 --install containerd,curl,software-properties-common
+#        virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get install software-properties-common'
+        virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update'
+        virt-customize -a base.qcow2 --firstboot-command 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg'
+        virt-customize -a base.qcow2 --firstboot-command 'echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list'
+        #virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update && sudo apt-get upgrade'
+        virt-customize -a base.qcow2 --firstboot-command 'sudo swapoff -a'
+        virt-customize -a base.qcow2 --mkdir /etc/containerd
+        virt-customize -a base.qcow2 --firstboot-command 'containerd config default | sudo tee /etc/containerd/config.toml'
+        virt-customize -a base.qcow2 --firstboot-command 'echo "br_netfilter" > /etc/modules-load.d/k8s.conf'
+        virt-customize -a base.qcow2 --firstboot-command 'sed -i "s/^\( *SystemdCgroup = \)false/\1true/" /etc/containerd/config.toml'
+        virt-customize -a base.qcow2 --firstboot-command 'sed -i -e "/#net.ipv4.ip_forward=1/c\net.ipv4.ip_forward=1" etc/sysctl.conf'
+        virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update && sudo apt install -y kubeadm kubectl kubelet'
+        virt-customize -a base.qcow2 --firstboot-command 'sudo truncate -s 0 /etc/machine-id'
+        virt-customize -a base.qcow2 --firstboot-command 'sudo rm /var/lib/dbus/machine-id'
+        virt-customize -a base.qcow2 --firstboot-command 'sudo ln -s /etc/machine-id /var/lib'
     fi
 }
 
 createVM() # Funtion: creat a VM or a Template using a CI #### EDIT THE DEFAULTS ####
 {
         # Choose RAM, Disk size, # of cores, what bridge to use. virtio is mandatory
-        if [[ $mini == [yY] ]] ; then
-                if [[ $tname < ' ' ]]; then tname='ubuntu-mini' ; fi
+        if [[ $mini == [yY] ]]; then
+                if [[ $tname < ' ' ]]; then tname='ubuntu-mini'; fi
           else
-                if [[ $tname < ' ' ]]; then tname='ubuntu-std' ; fi
+                if [[ $tname < ' ' ]]; then tname='ubuntu-std'; fi
         fi
-        # if [[ $tno <  1 ]]; then tno=8000 ; fi
-        # if [[ $ms < 1 ]]; then ms=1024 ; fi
-        # if [[ $cc < 1 ]]; then cc=1 ; fi
-        # if [[ $vmbr  ]]; then vmbr=vmbr2 ; fi
-        # if [[ $storage < ' ' ]]; then storage=tank; fi
+#        if [[ $tno  < 1 ]]; then tno=8000; fi
+#        if [[ $ms   < 1 ]]; then ms=1024; fi
+#        if [[ $cc   < 1 ]]; then cc=1; fi
+#        if [[ $vmbr < 9 ]]; then vmbr="vmbr2"; fi
+#        if [[ $storage < ' ' ]]; then storage="tank"; fi
 
         # Creare the base image ----------------------------------------------#
-        ibase=$tno --memory $ms --core $cc --name $tname --net0 virtio,bridge=$vmbr
-        if [[ tag > 0 ]]; then ibase="{$ibase},tag=$vlan"; fi
-        qm create $ibase
 
+        ibase="$tno --memory $ms --core $cc --name $tname --net0 virtio,bridge=$vmbr"
+        if [[ tag > 0 ]]; then ibase="${ibase},tag=$vlan"; fi
+	    qm create $ibase
+	    echo "Base created: $ibase"
         # Set options --------------------------------------------------------#
 
         qm importdisk $tno base.qcow2 $storage                                # Import the disc to the base of the template. Where to put the VM local-lvm
@@ -231,6 +236,7 @@ createClones() # Function: Cloning the template
 # Code Section ===============================================================#
 useColors        # Use color codes
 clear            # Clear the screan
+
 #Init the log
 echo ">>>> Started the Install  @ $(date +"%F %T") ****  ****" > ~/installMTB.log
 printf ${blub}
@@ -240,72 +246,67 @@ sleep 2
 printf ${yelb}
 header
 # Main menu ------------------------------------------------------------------#
-printf ${mag}" This script will create Templates and or VM's for your node."${end}
+echo -e "${magb}This script will create Templates and or VM's on your node.${end}"
 echo " "
-echo -e " ${redb}NOTE${end} - libguestfs-tools is needed. Please install it on the this node"
+echo -e "${redb}NOTE${end} - libguestfs-tools is needed. Pls installe it on this node"
 echo -e "${cyn}"
-echo "  Remember to edit the script before executing: "
-echo "    - base settings are 1 core and 1024M RAM"
-echo "    - normal disk size for a VM is 8-16G or sometimes 32G"
-echo "    - Enter Disk size as ${redb}8G${end}${cyn} NOT 8 !"
-echo -e "    - OS = L26, IP = DHCP, QGA = on, Autostart = off ${end}"
-echo ""
-echo -e " ${yelb}Start the configuration${end}"
-read -rp "    Install the libguestfs-tools Now  [y/N] : " gfs
-echo -e " ${magb}  Creating the Base Image from a Cloud image${end}"
-read -rp "    Use existing ISO-image        [y/N] : " upd
-read -rp "     - Use a minimal Ubuntu image     [y/N] : " mini
-read -rp "     - Disk size (8, 16 or 32G) e.g     8G : " ds
-read -rp "     - Memory (1024 is plenty)  e.g.  1024 : " ms
-read -rp "     - Core count (1 is plenty) e.g.     1 : " cc
-read -rp "     - Set vmbr to be used      e.g. vmbr2 : " vmbr
-read -rp "       - Set vlan tag           e.g.  0=no : " vlan
-echo -e " ${yelb}  Options:${end}"
-read -rp "     +  qemu-guest-agent             [y/N] : " o1
-read -rp "     +  nano editor, ncurses-term    [y/N] : " o2
-read -rp "     +  git                          [y/N] : " o3
-read -rp "     +  unattended-upgrades          [y/N] : " o4
-read -rp "     +  fail2ban                     [y/N] : " o5
-read -rp "     +  clamav, clamav-daemon        [y/N] : " o6
-read -rp "     +  mailutils                    [y/N] : " o7
-read -rp "     +  make K8s settings            [y/N] : " o8
-#read -rp "     +  containerd                   [y/N] : " o9
-#read -rp "     +  Docker-ce                    [y/N] : " o10
-#read -rp "     +  Portainer ce                 [y/N] : " o11
-echo -e " ${magb}  Settings for the VM or Template + VMs${end}"
-read -rp "   - Set VM / Template ID       e.g.  9000 : " tno
-read -rp "     - Set VM / Template name   e.g.  mini : " tname
-read -rp "     - Storage to use       e.g. local-zfs : " storage
-read -rp "   - Create with CI user    e.g.     admin : " ciu
-#echo -n "     - create with CI user password     : "
-#ead -sp "     - create with CI user password ****** : " cip
+echo " Remember to edit the script before executing: "
+echo "   - basic settings are 1 core and 1024M RAM"
+echo "   - normal disk size for a VM is 8-16G or sometimes 32G"
+echo "   - Enter Disk size as ${redb}8G${end}${cyn} NOT 8 !"
+echo -e "   - OS = L26, IP = DHCP, QGA = on, Autostart = off ${end}"
+echo " "
+echo -e "${yelb}Start the configuration${end}"
+read -rp "  Install the libguestfs-tools Now  [y/N] : " gfs
+echo -e "${yelb}    options:${end}"
+read -rp "    -  qemu-guest-agent             [y/N] : " o1
+read -rp "    -  nano editor, ncurses-term    [y/N] : " o2
+read -rp "    -  git                          [y/N] : " o3
+read -rp "    -  unattended-upgrades          [y/N] : " o4
+read -rp "    -  fail2ban                     [y/N] : " o5
+read -rp "    -  clamav, clamav-daemon        [y/N] : " o6
+read -rp "    -  mailutils                    [y/N] : " o7
+read -rp "    -  make K8s settings            [y/N] : " o8
+echo -e "${magb}  Creating the Base Image from a Cloud image${end}"
+read -rp "  - Use the minimal Ubuntu image    [y/N] : " mini
+read -rp "    - Use existing ISO-image        [y/N] : " upd
+read -rp "    - Disk size (8, 16 or 32G) e.g     8G : " ds
+read -rp "   - Memory (1024 is plenty)  e.g.  1024 : " ms
+read -rp "    - Core count (1 is plenty) e.g.     1 : " cc
+read -rp "    - Set vmbr to be used      e.g. vmbr2 : " vmbr
+read -rp "      - Set vlan tag           e.g.  0=no : " vlan
+echo -e "${magb}  Settings for the VM or Template and VMs${end}"
+read -rp "  - Set VM or Template ID    e.g.    9000 : " tno
+read -rp "  - Set VM or Template name  e.g.    mini : " tname
+read -rp "  - Storage to use VM      e.g. local-zfs : " storage
+read -rp "  - Create with CI user    e.g.     admin : " ciu
 echo -n "    - "
 cip="$(systemd-ask-password "Enter the password:")"
-read -rp "     - set key from ~/.ssh/my_key    [y/N] : " my_key
-echo -e " ${magb}  Settings for Templates and VMs${end}"
-read -rp "   - Create as a Template id $tno    [y/N] : " tok
+read -rp "    - set key from ~/.ssh/my_key    [y/N] : " my_key
+echo -e "${magb}  Settings for Template and VMs${end}"
+read -rp "  - Create as a Template id $tno    [y/N] : " tok
 
 if [[ $tok == [yY] ]]; then
-    read -rp "   - Create # clones of $tno    0=no clones: " ctno
+    read -rp "  - Create # clones of $tno    0=no clones: " ctno
     if [[ $ctno -gt 0 ]]; then
-        read -rp "     - ID number for first clone e.g. 5000 : " fcno
+        read -rp "    - ID number for first clone      5000 : " fcno
         if [ $ctno = 1 ]; then
            xz=$fcno
         else
            xz=$(($fcno + $ctno))
         fi
-        read -rp "     - name of clone's node1 to node$ctno       : " cname
-        echo -e " ${yelb}  Creating Template with ID $tno, $ds"
-        echo "     - creating cloned VM's $fcno - $xz"
+        read -rp "    - name of clone's node1 to node$ctno       : " cname
+        echo -e "${yelb}  Creating Template with ID $tno, $ds"
+        echo "    - creating cloned VM's $fcno - $xz"
         y=1
-        echo -e "     - named as  $cname$y - $cname$ctno${end}"
+        echo -e "    - named as  $cname$y - $cname$ctno${end}"
     fi
 else
     echo ""
-    echo -e "${yelb}   - Creating a VM${end} $tname ${yelb}with ID${end} $tno ${yelb}Disk ${end}$ds"
+    echo -e "${yelb}  - Creating a VM${end} $tname ${yelb}with ID${end} $tno ${yelb}Disk ${end}$ds"
 fi
 echo ""
-read -rp " ${redb}Start the Install [y/N] : ${end}" ok
+read -rp "${redb}Start the Install [y/N] : ${end}" ok
 echo ""
 # end of menu ----------------------------------------------------------------#
 
@@ -358,7 +359,7 @@ if [[ $ok == [yY] ]]; then
         echo "---- * Clones created          @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
     fi
     # End of Execute Functions------------------------------------------------#
-    echo "<<<< Installation ended OK     @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
+    echo "<<<< Install ended OK     @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
 
     # Terminate the Spinner
     kill "$spinner_pid"
@@ -399,4 +400,3 @@ tput cnorm
 
 read -rp "Print the log [Y/n] : " pl
 if [[ $pl == [yY] ]]; then cat ~/installMTB.log; fi
-
