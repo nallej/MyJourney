@@ -335,7 +335,7 @@ if [[ $ok == [yY] ]]; then
     (createBase >> ~/installMTB.log 2>&1)
     printf "\b"
     echo "${grn} ✔${end}  base.qcow2 image created"
-    echo "---- * base.qcov2 $ds done     @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
+    echo "---- * base.qcow2 $ds done     @ $(date +"%F %T") ****  ****" >> ~/installMTB.log
 
     echo "---->> VM start create $(date +"%F %T") ****  ****" >> ~/installMTB.log
     (createVM >> ~/installMTB.log 2>&1)
