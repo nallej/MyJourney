@@ -42,8 +42,8 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 ## IP related
-#### 192 for 192.168.1.0 - Use your subnet here
-alias myip="echo My LAN-ip: $(ip address | grep 192 | awk '{print $2}')"
+#### Use your subnet mask here /24 
+alias myip="echo My LAN-ip: $(ip address | grep /24 | awk '{print $2}')"
 #alias lanip="ip a | grep inet | awk '{print $2}' | cut -f2 -d:"
 #alias wanip='echo WanIp: $(curl ipinfo.io/ip)'
 #alias netspeed='sudo curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -'
