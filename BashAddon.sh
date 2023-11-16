@@ -18,7 +18,7 @@ echo "  Adding bash_aliases to bashrc"
 echo "[[ -f ~/.bash_aliases ]] && . ~/.bash_aliases" >> .bashrc
 echo ""
 echo "  Edit your new bash by nano .bash_aliases and make it yours"
-echo "    - change the IPfirst octet setting in [alias myip]"
+echo "    - change the IP mask if not /24 in [alias myip]"
 echo "    - add any alias you like"
 echo "    - comment out what you do not like"
 echo "    - exit from bat type q"
