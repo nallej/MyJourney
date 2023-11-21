@@ -1,6 +1,7 @@
 ---
 version: '3'
 # auto update containers
+# May cause interupts and other issues 
 services:
   watchtower:
     image: containrrr/watchtower
@@ -11,16 +12,12 @@ services:
       - WATCHTOWER_SCHEDULE=0 0 4 * * *
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_INCLUDE_STOPPED=true
-# - WATCHTOWER_POLL_INTERVAL=3600 # in sec. 24h = 86400
-
+    # - WATCHTOWER_POLL_INTERVAL=3600 # in sec. 24h = 86400
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
     networks:
       - pihalla 
 # networks to be used by service
 networks:
   pihalla:
     external: true
-
-...
