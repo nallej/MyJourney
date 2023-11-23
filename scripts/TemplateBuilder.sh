@@ -11,13 +11,16 @@
 # Version 5
 
 # Edit the script is very important, set these to use for auto creation:
-#  - set mini       = minimal Cloud Image
-#  - set std        = server Cloud Image
-#  - set admin      = admin user
-#  - set key_st     = name and addree of your puplic key like   - ~/.ssh/my_key
-#  - set passl      = minimi lenght of passwords
-#  - set logFILE    = name and addres to the logFILEile
-#  - set ISO path   = local or external path to ISO Storage
+#  - set miniFILE -LOCATION = minimal Cloud Image
+#  - set stdFILE -LOCATION  = server Cloud Image
+#  - set passwdLENGHT       = Minimi lenght of passwords
+#  - set admin              = admin user
+#  - set initPASSWD         = admin user password
+#  - showPASSWD             = Show Password in log true/false
+#  - set initKEY            = name and address of your puplic key like   - ~/.ssh/my_key
+#  - set testMODE           = Set to true for elevated privilidges in Testing / HomeLab mode
+#  - set logFILE            = name and address to the logFILEile
+#  - set ISO paths          = local or external path to ISO Storage
 
 # This script generate a workin VM or a Template or a set of VMs
 
@@ -35,70 +38,65 @@
   #       👍    👍     E D I T  t h i s  S E C T I O N      👍    👍       #
  #                                                                           #
 ###############################################################################
-
-
+#
 #------------------------------------------------------------------------------
 # 📂 Minimal Cloud Image - example Ubuntu 22.04. Just edit to use your favorite
-#------------------------------------------------------------------------------
-# File name
-    mini=ubuntu-22.04-minimal-cloudimg-amd64.img
-# Locaction of the file
-    miniFile="https://cloud-images.ubuntu.com/minimal/releases/jammy/release/$mini"
-#
+     # File name
+     miniFILE=ubuntu-22.04-minimal-cloudimg-amd64.img
+     # Locaction of the file
+     miniLOCATION="https://cloud-images.ubuntu.com/minimal/releases/jammy/release/$miniFILE"
 #------------------------------------------------------------------------------
 # 📂 Server Cloud Image - example Ubuntu 22.04. Just edit to use your favorite
+     # File name
+     #stdFILE=jammy-server-cloudimg-amd64-disk-kvm.img
+     stdFILE=jammy-server-cloudimg-amd64.img
+     # Locaction of the file
+     stdLOCATION="https://cloud-images.ubuntu.com/jammy/current/$stdFILE"
 #------------------------------------------------------------------------------
-# File name
-    #std=jammy-server-cloudimg-amd64-disk-kvm.img
-    std=jammy-server-cloudimg-amd64.img
-# Locaction of the file
-    stdFile="https://cloud-images.ubuntu.com/jammy/current/$std"
-#
+# 👤 Addmin user pre-fil
+     # 🔟 Create a long and complicated password
+     #    6 is a joke,  8 is something,  12 is semi ok,  16 is ok,  20 is good.
+     passwdLENGHT=20      #length of password
+     initADMIN=Administrator
+     initPASSWD=Pa$$w0rd
+     showPASSWD=false     # Show Password in log true/false
+     # 🔐 SSH Public Key or download it in the GUI into the cloud-init
+     initKEY=~/.ssh/my_key
 #------------------------------------------------------------------------------
-# 👤 Addmin user pre-fill
-    admin=Administrator
-    passwd=Pa$$w0rd
-    showPASSWD=false    # Show Password in log true/false
-#
-# 🔐 SSH Public Key or download it in the GUI into the cloud-init
-    key_st=~/.ssh/my_key
-#------------------------------------------------------------------------------    
-# 🔐 Add user to Docker Groupe - NOT recommended for production
-    test=y # Set to nN for elevated privilidges in Testing / HomeLab mode  
-#
-#------------------------------------------------------------------------------
-# 🔟 Create a long and complicated password
-#   6 is a joke,  8 is something,  12 is semi ok,  16 is ok,  20 is good.
-    passl=20 #length of password
-#
+     # 🔐 Add user to Docker Groupe - NOT recommended for production
+     testMODE=true # Set to true for elevated privilidges in Testing / HomeLab mode
 #------------------------------------------------------------------------------
 # 📑 Name of your LOG file
-    logFILE=~/install-TemplateBuilder.log
-#
+     logFILE=~/install-TemplateBuilder.log
 #------------------------------------------------------------------------------
 # 📂 Local and External PATHs to your ISO files,
-#
+     #Default Local Storage
+     pathISOlocal="/var/lib/vz/template/iso/"
+     nameISOlocal=local
+     # Default NFS if any
+     pathISONFS="/mnt/Sammiot/PVE/ISO/"
+     nameISONFS=ISO
+     # More defaults if needed
+     #pathISO1= < path >
+     #nameISO1= < name >
+     # More defaults if needed
+     #pathISO2= < path >
+     #nameISO2= < name >
+     # More defaults if needed
+     #pathISO3= < path >
+     #nameISO3= < name >
 #------------------------------------------------------------------------------
-#Default Local Storage
-    path_iso_local="/var/lib/vz/template/iso/"
-    name_iso_local=local
-# Default NFS if any
-    path_iso_NFS="/mnt/Sammiot/PVE/ISO/"
-    name_iso_NFS=ISO
-# More defaults if needed
-    #path_iso_1= < path >
-    #name_iso_1= < name >
-
-    #path_iso_2= < path >
-    #name_iso_2= < name >
-
-    #path_iso_3= < path >
-    #name_iso_3= < name >
-#
+# Other initialisation variables
+     initVMNO=8000                  # suggested VM numbre
+     initVMNAME=nfs-7               # suggested VM name
+     initTEMPLATENO=9000            # suggested Template number 
+     initTEMPLATENAME=ubuntu-mini   # suggested Template name
+     initNOCLONES=3                 # suggested how many Clones to create
+     initNO1STCLONE=5001            # suggested number for 1st Clone
+     initCLONENAME=node-            # suggested Clone namebas for e.g. node-1
 #------------------------------------------------------------------------------
-
-# End of Editable Section ====================================================#
-
+# E n d   o f   E d i t a b l e   S e c t i o n                               #
+#------------------------------------------------------------------------------
 
 ###############################################################################
  #                                                                           #
@@ -178,7 +176,7 @@ Author: nallej (CasaUrsus)\n \
 License: MIT  https://github.com/nallej/MyJourney/raw/main/LICENSE\n \
 This is Free and Open Sourse Software; you are free to change and redistribute it.\n \
 \nSee the LICENSE file or the link for details.\n \
- - There is NO WARRANTY, read the code befor using.\n \
+ - There is NO WARRANTY, read the code befor using it.\n \
  - Part of the My Journey Project @ homelab.casaursus.net"
 
 function header() { # print CasaUrsus. figlet -f standard CasaUrsus
@@ -213,10 +211,10 @@ function useColors() { # define colors to be used
     mag=$'\e[35m'; magb=$'\e[1;35m' # call as magenta $mag as bold magenta $magb
     cyn=$'\e[36m'; cynb=$'\e[1;36m' # call as cyan $cyn as cyan bold $cynb
     end=$'\e[0m'                    # End that color
-    okcm="${grnb}✔ ${end}"         # Green OK
-    nocm="${redb}✘ ${end}"         # Red NO
-    dlcm="${grnb}➟ ${end}"         # Indikate DownLoad
-    stcm="${cynb}➲ ${end}"         # STart of somthing
+    okcm="${grnb}✔ ${end}"          # Green OK
+    nocm="${redb}✘ ${end}"          # Red NO
+    dlcm="${grnb}➟ ${end}"          # Indikate DownLoad
+    stcm="${cynb}➲ ${end}"          # Start of somthing
     ccl="\\r\\033[K"                # Clear Current Line (carriage return + clear from cursor to EOL)
 
     #Use them to print with colours: printf "%s\n" "Text in white ${blu}blue${end}, white and ${mag}magenta${end}.
@@ -288,7 +286,7 @@ function askLicens() {
   else
       wget https://github.com/nallej/MyJourney/raw/main/LICENSE &> /dev/null
       echo "${blu}LICENSE file now in this directory.${end}" >> $logFILE
-      echo -e "\nTemplate Builder is Free and Open Sourse Software.\n  - There is NO WARRANTY, to the extent permitted by law.\n  - Part of the My Journey Project @ homelab.casaursus.net" > /etc/motd
+      echo -e "\nTemplate Builder is Free and Open Sourse Software.\n  - There is NO WARRANTY, read the code before using it.\n  - Part of the My Journey Project @ homelab.casaursus.net" > /etc/motd
     fi
 else
   echo "${red}⚠ User selected to Decline, exit status was $?. ⚠${end}" >> $logFILE
@@ -324,12 +322,12 @@ function dlFile() { # Download the Cloud Image
     local NAME    # Short name O
     case $TYPE in
         minimal)
-            fileISO=$miniFile
-            nameISO=$mini
+            fileISO=$miniLOCATION
+            nameISO=$miniFILE
             ;;
         server)
-            fileISO=$stdFile
-            nameISO=$std
+            fileISO=$stdLOCATION
+            nameISO=$stdFILE
             ;;
     esac
 
@@ -337,17 +335,17 @@ function dlFile() { # Download the Cloud Image
         local)
             pathISO="/var/lib/vz/template/iso/"
             ;;
-        $name_iso_NFS)
-            pathISO=path_iso_NFS
+        $nameISONFS)
+            pathISO=pathISONFS
             ;;
-        $name_iso_1)
-            pathISO=path_iso_1
+        $nameISO1)
+            pathISO=pathISO1
             ;;
-        $name_iso_2)
-            pathISO=path_iso_2
+        $nameISO2)
+            pathISO=pathISO2
             ;;
-        $name_iso_3)
-            pathISO=path_iso_3
+        $nameISO3)
+            pathISO=pathISO3
             ;;
     esac
     #dlNEW=(whiptail --backtitle "$backTEXT" --title "Re-DownLoad" --radiolist \
@@ -431,15 +429,15 @@ function setUSER() {
     # Set Cloid-init user
     ciUSER=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --inputbox \
       "\nCreate with CI user" \
-      10 48 $admin 3>&1 1>&2 2>&3)
+      10 48 $initADMIN 3>&1 1>&2 2>&3)
       echo "${cyn}     -  Cloud-init user: $ciUSER" >> $logFILE
 
     # Create a long and complicated password 6 is a joke 8 is something 12 is semi ok 16 is ok 20 is good
-    while [[ "$ciPASSWD" != "$ciPASSWD_repeat" || ${#ciPASSWD} -lt $passl ]]; do
+    while [[ "$ciPASSWD" != "$ciPASSWD_repeat" || ${#ciPASSWD} -lt $passwdLENGHT ]]; do
       ciPASSWD=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --passwordbox \
-        "\n${ciPASSWD_invalid}Please enter a password (6 chars min.): " 10 48 $passwd 3>&1 1>&2 2>&3)
+        "\n${ciPASSWD_invalid}Please enter a password ($passwdLENGHT chars min.): " 10 48 $initPASSWD 3>&1 1>&2 2>&3)
       ciPASSWD_repeat=$(whiptail  --backtitle "$backTEXT" --title "Create CI User" --passwordbox \
-        "\nPlease repeat the password: " 10 48 $passwd 3>&1 1>&2 2>&3)
+        "\nPlease repeat the password: " 10 48 $initPASSWD 3>&1 1>&2 2>&3)
       ciPASSWD_invalid="WARNING Password too short, or not matching! "
     done
     # Shoud NOT be used for production
@@ -450,7 +448,7 @@ function setUSER() {
     # Set Key name and address
     my_key=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --inputbox \
       "\nUsers SSH Public Key is: $my_key" \
-      10 48 $key_st 3>&1 1>&2 2>&3)
+      10 48 $initKEY 3>&1 1>&2 2>&3)
       echo "${cyn}     -  My key: $my_key" >> $logFILE
 
 }
@@ -501,7 +499,7 @@ while read -r ONOFF TAG ITEM; do
   OPTION_MENU+=("$TAG" "$ITEM " "$ONOFF")
 done < <(
   cat <<EOF
-ON Qemu-Guest-Agent
+ON Qemu-Guest-Agent Qemu-Guest-Agent
 ON nano editor and ncurses-term
 ON git Git Hub/Lab use
 OFF unattended-upgrades set to On
@@ -512,69 +510,118 @@ OFF Docker-CE Alpine
 OFF Dockge Docker Management
 OFF Portainer-CE Alpine
 OFF Agent Portainer Agent
-OFF Docker ﹩ license Docker-EE
-OFF Portainer-BE ﹩ license
-OFF K3s make K3s HA-Cluster TBA
-OFF K8s make K8s Cluster
-
+OFF Docker $ license Docker-EE
+OFF Portainer-BE $ license
+OFF K3s TBA a K3s HA-Cluster
+OFF K8s make a K8s Cluster
 EOF
 )
 OPTIONS=$(whiptail --backtitle "$backTEXT" --title "Options List" --checklist --separate-output \
-"\nSelect Options for the VM:\n" 20 $((LONGA + 30)) 12 "${OPTION_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
+"\nSelect Options for the VM:\n" 20 $((LONGA + 33)) 12 "${OPTION_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 [ -z "$OPTIONS" ] && {
   whiptail --backtitle "$backTEXT" --title "No Options Selected" --msgbox "It appears that no Options was selected" 10 68
 }
 
 if [ -z "$OPTIONS" ]; then
-  echo "${red}⚠ No option was selected (user hit Cancel or unselected all options)${end}" >> $logFILE
+    echo "${red}⚠ No option was selected (user hit Cancel or unselected all options)${end}" >> $logFILE
 else
-  echo "${cynb}   - User selected options:${end}" >> $logFILE
+    vc=""
+    echo "${cynb}   - User selected options:${end}" >> $logFILE
   for CHOICE in $OPTIONS; do
     case "$CHOICE" in
     "Qemu-Guest-Agent")
-      o1="y"
+        vc="$vc --install qemu-guest-agent"
+        echo "${cyn}-  qemu-guest-agent${end}" >> $logFILE
       ;;
     "nano")
-      o2="y"
+        vc="$vc --install nano"
+        vc="$vc --install ncurses-term"
+        echo "${cyn}-  nano editor, ncurses-term${end}" >> $logFILE
       ;;
     "git")
-      o3="y"
+        vc="$vc --install git"
+        echo "${cyn}-  git${end}" >> $logFILE
       ;;
     "unattended-upgrades")
-      o4="y"
+        vc="$vc --install unattended-upgrades"
+        echo "${cyn}-  unattended-upgrades${end}" >> $logFILE
       ;;
     "Fail2Ban")
-      o5="y"
+        vc="$vc --install fail2ban"
+        echo "${cyn}-  fail2ban${end}" >> $logFILE
       ;;
     "clamav")
-      o6="y"
+        vc="$vc --install clamav"
+        vc="$vc --install clamav-daemon"
+        echo "${cyn}-  clamav, clamav-daemon${end}" >> $logFILE
       ;;
     "mailutils")
-      o7="y"
+        vc="$vc --install mailutils"
+        echo "${cyn}-  mailutils${end}" >> $logFILE
       ;;
     "Docker-CE")
-      o8="y"
+        echo "${cyn}-  Docker-CE${end}" >> $logFILE
+        echo "apt-get install -y software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl"  >> firstboot.sh
+        echo "mkdir -p /etc/apt/keyrings" >> firstboot.sh
+        echo "mkdir -p /home/$ciUSER/docker/" >> firstboot.sh
+        echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+        echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+        echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
+        echo "apt-get update" >> firstboot.sh
+        if testMODE=true; then echo "usermod -aG docker $ciUSER" >> firstboot.sh; fi
+        echo "apt-get install -y docker-ce containerd.io docker-ce-cli docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin" >> firstboot.sh
       ;;
     "Dockge")
-      o9="y"
-      ;;  
+       echo "${cyn}-  Dockge${end}" >> $logFILE
+        echo "/home/$ciUSER/docker/dockge/" >> firstboot.sh
+        # Dockge management app is a great tool and replaces Portainer-CE in my lab. Storage strategy /home/<user>/docker/ dockge (for its data) and stacks (for the <app>/compose.yaml)
+        echo "docker run -d -p 5001:5001 --name Dockge --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /home/$ciUSER/docker/dockge/data:/app/data -v /home/$ciUSER/docker/stacks:/home/$ciUSER/docker/stacks -e DOCKGE_STACKS_DIR=/home/$ciUSER/docker/stacks louislam/dockge:latest" >> firstboot.sh
+      ;;
     "Portainer-CE")
-      o10="y"
+        echo "${cyn}-  Portainer-CE${end}" >> $logFILE
+        echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:alpine" >> firstboot.sh
       ;;
     "Agent")
-      o11="y"
+        echo "${cyn}-  Portainer-CE${end}" >> $logFILE
+        echo "docker run -d -p 9001:9001 --name portainer-agent --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker/volumes:/var/lib/docker/volumes portainer/agent:alpine" >> firstboot.sh
       ;;
     "Docker")
-      o12="y"
+        echo "${cyn}-  Docker-EE ﹩${end}" >> $logFILE
+        echo "apt-get install -y software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl"  >> firstboot.sh
+        echo "mkdir -p /etc/apt/keyrings" > firstboot.sh
+        echo "mkdir -p /home/$ciUSER/docker/" >> firstboot.sh
+        echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+        echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+        echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
+        echo "apt-get update" >> firstboot.sh
+        echo "apt-get install -y docker containerd.io docker-cli docker-compose-plugin docker-rootless-extras docker-buildx-plugin" >> firstboot.sh
       ;;
     "Portainer-BE")
-      o13="y"
+        echo "${cyn}-  Portainer ﹩${end}" >> $logFILE
+        echo "mkdir -p /home/$ciUSER/docker/portainer/portainer-data" >> firstboot.sh
+        echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:alpine" >> firstboot.sh
       ;;
     "K3s")
-      o14="y"
+        echo "${cyn}     -  make K3s settings${end}" >> $logFILE
+        #echo "" >> firstboot.sh
       ;;
     "K8s")
-      o15="y"
+        echo "${cyn}-  make K8s HA-settings${end}" >> $logFILE
+        echo "apt-get update" >> firstboot.sh
+        echo "apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
+        echo "apt-get update" >> firstboot.sh
+        echo "curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg" >> firstboot.sh
+        echo "echo \"deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main\" | tee /etc/apt/sources.list.d/kubernetes.list" >> firstboot.sh
+        echo "swapoff -a" >> firstboot.sh
+        echo "mkdir /etc/containerd" >> firstboot.sh
+        echo "containerd config default | tee /etc/containerd/config.toml" >> firstboot.sh
+        echo "echo \"br_netfilter\" > /etc/modules-load.d/k8s.conf" >> firstboot.sh
+        echo "sed -i \"s/^\( *SystemdCgroup = \\)false/\\1true/\" /etc/containerd/config.toml" >> firstboot.sh
+        echo "sed -i -e \"/#net.ipv4.ip_forward=1/c\\net.ipv4.ip_forward=1\" etc/sysctl.conf" >> firstboot.sh
+        echo "apt-get update && sudo apt install -y kubeadm kubectl kubelet" >> firstboot.sh
+        echo "truncate -s 0 /etc/machine-id" >> firstboot.sh
+        echo "rm /var/lib/dbus/machine-id" >> firstboot.sh
+        echo "ln -s /etc/machine-id /var/lib" >> firstboot.sh
       ;;
     *)
       echo "${red}⚠ Unsupported item $CHOICE! ${end}" >> $logFILE
@@ -592,26 +639,26 @@ if (whiptail --backtitle "$backTEXT" --title "What to Create" --yesno \
   10 48 --no-button "Single VM" --yes-button "Template Stack"); then
   tok=true # do the yes, a Template
   templateNO=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nTemplate ID" 10 48 9000 3>&1 1>&2 2>&3)
+        "\nTemplate ID" 10 48 $initTEMPLATENO 3>&1 1>&2 2>&3)
   templateNAME=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nTemplate Name" 10 48 k8s-template 3>&1 1>&2 2>&3)
+        "\nTemplate Name" 10 48 $initTEMPLATENAME 3>&1 1>&2 2>&3)
   echo "${cyn}     -  Template $templateNO $templateNAME" >> $logFILE
   #Create also some Clones of the Template
   if (whiptail --backtitle "$backTEXT" --title "What to Create" --yesno \
        "\n  Create Clones of the Template?" 10 48 ); then
         # do the yes, a Template
         firstCLONE=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nID of first clone" 10 48 5000 3>&1 1>&2 2>&3)
+        "\nID of first clone" 10 48 $initNO1STCLONE 3>&1 1>&2 2>&3)
         numberCLONES=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nNumber of clones 3" 10 48 3 3>&1 1>&2 2>&3)
-        cname=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
+        "\nNumber of clones 3" 10 48 $initNOCLONES 3>&1 1>&2 2>&3)
+        cloneNAME=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
         "\nName of clone(s) node-1 to node-$numberCLONES" 10 48 node- 3>&1 1>&2 2>&3)
-        first="${cname}1"
+        first="${cloneNAME}1"
         if [ $numberCLONES = 1 ]; then
-            createMSG=" ${okcm}${cyn} $(date +"%T")  $numberCLONES Clone: $firstCLONE $first $numberCLONES "
+            createMSG="${cyn}     - $numberCLONES Clone: $firstCLONE $first $numberCLONES "
         else
             last=$(($firstCLONE + $numberCLONES))
-            createMSG=" ${okcm}${cyn} $(date +"%T")  $numberCLONES Clones: $firstCLONE $first - $last $cname$numberCLONES"
+            createMSG="${cyn}     -  $numberCLONES Clones: $firstCLONE $first - $last $cloneNAME$numberCLONES"
         fi
         echo "$createMSG" >> $logFILE
   fi
@@ -619,9 +666,9 @@ else
     tok=false # No, a Single VM
 fi
     vmNO=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nID for the VM" 10 48 8000 3>&1 1>&2 2>&3)
+        "\nID for the VM" 10 48 $initVMNO 3>&1 1>&2 2>&3)
     vmNAME=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nName of the VM" 10 48 k8s-master 3>&1 1>&2 2>&3)
+        "\nName of the VM" 10 48 $initVMNAME 3>&1 1>&2 2>&3)
     echo "${cyn}     -  VM $vmNO $vmNAME" >> $logFILE
 }
 
@@ -649,115 +696,119 @@ fi
 function createBase() {
 # Create base.qcow2 as a base for a VM using a CI
     #printf "\b"
+    echo "${stcm}${cyn} $(date +"%T")  Create base $sizeD image" >> $logFILE
     echo "${stcm}${cyn} $(date +"%T")  Copy $pathISO$nameISO -> base.qcow2" >> $logFILE
     if [ -f base.qcow2 ]; then
         cp --remove-destination $pathISO$nameISO base.qcow2  &> /dev/null
       else
         cp $pathISO$nameISO base.qcow2  &> /dev/null
     fi
-    echo "${stcm}${cyn} $(date +"%T")  Create base $sizeD image" >> $logFILE
-
     qemu-img resize base.qcow2 $sizeD
     # 16G is typical - Resize the disk to your needs, 8 - 32 GiB is normal
     # Add Qemu-Guest-Agent and any other packages you’d like in your base image.
     # libguestfs-tools has to be installed on the node.
     # Add or delete add-ons according to your needs
-    echo "# Firstboot commands created from myTemplateBuilder" > firstboot.sh
-    vc=""
-    if [[ $o1 == 'y' ]]; then 
-        vc="$vc --install qemu-guest-agent"
-        echo "${cyn}     -  qemu-guest-agent${end}" >> $logFILE
-    fi
-    if [[ $o2 == 'y' ]]; then
-        vc="$vc --install nano"
-        vc="$vc --install ncurses-term"
-        echo "${cyn}     -  nano editor, ncurses-term${end}" >> $logFILE
-    fi
-    if [[ $o3 == 'y' ]]; then 
-        vc="$vc --install git"
-        echo "${cyn}     -  git${end}" >> $logFILE
-    fi
-    if [[ $o4 == 'y' ]]; then
-        vc="$vc --install unattended-upgrades"
-        echo "${cyn}     -  unattended-upgrades${end}" >> $logFILE
-    fi
-    if [[ $o5 == 'y' ]]; then
-        vc="$vc --install fail2ban"
-        echo "${cyn}     -  fail2ban${end}" >> $logFILE
-    fi
-    if [[ $o6 == 'y' ]]; then
-        vc="$vc --install clamav"
-        vc="$vc --install clamav-daemon"
-        echo "${cyn}     -  clamav, clamav-daemon${end}" >> $logFILE
-    fi
-    if [[ $o7 == 'y' ]]; then
-        vc="$vc --install mailutils"
-        echo "${cyn}     -  mailutils${end}" >> $logFILE
-    fi
-    if [[ $o8 == 'y' ]]; then # || $o13 == 'y' ]]; then
-        echo "${cyn}     -  Docker-CE${end}" >> $logFILE
-        echo "apt-get install -y software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl"  >> firstboot.sh
-        echo "mkdir -p /etc/apt/keyrings" >> firstboot.sh
-        echo "mkdir -p /home/$ciUSER/docker/" >> firstboot.sh
-        echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
-        echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
-        echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
-        echo "apt-get update" >> firstboot.sh
-        if [[ test == [yY] ]]; then echo "usermod -aG docker $ciUSER" >> firstboot.sh; fi
-        echo "apt-get install -y docker-ce containerd.io docker-ce-cli docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin" >> firstboot.sh
-    fi
-    if [[ $o9 == 'y' ]]; then
-        echo "${cyn}     -  Dockge${end}" >> $logFILE
-        echo "/home/$ciUSER/docker/dockge/" >> firstboot.sh
-        # Dockge management app is a great tool and replaces Portainer-CE in my lab. Storage strategy /home/<user>/docker/ dockge (for its data) and stacks (for the <app>/compose.yaml)
-        echo "docker run -d -p 5001:5001 --name Dockge --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /home/$ciUSER/docker/dockge/data:/app/data -v /home/$ciUSER/docker/stacks:/home/$ciUSER/docker/stacks -e DOCKGE_STACKS_DIR=/home/$ciUSER/docker/stacks louislam/dockge:latest" >> firstboot.sh
-    fi
-    if [[ $o10 == 'y' ]]; then
-        echo "${cyn}     -  Portainer-CE${end}" >> $logFILE
-        echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:alpine" >> firstboot.sh
-    fi
-    if [[ $o11 == "y" ]]; then
-        echo "${cyn}     -  Portainer-CE${end}" >> $logFILE
-        echo "docker run -d -p 9001:9001 --name portainer-agent --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker/volumes:/var/lib/docker/volumes portainer/agent:alpine" >> firstboot.sh
-    fi
-    if [[ $o12 == 'y' ]]; then
-        echo "${cyn}     -  Docker-EE ﹩${end}" >> $logFILE
-        echo "apt-get install -y software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl"  >> firstboot.sh
-        echo "mkdir -p /etc/apt/keyrings" > firstboot.sh
-        echo "mkdir -p /home/$ciUSER/docker/" >> firstboot.sh
-        echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
-        echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
-        echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
-        echo "apt-get update" >> firstboot.sh
-        echo "apt-get install -y docker containerd.io docker-cli docker-compose-plugin docker-rootless-extras docker-buildx-plugin" >> firstboot.sh
-    fi
-    if [[ $o13 == 'y' ]]; then
-      echo "${cyn}     -  Portainer ﹩${end}" >> $logFILE     
-        echo "mkdir -p /home/$ciUSER/docker/portainer/portainer-data" >> firstboot.sh
-        echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:alpine" >> firstboot.sh
-    fi
-    if [[ $o14 == "y" ]]; then
-        echo "${cyn}     -  make K3s settings${end}" >> $logFILE
-        #echo "" >> firstboot.sh
-    fi
-    if [[ $o15 == 'y' ]]; then
-        echo "${cyn}     -  make K8s HA-settings${end}" >> $logFILE
-        echo "apt-get update" >> firstboot.sh
-        echo "apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
-        echo "apt-get update" >> firstboot.sh
-        echo "curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg" >> firstboot.sh
-        echo "echo \"deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main\" | tee /etc/apt/sources.list.d/kubernetes.list" >> firstboot.sh
-        echo "swapoff -a" >> firstboot.sh
-        echo "mkdir /etc/containerd" >> firstboot.sh
-        echo "containerd config default | tee /etc/containerd/config.toml" >> firstboot.sh
-        echo "echo \"br_netfilter\" > /etc/modules-load.d/k8s.conf" >> firstboot.sh
-        echo "sed -i \"s/^\( *SystemdCgroup = \\)false/\\1true/\" /etc/containerd/config.toml" >> firstboot.sh
-        echo "sed -i -e \"/#net.ipv4.ip_forward=1/c\\net.ipv4.ip_forward=1\" etc/sysctl.conf" >> firstboot.sh
-        echo "apt-get update && sudo apt install -y kubeadm kubectl kubelet" >> firstboot.sh
-        echo "truncate -s 0 /etc/machine-id" >> firstboot.sh
-        echo "rm /var/lib/dbus/machine-id" >> firstboot.sh
-        echo "ln -s /etc/machine-id /var/lib" >> firstboot.sh
-    fi  
+    echo "# Firstboot commands created from TemplateBuilder.sh" > firstboot.sh
+    # vc=""
+    # if [[ $o1 == 'y' ]]; then 
+    #     vc="$vc --install qemu-guest-agent"
+    #     echo "${cyn}-  qemu-guest-agent${end}" >> $logFILE
+    # fi
+    # if [[ $o2 == 'y' ]]; then
+    #     vc="$vc --install nano"
+    #     vc="$vc --install ncurses-term"
+    #     echo "${cyn}-  nano editor, ncurses-term${end}" >> $logFILE
+    # fi
+    # if [[ $o3 == 'y' ]]; then 
+    #     vc="$vc --install git"
+    #     echo "${cyn}-  git${end}" >> $logFILE
+    # fi
+    # if [[ $o4 == 'y' ]]; then
+    #     vc="$vc --install unattended-upgrades"
+    #     echo "${cyn}-  unattended-upgrades${end}" >> $logFILE
+    # fi
+    # if [[ $o5 == 'y' ]]; then
+    #     vc="$vc --install fail2ban"
+    #     echo "${cyn}-  fail2ban${end}" >> $logFILE
+    # fi
+    # if [[ $o6 == 'y' ]]; then
+    #     vc="$vc --install clamav"
+    #     vc="$vc --install clamav-daemon"
+    #     echo "${cyn}-  clamav, clamav-daemon${end}" >> $logFILE
+    # fi
+    # if [[ $o7 == 'y' ]]; then
+    #     vc="$vc --install mailutils"
+    #     echo "${cyn}-  mailutils${end}" >> $logFILE
+    # fi
+    # if [[ $o8 == 'y' ]]; then # || $o13 == 'y' ]]; then
+    #     echo "${cyn}-  Docker-CE${end}" >> $logFILE
+    #     echo "apt-get install -y software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl"  >> firstboot.sh
+    #     echo "mkdir -p /etc/apt/keyrings" >> firstboot.sh
+    #     echo "mkdir -p /home/$ciUSER/docker/" >> firstboot.sh
+    #     echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+    #     echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+    #     echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
+    #     echo "apt-get update" >> firstboot.sh
+    #     if testMODE=true; then echo "usermod -aG docker $ciUSER" >> firstboot.sh; fi
+    #     echo "apt-get install -y docker-ce containerd.io docker-ce-cli docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin" >> firstboot.sh
+    # fi
+    # if [[ $o9 == 'y' ]]; then
+    #     echo "${cyn}-  Dockge${end}" >> $logFILE
+    #     echo "/home/$ciUSER/docker/dockge/" >> firstboot.sh
+    #     # Dockge management app is a great tool and replaces Portainer-CE in my lab. Storage strategy /home/<user>/docker/ dockge (for its data) and stacks (for the <app>/compose.yaml)
+    #     echo "docker run -d -p 5001:5001 --name Dockge --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /home/$ciUSER/docker/dockge/data:/app/data -v /home/$ciUSER/docker/stacks:/home/$ciUSER/docker/stacks -e DOCKGE_STACKS_DIR=/home/$ciUSER/docker/stacks louislam/dockge:latest" >> firstboot.sh
+    
+    # fi
+    # if [[ $o10 == 'y' ]]; then
+    #     echo "${cyn}-  Portainer-CE${end}" >> $logFILE
+    #     echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:alpine" >> firstboot.sh
+    
+    # fi
+    # if [[ $o11 == "y" ]]; then
+    #     echo "${cyn}-  Portainer-CE${end}" >> $logFILE
+    #     echo "docker run -d -p 9001:9001 --name portainer-agent --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker/volumes:/var/lib/docker/volumes portainer/agent:alpine" >> firstboot.sh
+    
+    # fi
+    # if [[ $o12 == 'y' ]]; then
+    #     echo "${cyn}-  Docker-EE ﹩${end}" >> $logFILE
+    #     echo "apt-get install -y software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl"  >> firstboot.sh
+    #     echo "mkdir -p /etc/apt/keyrings" > firstboot.sh
+    #     echo "mkdir -p /home/$ciUSER/docker/" >> firstboot.sh
+    #     echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+    #     echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+    #     echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
+    #     echo "apt-get update" >> firstboot.sh
+    #     echo "apt-get install -y docker containerd.io docker-cli docker-compose-plugin docker-rootless-extras docker-buildx-plugin" >> firstboot.sh
+    
+    # fi
+    # if [[ $o13 == 'y' ]]; then
+    #   echo "${cyn}-  Portainer ﹩${end}" >> $logFILE
+    #     echo "mkdir -p /home/$ciUSER/docker/portainer/portainer-data" >> firstboot.sh
+    #     echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:alpine" >> firstboot.sh
+    
+    # fi
+    # if [[ $o14 == "y" ]]; then
+    #     echo "${cyn}     -  make K3s settings${end}" >> $logFILE
+    #     #echo "" >> firstboot.sh
+    # fi
+    # if [[ $o15 == 'y' ]]; then
+    #     echo "${cyn}-  make K8s HA-settings${end}" >> $logFILE
+    #     echo "apt-get update" >> firstboot.sh
+    #     echo "apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
+    #     echo "apt-get update" >> firstboot.sh
+    #     echo "curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg" >> firstboot.sh
+    #     echo "echo \"deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main\" | tee /etc/apt/sources.list.d/kubernetes.list" >> firstboot.sh
+    #     echo "swapoff -a" >> firstboot.sh
+    #     echo "mkdir /etc/containerd" >> firstboot.sh
+    #     echo "containerd config default | tee /etc/containerd/config.toml" >> firstboot.sh
+    #     echo "echo \"br_netfilter\" > /etc/modules-load.d/k8s.conf" >> firstboot.sh
+    #     echo "sed -i \"s/^\( *SystemdCgroup = \\)false/\\1true/\" /etc/containerd/config.toml" >> firstboot.sh
+    #     echo "sed -i -e \"/#net.ipv4.ip_forward=1/c\\net.ipv4.ip_forward=1\" etc/sysctl.conf" >> firstboot.sh
+    #     echo "apt-get update && sudo apt install -y kubeadm kubectl kubelet" >> firstboot.sh
+    #     echo "truncate -s 0 /etc/machine-id" >> firstboot.sh
+    #     echo "rm /var/lib/dbus/machine-id" >> firstboot.sh
+    #     echo "ln -s /etc/machine-id /var/lib" >> firstboot.sh
+    # fi
     # --firstboot-command 'sudo apt-get update'
     # --install containerd,curl \
     # --firstboot-command 'sudo apt-get install software-properties-common'\
@@ -778,7 +829,7 @@ function createBase() {
     # fi
 
     echo "cp /root/virt-sysprep-firstboot.log /home/$ciUSER/firstboot.log" >> firstboot.sh
-    echo "IP addr: $(ip address | grep /24 | awk '{print $2}') > /home/$ciUSER/IP" >> firstboot.sh
+    echo "echo \"IP addr: \$(ip address | grep /24 | awk '{print $2}') > /home/$ciUSER/IP\"" >> firstboot.sh
     vc="$vc --firstboot firstboot.sh --add base.qcow2"
     virt-customize $vc
     echo ">>>> virt-customize:$vc " >> $logFILE
@@ -804,11 +855,11 @@ function createVM() {
     qm set $vmNO --onboot 1                                                     # Autostart vm at boot - default is 0 - Ususlly most VM's are allway running
     qm set $vmNO --agent 1                                                      # Use Qemu Guest Agent - default is 0
     qm set $vmNO --ostype l26                                                   # Set OS type Linux 5.x kernel 2.6 - default is other
-    qm set $vmNO --ipconfig0 ip="dhcp"                                          # Set dhcp on
+    qm set $vmNO --ipconfig0 ip="dhcp"                                          # Set dhcp on. Clones to be able to get a IP at start
     qm set $vmNO --ciuser $ciUSER                                               # "admin"        use your imagination
     qm set $vmNO --cipassword $ciPASSWD                                         # "Pa$$w0rd"     use a super complicated one
-    qm set $vmNO --sshkey ~/.ssh/my_key                                         # sets the users key to the vm
-    #if [[ $my_key > " " ]]; then qm set $vmNO --sshkey $my_key; fi     # sets the users key to the vm
+    qm set $vmNO --sshkey $my_key                                               # sets the users key to the vm
+    #if [[ $my_key > " " ]]; then qm set $vmNO --sshkey $my_key; fi              # sets the users key to the vm
     # Create the Notes window
     echo "# # VM: $vmNO | $vmNAME" >> /etc/pve/qemu-server/$vmNO.conf
     echo "#- RAM    : $sizeM" >> /etc/pve/qemu-server/$vmNO.conf
@@ -820,6 +871,7 @@ function createVM() {
     echo "#- Storage: $storageVM" >> /etc/pve/qemu-server/$vmNO.conf
     echo "#- Base   : $nameISO" >> /etc/pve/qemu-server/$vmNO.conf
     echo "#  - from : $pathISO" >> /etc/pve/qemu-server/$vmNO.conf
+    echo "#- Options: $OPTIONS" >> /etc/pve/qemu-server/$vmNO.conf
     #echo -e '#foo-bar\n' >> /etc/pve/lxc/VMID.conf
     echo "${okcm}${cyn} $(date +"%T")  VM $vmNO $vmNAME Created" >> $logFILE
 }
@@ -842,24 +894,24 @@ function createTemplate() {
     qm set $templateNO --agent 1                                                            # Use Qemu Guest Agent - default is 0
     qm set $templateNO --ostype l26                                                         # Set OS type Linux 5.x kernel 2.6 - default is other
     qm set $templateNO --ipconfig0 ip="dhcp"                                                # Set dhcp on
-    qm set $templateNO --ciuser $ciUSER                                                     # "admin"        use your imagination
-    qm set $templateNO --cipassword $ciPASSWD                                               # "Pa$$w0rd"     use a super complicated one
-    if [[ $my_key > " " ]]; then qm set $templateNO --sshkey $my_key; fi                    # sets the users key to the vm
+    qm set $templateNO --ciuser $ciUSER                                                        # "admin"        use your imagination
+    qm set $templateNO --cipassword $ciPASSWD                                                    # "Pa$$w0rd"     use a super complicated one
+    if [[ $my_key > " " ]]; then qm set $templateNO --sshkey $my_key; fi            # sets the users key to the vm
 
-    echo "# # Template: $templateNO | $templateNAME" > /etc/pve/qemu-server/$templateNO.conf
+    echo "# #Template $templateNO $templateNAME" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#- RAM    : $sizeM" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#- Core   : $sizeC" >> /etc/pve/qemu-server/$templateNO.conf
-    echo "#- User   : $ciUSER, $ciPASSWD" >> /etc/pve/qemu-server/$templateNO.conf
+    echo "#- User   : $ciu, $cip" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#- Bridge : $vmbr" >>  /etc/pve/qemu-server/$templateNO.conf
-    if [[ $vlan > 0 ]]; then echo "#  vlan: $vlan" >> /etc/pve/qemu-server/$templateNO.conf; fi
+    if [[ $vlan > 0 ]]; then echo "#  vLAN: $vlan" >> /etc/pve/qemu-server/$templateNO.conf; fi
     if [[ $my_key > " " ]]; then echo " - SSH Key: $my_key" >> /etc/pve/qemu-server/$templateNO.conf; fi
     echo "#- Storage: $storageVM" >> /etc/pve/qemu-server/$templateNO.conf
-    echo "#- Base   : $nameISO" >> /etc/pve/qemu-server/$templateNO.conf
+    echo "#- Base   : $$nameISO" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#  from : $pathISO$" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#- Options: $OPTIONS" >> /etc/pve/qemu-server/$templateNO.conf
     #echo -e '#foo-bar\n' >> /etc/pve/lxc/VMID.conf
 
-    qm template $templateNO --name $templateNAME
+    qm template $templateNO
     echo "${okcm}${cyn} $(date +"%T")  Template $templateNO $templateNAME created" >> $logFILE
 }
 
@@ -873,17 +925,17 @@ function createClones() { # Cloning the template
         xx=$(($firstCLONE + $x))
         x=$(( $x + 1 ))
         qm clone $templateNO $xx --name $cname$x --full
-        echo "# # VM $xx $cname$x" > /etc/pve/qemu-server/$xx.conf
+        echo "# # VM $xx $cloneNAME$x" > /etc/pve/qemu-server/$xx.conf
         echo "#- Template: $templateNO | $templateNAME" >> /etc/pve/qemu-server/$xx.conf
-        echo " ${okcm}${cyn} $(date +"%T")  Clone $xx created"
+        echo "${okcm}${cyn} $(date +"%T")  Clone $xx created $cloneNAME$x"
     done
 
-    # first="${cname}1"
+    # first="${cloneNAME}1"
     # if [ $numberCLONES = 1 ]; then
     #    createMSG=" ${okcm}${cyn} $(date +"%T")  $numberCLONES Clone created: $firstCLONE $first $numberCLONES "
     # elif [ $numberCLONES >1 ]; then
     #    last=$(($firstCLONE + $numberCLONES - 1))
-    #    createMSG=" ${okcm}${cyn} $(date +"%T")  $numberCLONES Clones created: $firstCLONE $first - $last $cname$numberCLONES"
+    #    createMSG=" ${okcm}${cyn} $(date +"%T")  $numberCLONES Clones created: $firstCLONE $first - $last $cloneNAME$numberCLONES"
     # fi
     # echo "$createMSG" >> $logFILE
 }
@@ -916,8 +968,8 @@ storageISO=$(getPool ISO)   # Set ISO storage e.g. local /var/lib/vz/template/is
 # Use Server or Minimal Cloud Image
 CI=$(whiptail  --backtitle "$backTEXT" --title "Choose the Base Image" --radiolist \
 "\nChoose the Cloud Image to use as a Base " 12 78 2 \
-"minimal" "$mini" ON \
-"server" "$std" OFF \
+"minimal" "$miniFILE" ON \
+"server" "$stdFILE" OFF \
 3>&1 1>&2 2>&3)
 dlFile $CI                  # Download Cloud Image if missing from storageISO
 echo "${cynb}   - User selected the ${magb}$CI${end}${cyn} image and:${end}" >> $logFILE
@@ -938,56 +990,56 @@ if (whiptail --backtitle "$backTEXT" --title \
   "\nCreate a VM, a Template and/or Clones" --yesno --defaultno \
   "\n  ⚠️  Do you like to proceed  -  Install  or  Exit " \
   10 68 --no-button "Exit" --yes-button "Install"); then
-  echo "${magb}   -  Installation started  $(date +"%F %T")${end}" >> $logFILE
+  echo "${stcm}${magb} Installation started  $(date +"%F %T")${end}" >> $logFILE
 
 # Headers --------------------------------------------------------------------#
     printf ${yelb}; header; header-2; printf ${end}
     echo -e "\n\n${magb}# ========== **** S T A R T  o f  I N S T A L L A T I O N **** ========== #\n${end}"
     echo "${cyn}-  $(date +"%T")  Cloud Image creation started" >> $logFILE
-    echo "-- Installation started"
+    echo "${stcm}${magb} Installation started"
     runSpinner run    # Run the Spinner
-# Create the VM --------------------------------------------------------------#
 
+# Create the VM --------------------------------------------------------------#
     (createBase >> $logFILE 2>&1)
     printf "\b"
     echo "${okcm} base.qcow2 image created"
 
     (createVM >> $logFILE 2>&1)
     printf "\b"
-    echo "${okcm} VM $vmNO created as $vmNAME"
+    echo "   ${okcm} VM $vmNO created as $vmNAME"
 # Create the Template --------------------------------------------------------#
     if [[ $tok = true ]]; then
-        createTemplate &> /dev/null
+        (createTemplate  >> $logFILE 2>&1) #&> /dev/null
         printf "\b"
         echo "   ${okcm} Template created: $templateNO $templateNAME"
 
         # Create the Clones --------------------------------------------------#
         if [[ $numberCLONES -gt 0 ]]; then
-            (createClones &> /dev/null)
+            (createClones  >> $logFILE 2>&1) #&> /dev/null)
             printf "\b"
-            first="${cname}1"
+            first="${cloneNAME}1"
             if [ $numberCLONES = 1 ]; then
                echo "   ${okcm} Clone created: $firstCLONE $first $numberCLONES"
             elif [[ $numberCLONES > 1 ]]; then
                last=$(($firstCLONE + $numberCLONES - 1))
-               echo "   ${okcm} Clone(s) created: $firstCLONE $first - $last $cname$numberCLONES"
+               echo "   ${okcm} Clones created: $firstCLONE $first  -  $last $cloneNAME$numberCLONES"
             fi
         fi
     fi
 
-    echo -e "${grnb}== Installation is completed. See log for details."
+    echo -e "${okcm}${grnb} Installation is completed. See log for details."
 # End of Execute Functions----------------------------------------------------#
 
 # End of Install -------------------------------------------------------------#
 runSpinner off  # Terminate the Spinner
-echo "${blub}>>>> End of the Install   $(date +"%F %T") ${end}" >> $logFILE
+echo "${okcm}${blub} End of the Install   $(date +"%F %T") ${end}" >> $logFILE
 read -rp "Show the log [y/N] : " pl; if [[ $pl == [yY] ]]; then cat $logFILE; fi
 # End of Install =============================================================#
 
 # ⚠️ Setup Aborted ⚠️ ========================================================#
 else
     runSpinner off  # Terminate the Spinner
-    echo -e "${red}== Installation was aborted!${end}"
+    echo -e "${nocm}${red} Installation was aborted!${end}"
     echo -e "${yelb}⚠ User canceld the install ⚠${end}" >> $logFILE
 fi
 # End of Script ###############################################################
