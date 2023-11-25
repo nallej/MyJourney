@@ -1,0 +1,43 @@
+function getPool() { # Show basic pool info and Select a Pool
+    local ST=$1
+    local LABEL
+    local TYPE
+    case $ST in
+    VM)
+      LABEL='VM/CT storage'
+      TYPE=$zfs_st
+      ;;
+    ISO)
+      LABEL='IMG/ISO storage'
+      TYPE=$img_st
+      ;;
+    *) exit ;;
+    esac
+    local -a LIST
+    while read -r line; do
+      local TAG=$(echo $line | awk '{print $1}')
+      local TYPE=$(echo $line | awk '{printf "%-10s", $2}')
+      local FREE=$(echo $line | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
+      local ITEM="  Type: $TYPE Free: $FREE "
+      local OFFSET=2
+      if [[ $((${#ITEM} + $OFFSET)) -gt ${LONGA:-} ]]; then
+        local LONGA=$((${#ITEM} + $OFFSET))
+      fi
+      LIST+=("$TAG" "$ITEM" "OFF")
+    done < <(echo "$TYPE" | awk 'NR>1')
+    # Select storage location
+    if [ $((${#LIST[@]} / 3)) -eq 0 ]; then
+      echo "${nocm}${red}Unable to detect valid storage location for ISO storage.${end}" >> $logFILE
+    elif [ $((${#LIST[@]} / 3)) -eq 1 ]; then
+      printf ${LIST[0]}
+    else
+      local POOL
+      while [ -z "${POOL:+x}" ]; do
+        POOL=$(whiptail --backtitle "$backTEXT" --title "Select Storage Pool" --radiolist \
+          "\nStorage pool to use for the ${LABEL,,}?\nSelect [ Space ] and Accsept [ Enter ]\n" \
+          18 $(($LONGA + 23)) 6 \
+          "${LIST[@]}" 3>&1 1>&2 2>&3) || echo "getPool RadioList aborted."  >> $logFILE
+      done
+      printf $POOL
+    fi
+}
