@@ -1,0 +1,13 @@
+function runSpinner() {
+    local ONOFF=$1
+    if [ $ONOFF == 'run' ]; then
+        # Run the spinner in the background and Save the PID
+        spinner &
+        spinner_pid=$!
+    else
+       # Terminate the Spinner
+       kill "$spinner_pid"; wait "$spinner_pid" 2>/dev/null
+       tput cnorm # Show the Cursor Again
+       echo -e "${end} "
+    fi
+}
