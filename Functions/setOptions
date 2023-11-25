@@ -1,0 +1,111 @@
+function setOPTIONS() {
+
+OPTION_MENU=()
+LONGA=0
+while read -r ONOFF TAG ITEM; do
+  OFFSET=2
+  ((${#ITEM} + OFFSET > LONGA)) && LONGA=${#ITEM}+OFFSET
+  OPTION_MENU+=("$TAG" "$ITEM " "$ONOFF")
+done < <(
+  cat <<EOF
+ON Qemu-Guest-Agent Qemu-Guest-Agent
+ON nano editor and ncurses-term
+ON git Git Hub/Lab use
+on nala APT frontend
+OFF unattended-upgrades set to On
+ON Fail2Ban Security
+OFF clamav antivirus and daemon
+OFF mailutils needs FQDN
+OFF Docker-CE Alpine
+OFF Dockge Docker Management
+OFF Portainer-CE Alpine
+OFF Agent Portainer Agent
+OFF Docker \$\$\$ license
+OFF Portainer-BE \$\$\$ license
+OFF K3s TBA a K3s HA-Cluster
+OFF K8s make a K8s Cluster
+EOF
+)
+OPTIONS=$(whiptail --backtitle "$backTEXT" --title "Options List" --checklist --separate-output \
+"\nSelect Options for the VM:\n" 20 $((LONGA + 33)) 12 "${OPTION_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
+[ -z "$OPTIONS" ] && {
+  whiptail --backtitle "$backTEXT" --title "No Options Selected" --msgbox "It appears that no Options was selected" 10 68
+}
+
+if [ -z "$OPTIONS" ]; then
+  echo "${red}⚠ No option was selected (user hit Cancel or unselected all options)${end}" >> $logFILE
+else
+  echo "${cynb}   - User selected options:${end}" >> $logFILE
+  for CHOICE in $OPTIONS; do
+    case "$CHOICE" in
+    "Qemu-Guest-Agent")
+      o1="y"
+      echo "${cyn}     -  qemu-guest-agent${end}" >> $logFILE
+      ;;
+    "nano")
+      o2="y"
+      echo "${cyn}     -  nano editor, ncurses-term${end}" >> $logFILE
+      ;;
+    "git")
+      o3="y"
+      echo "${cyn}     -  git${end}" >> $logFILE
+      ;;      
+    "nala")
+      o21="y"
+      echo "${cyn}     -  nala${end}" >> $logFILE
+      ;;
+    "unattended-upgrades")
+      o4="y"
+      echo "${cyn}     -  unattended-upgrades${end}" >> $logFILE
+      ;;
+    "Fail2Ban")
+      o5="y"
+      echo "${cyn}     -  fail2ban${end}" >> $logFILE
+      ;;
+    "clamav")
+      o6="y"
+      echo "${cyn}     -  clamav-daemon${end}" >> $logFILE
+      ;;
+    "mailutils")
+      o7="y"
+      echo "${cyn}     -  mailutils${end}" >> $logFILE
+      ;;
+    "Docker-CE")
+      o10="y"
+      echo "${cyn}     -  Docker-CE${end}" >> $logFILE
+      ;;
+    "Dockge")
+      o20="y"
+      ;;
+    "Portainer-CE")
+      o11="y"
+      echo "${cyn}     -  Portainer-CE${end}" >> $logFILE
+      ;;
+    "Agent")
+      o12="y"
+      echo "${cyn}     -  Portainer Agent${end}" >> $logFILE
+      ;;
+    "Docker")
+      o13="y"
+      echo "${cyn}     -  Docker-EE \$\$\$${end}" >> $logFILE
+      ;;
+    "Portainer-BE")
+      o14="y"
+      echo "${cyn}     -  Portainer \$\$\$${end}" >> $logFILE
+      ;;
+    "K3s")
+      o8="y"
+      echo "${cyn}     -  make a K3s cluster${end}" >> $logFILE
+      ;;
+    "K8s")
+      o9="y"
+      echo "${cyn}     -  make a K8s cluster${end}" >> $logFILE
+      ;;      
+    *)
+      echo "${red}⚠ Unsupported item $CHOICE! ${end}" >> $logFILE
+      exit 1
+      ;;
+    esac
+  done
+fi
+}
