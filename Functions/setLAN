@@ -1,0 +1,17 @@
+function setLAN(){
+    # Set the Virtual Bridge
+    vmbr=$(whiptail --backtitle "$backTEXT" --title "VLAN Dialog" --inputbox \
+    "\nVirtual Bridge to be useed" \
+    10 48 vmbr2 3>&1 1>&2 2>&3)
+    echo "${cyn}     -  Bridge: $vmbr" >> $logFILE
+    # Use a Virtual LAN
+    if whiptail --backtitle "$backTEXT"  --title "VLAN Dialog" --yesno \
+       "\nDo you need to use a VLAN?" 10 48; then
+       vlan=$(whiptail --backtitle "$backTEXT" --title "VLAN Dialog" --inputbox\
+       "\nVLAN to use for the VM/Template" 10 48 10  3>&1 1>&2 2>&3)
+       echo "${cyn}     -  VLAN: $vlan" >> $logFILE
+    else
+        vlan=0
+        echo "${cyn}     -  User selected NOT to use a VLAN" >> $logFILE
+    fi
+}
