@@ -1,5 +1,4 @@
-# Function Check for root privilidges and stop if not -------------------------#
-stoproot(){
+stoproot(){ # Function Check for root privilidges and exit if not
 if [[ "$EUID" != 0 ]]; then
     echo -e "\e[0;31mYou need to be root! Pleas run as sudo.\033[0m" # Message in read
     exit
