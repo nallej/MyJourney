@@ -8,8 +8,7 @@
 #  - open a terminal in the Proxmox node as root
 #  - run wget: wget -q --show-progress https://github.com/nallej/MyJourney/raw/main/scripts/myTemplateBuilder.sh
 #  - chmod +x myTemplateBuilder.sh
-# Version 5
-
+#
 # Edit the script is very important, set these to use for auto creation:
 #  - set miniFILE -LOCATION = minimal Cloud Image
 #  - set stdFILE -LOCATION  = server Cloud Image
@@ -78,7 +77,7 @@
     path_iso_local="/var/lib/vz/template/iso/"
     name_iso_local=local
 # Default NFS if any
-    path_iso_NFS="/mnt/Sammiot/PVE/ISO/"
+    path_iso_NFS="/mnt/tank/PVE/ISO/"
     name_iso_NFS=ISO
 # More defaults if needed
     #path_iso_1= < path >
@@ -123,18 +122,18 @@ Version History:
 - v2.0 04.01.2023  v2.1 09.01.2023  v2.2 29.01.2023
 - v3.0 30.05.2023  v3.1 31.05.2023  v3.2 01.06.2023  v3.3 12.10.2023
 - v4.0 12.10.2023  v4.1 31.10.2023
-- v5.0 30.11.2023"
+- v5.0 25.11.2023"
 
 function showRecommended() { # Basic recommendations for the user
 whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
 "\nRemember to edit the script before executing:
-  - basic settings are 1 core and 1 GiB RAM
+  - basic settings are 1 core/socket and 1 GiB RAM
   - normal disk size for a VM is 8 - 16 G, but sometimes 4 or even 32 G
     - K8s workers nodes : small 1-2 core and 1-2 GiB RAM, disk 8 - 16 G
     - K8s managers      : 2-4 core and 2 - 4 GiB RAM disk 16 - 32G.
     - K3s nodes minimum : min. 1 core and 512M RAM
 
-  - OS type set to      = L26   Linux
+  - OS type set to      = L26   Linux 2.6 - 6.X Kernel
   - IP address set to   = DHCP  Remember to set DHCP Reservations
   - Qemu-Guest-Agent    = on
   - Autostart set to    = on " 18 78
@@ -146,10 +145,35 @@ whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
  #                                                                           #
 ###############################################################################
 
+pgrm="TemplateBuilder"
+ver="5.0"
+
+stopNotRoot(){ # Function Check for root privilidges and exit if not
+if [[ "$EUID" != 0 ]]; then
+    echo -e "\e[0;31mYou need to be root! Pleas run as sudo.\033[0m" # Message in read
+    exit
+fi
+}
+
+setRoot() { # Function I am root 
+if [[ "$EUID" = 0 ]]; then
+    echo -e "\n${okcm} Initialaizing: $pgrm version $ver"          # I am root
+else
+    sudo -k                             # ask for sudo password
+    if sudo true; then                  # Correct password
+        clear
+        echo -e "\n${yelb}Start $pgrm version $ver${end}"
+        echo -e "\n${okcm}Initialaizing...${end}"
+    else
+        echo "${redb}wrong password!${end}"
+        exit                            #exit if 3 times wrong
+    fi
+fi
+}
 
 function showGuide() {
-    whiptail --backtitle "$backTEXT" --title "Notice" --msgbox \
-" This script generate a VM or a Template or a set of a Template and VMs, \
+whiptail --backtitle "$backTEXT" --title "Notice" --msgbox \
+"This script generates a single VM or a Template and cloned VMs, \
 \nfunctionallity is detemend by your Y/N answers
 Run this script as root or sudo.
   - to make it executable: chmod +x myTemplateBuilder.sh.
@@ -283,7 +307,7 @@ function setLOG(){
 
 function askLicens() {
   if (whiptail --backtitle "$backTEXT" --title "Copyrigt and License" --defaultno --yesno \
-  "\n$cstring\n⚠️ Do You Accept the LICENSE?" 20 78 \
+  "\n$cstring\n⚠️ Do You Accept the LICENSE agreement?" 20 78 \
     --no-button "No" --yes-button "Accept"); then
     echo "${grn}User Accepted the License. Yes, exit status was $?.${end}" >> $logFILE
     FILE=LICENSE
@@ -854,7 +878,6 @@ function createTemplate() {
     echo "#- Storage: $storageVM" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#- Base   : $nameISO" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#  from : $pathISO" >> /etc/pve/qemu-server/$templateNO.conf
-    echo "#- Options: $OPTIONS" >> /etc/pve/qemu-server/$templateNO.conf
     #echo -e '#foo-bar\n' >> /etc/pve/lxc/VMID.conf
 
     qm template $templateNO
@@ -864,29 +887,16 @@ function createTemplate() {
 function createClones() { # Cloning the template
     local note
     echo "${stcm}${cyn} $(date +"%T")  Clone creation started" >> $logFILE
-    #if [[ $numberCLONES -gt 0 ]]; then
     x=0
     while [ $x -lt $numberCLONES ]
     do
         xx=$(($firstCLONE + $x))
         x=$(( $x + 1 ))
         qm clone $templateNO $xx --name $cname$x --full
-        #note=${# # Clone of $templateNO  $templateNAME\nuses $CI as base\nBridge: $vmbr}
-        #if [[ tag > 0 ]]; then note="${note}, vlan $vlan"; fi
-        #echo -e "$note" >> /etc/pve/qemu-server/$xx.conf
         echo "# # VM $xx $cname$x" >> /etc/pve/qemu-server/$xx.conf
         #echo " ${okcm}${cyn} $(date +"%T")  Clone $xx created"
         echo "${okcm}${cyn} $(date +"%T")  Cloned VM $xx $cname$x created" >> $logFILE
     done
-
-    # first="${cname}1"
-    # if [ $numberCLONES = 1 ]; then
-    #    createMSG=" ${okcm}${cyn} $(date +"%T")  $numberCLONES Clone created: $firstCLONE $first $numberCLONES "
-    # elif [ $numberCLONES >1 ]; then
-    #    last=$(($firstCLONE + $numberCLONES - 1))
-    #    createMSG=" ${okcm}${cyn} $(date +"%T")  $numberCLONES Clones created: $firstCLONE $first - $last $cname$numberCLONES"
-    # fi
-    # echo "$createMSG" >> $logFILE
 }
 
 function init() {
@@ -899,12 +909,20 @@ function init() {
     runSpinner off
 }
 
+###############################################################################
+ #                                                                           #
+  #   🧱🧱🧱🧱🧱🧱   E X E C U T I O N A B L E   C O D E   🧱🧱🧱🧱🧱🧱   #
+ #                                                                           #
+###############################################################################
+
 # Code Section ===============================================================#
 backt="myTempBuilder.sh is part of the My HomeLab Journey Project"  #Background text
 # Initialization menu --------------------------------------------------------#
 
 useColors                   # Use color codes
 init                        # Init function
+setRoot                     # Check for root privilidges
+stopNotRoot                 # Exit if not root
 clear                       # Clear the screan
 setLOG                      # New or Append
 showGuide                   # Quick Guide
@@ -928,13 +946,11 @@ setLAN                      # Set Bridge and VLAN
 setOPTIONS                  # Set more Options
 storageVM=$(getPool VM)     # Set Storage fo the VM e.g. local-zfs
 setUSER                     # Create the user, Passwork and Private Key to use
-#  What to create: a VM, a Template and optional Clones
-toCREATE                    # What shall we Create today
+toCREATE                    # What shall we Create Today, a VM or a Template+Clones
 
 # End of Code Section and Initialization Menu ================================#
 
 # Install or not to Install ==================================================#
-
 if (whiptail --backtitle "$backTEXT" --title \
   "\nCreate a VM, a Template and Clones" --yesno --defaultno \
   "\n  ⚠️  Do you like to proceed  -  Install  or  Exit " \
@@ -965,7 +981,7 @@ if (whiptail --backtitle "$backTEXT" --title \
     if [[ $tok = true ]]; then
         createTemplate &> /dev/null
         printf "\b"
-        echo "  ${okcm} Template created: $templateNO $templateNAME"
+        echo "${okcm} Template created: $templateNO $templateNAME"
 
         # Create the Clones --------------------------------------------------#
         if [[ $numberCLONES -gt 0 ]]; then
@@ -973,15 +989,15 @@ if (whiptail --backtitle "$backTEXT" --title \
             printf "\b"
             first="${cname}1"
             if [ $numberCLONES = 1 ]; then
-               echo "  ${okcm} Clone created: $firstCLONE $first $numberCLONES"
+               echo "${okcm} Clone created: $firstCLONE $first $numberCLONES"
             elif [[ $numberCLONES > 1 ]]; then
                last=$(($firstCLONE + $numberCLONES - 1))
-               echo "  ${okcm} Clone(s) created: $firstCLONE $first - $last $cname$numberCLONES"
+               echo "${okcm} Clone(s) created: $firstCLONE $first - $last $cname$numberCLONES"
             fi
         fi
     fi
 
-    echo -e "${grnb}== Installation is completed. See log for details."
+    echo -e "\n${grnb}== Installation is completed. See log for details."
 # End of Execute Functions----------------------------------------------------#
 
 # End of Install -------------------------------------------------------------#
