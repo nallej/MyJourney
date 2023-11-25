@@ -1,0 +1,31 @@
+function setUSER() {
+    # Set Cloid-init user
+    ciu=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --inputbox \
+      "\nCreate with CI user" \
+      10 48 $admin 3>&1 1>&2 2>&3)
+      echo "${cyn}     -  Cloud-init user: $ciu" >> $logFILE
+
+    # Create a long and complicated password 6 is a joke 8 is something 12 is semi ok 16 is ok 20 is good
+    while [[ "$cip" != "$cip_repeat" || ${#cip} -lt $passl ]]; do
+      cip=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --passwordbox \
+        "\n${cip_invalid}Please enter a password (6 chars min.): " 10 48 $passwd 3>&1 1>&2 2>&3)
+      cip_repeat=$(whiptail  --backtitle "$backTEXT" --title "Create CI User" --passwordbox \
+        "\nPlease repeat the password: " 10 48 $passwd 3>&1 1>&2 2>&3)
+      cip_invalid="WARNING Password too short, or not matching! "
+    done
+    # Shoud NOT be used for production
+        if showPASSWD=true; then 
+            echo "${cyn}     -  Cloud-init password: $cip" >> $logFILE
+        else
+            echo "${cyn}     -  Cloud-init password: /<hidden/>" >> $logFILE
+        fi
+      #PASSWORD="$(openssl rand -base64 16)"
+
+    #read -rp "     - set key from ~/.ssh/my_key    [y/N] : " my_key
+    # Set Key name and address
+    my_key=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --inputbox \
+      "\nUsers SSH Public Key is: $my_key" \
+      10 48 $initKEY 3>&1 1>&2 2>&3)
+      echo "${cyn}     -  My key: $my_key" >> $logFILE
+
+}
