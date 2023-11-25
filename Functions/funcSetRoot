@@ -1,15 +1,14 @@
-# Function I am root ----------------------------------------------------------#
-setroot() {
+setRoot() { # Function I am root 
 if [[ "$EUID" = 0 ]]; then
-    echo -e "\nInitialaizing:"          # I am root
+    echo -e "\n${okcm} Initialaizing: $pgrm version $ver"          # I am root
 else
     sudo -k
     if sudo true; then                  # Correct password
         clear
-        echo -e "\nStart My Code what ever it's"
-        echo -e "\nInitialaizing..."
+        echo -e "\n${yelb}Start $pgrm version $ver${end}"
+        echo -e "\n${okcm}Initialaizing...${end}"
     else
-        echo "wrong password!"
+        echo "${redb}wrong password!${end}"
         exit                            #exit if 3 times wrong
     fi
 fi
