@@ -1,0 +1,20 @@
+function askLicens() {
+  if (whiptail --backtitle "$backTEXT" --title "Copyrigt and License" --defaultno --yesno \
+  "\n$cstring\n⚠️ Do You Accept the LICENSE?" 20 78 \
+    --no-button "No" --yes-button "Accept"); then
+    echo "${grn}User Accepted the License. Yes, exit status was $?.${end}" >> $logFILE
+    FILE=LICENSE
+  if [ -f "$FILE" ]; then
+      echo "${blu}LICENSE file exist in this directory.${end}" >> $logFILE
+  else
+      wget https://github.com/nallej/MyJourney/raw/main/LICENSE &> /dev/null
+      echo "${blu}LICENSE file now in this directory.${end}" >> $logFILE
+      echo -e "\nTemplate Builder is Free and Open Sourse Software.\n  - There is NO WARRANTY, to the extent permitted by law.\n  - Part of the My Journey Project @ homelab.casaursus.net" > /etc/motd
+    fi
+else
+  echo "${red}⚠ User selected to Decline, exit status was $?. ⚠${end}" >> $logFILE
+  exit
+fi
+
+whiptail --backtitle "$backTEXT" --title "Version History" --msgbox "$version" 18 78
+}
