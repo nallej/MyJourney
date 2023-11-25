@@ -14,6 +14,7 @@ Both versions will be kept due to refrensing in blog posts
 - Still in Alpha testing K3s
 - nala APT Front-End added
 - K3s cluster is still TBA
+  
 ![apps1](https://github.com/nallej/MyJourney/assets/24981516/59faf5de-8c55-454c-ab41-a07855ea2454)
 
 
