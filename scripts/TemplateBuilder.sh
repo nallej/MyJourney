@@ -8,16 +8,19 @@
 #  - open a terminal in the Proxmox node as root
 #  - run wget: wget -q --show-progress https://github.com/nallej/MyJourney/raw/main/scripts/myTemplateBuilder.sh
 #  - chmod +x myTemplateBuilder.sh
-# ᛒ᛫ᛃ # ᚾᚨᛚᛚᛂᛃ
+# Version 5
 
 # Edit the script is very important, set these to use for auto creation:
-#  - set mini       = minimal Cloud Image
-#  - set std        = server Cloud Image
-#  - set admin      = admin user
-#  - set key_st     = name and addree of your puplic key like   - ~/.ssh/my_key
-#  - set passl      = minimi lenght of passwords
-#  - set logFILE    = name and addres to the logFILEile
-#  - set ISO path   = local or external path to ISO Storage
+#  - set miniFILE -LOCATION = minimal Cloud Image
+#  - set stdFILE -LOCATION  = server Cloud Image
+#  - set passwdLENGHT       = Minimi lenght of passwords
+#  - set admin              = admin user
+#  - set initPASSWD         = admin user password
+#  - showPASSWD             = Show Password in log true/false
+#  - set initKEY            = name and address of your puplic key like   - ~/.ssh/my_key
+#  - set testMODE           = Set to true for elevated privilidges in Testing / HomeLab mode
+#  - set logFILE            = name and address to the logFILEile
+#  - set ISO paths          = local or external path to ISO Storage
 
 # This script generate a workin VM or a Template or a set of VMs
 
@@ -35,49 +38,41 @@
   #       👍    👍     E D I T  t h i s  S E C T I O N      👍    👍       #
  #                                                                           #
 ###############################################################################
-
-
+#
 #------------------------------------------------------------------------------
 # 📂 Minimal Cloud Image - example Ubuntu 22.04. Just edit to use your favorite
 #------------------------------------------------------------------------------
 # File name
-    mini=ubuntu-22.04-minimal-cloudimg-amd64.img
+     mini=ubuntu-22.04-minimal-cloudimg-amd64.img
 # Locaction of the file
-    miniFile="https://cloud-images.ubuntu.com/minimal/releases/jammy/release/$mini"
-#
+     miniFile="https://cloud-images.ubuntu.com/minimal/releases/jammy/release/$mini"
 #------------------------------------------------------------------------------
 # 📂 Server Cloud Image - example Ubuntu 22.04. Just edit to use your favorite
 #------------------------------------------------------------------------------
 # File name
-    #std=jammy-server-cloudimg-amd64-disk-kvm.img
-    std=jammy-server-cloudimg-amd64.img
+     #std=jammy-server-cloudimg-amd64-disk-kvm.img
+     std=jammy-server-cloudimg-amd64.img
 # Locaction of the file
-    stdFile="https://cloud-images.ubuntu.com/jammy/current/$std"
-#
+     stdFile="https://cloud-images.ubuntu.com/jammy/current/$std"
 #------------------------------------------------------------------------------
-# 👤 Addmin user pre-fill
-    admin=pomo          #Administrator
-    passwd=sophia       #Pa$$w0rd
-    showPASSWD=false    # Show Password in log true/false
-#
-# 🔐 SSH Public Key or download it in the GUI into the cloud-init
-    key_st=~/.ssh/my_key
+# 👤 Addmin user pre-fills
 #------------------------------------------------------------------------------
-# 🔐 Add user to Docker Groupe - NOT recommended for production
-    test=y # Set to nN for elevated privilidges in Testing / HomeLab mode
-#
+     # 🔟 Create a long and complicated password
+     #   6 is a joke,  8 is something,  12 is semi ok,  16 is ok,  20 is good.
+     passl=16 #length of password
+     admin=Administrator
+     passwd=Pa$$w0rd
+     showPASSWD=true     # Show Password in log true/false
+     # 🔐 SSH Public Key or download it in the GUI into the cloud-init
+     initKEY=~/.ssh/my_key
 #------------------------------------------------------------------------------
-# 🔟 Create a long and complicated password
-#   6 is a joke,  8 is something,  12 is semi ok,  16 is ok,  20 is good.
-    passl=6 #length of password
-#
+     # 🔐 Add user to Docker Groupe - NOT recommended for production
+     testMODE=true # Set to true for elevated privilidges in Testing / HomeLab mode
 #------------------------------------------------------------------------------
 # 📑 Name of your LOG file
-    logFILE=~/install-myTemplateBuilder.log
-#
+     logFILE=~/TemplateBuilder.log
 #------------------------------------------------------------------------------
 # 📂 Local and External PATHs to your ISO files,
-#
 #------------------------------------------------------------------------------
 #Default Local Storage
     path_iso_local="/var/lib/vz/template/iso/"
@@ -88,16 +83,25 @@
 # More defaults if needed
     #path_iso_1= < path >
     #name_iso_1= < name >
-
+# More defaults if needed
     #path_iso_2= < path >
     #name_iso_2= < name >
-
+# More defaults if needed
     #path_iso_3= < path >
     #name_iso_3= < name >
-#
 #------------------------------------------------------------------------------
-
-# End of Editable Section ====================================================#
+# Other initialisation variables
+#------------------------------------------------------------------------------
+     initVMNO=8000                  # suggested VM numbre
+     initVMNAME=k8s-ctrlr           # suggested VM name
+     initTEMPLATENO=9000            # suggested Template number 
+     initTEMPLATENAME=k8s-template  # suggested Template name
+     initNOCLONES=3                 # suggested how many Clones to create
+     initNO1STCLONE=5001            # suggested number for 1st Clone
+     initCLONENAME=node-            # suggested Clone namebas for e.g. node-1
+#------------------------------------------------------------------------------
+#    E n d   o f   t h e   E d i t a b l e   S e c t i o n                    #
+#------------------------------------------------------------------------------
 
 
 ###############################################################################
@@ -118,7 +122,8 @@ Version History:
 - v1.0 29.11.2022  v1.1 01.12.2022
 - v2.0 04.01.2023  v2.1 09.01.2023  v2.2 29.01.2023
 - v3.0 30.05.2023  v3.1 31.05.2023  v3.2 01.06.2023  v3.3 12.10.2023
-- v4.0 12.10.2023  v4.1 31.10.2023"
+- v4.0 12.10.2023  v4.1 31.10.2023
+- v5.0 30.11.2023"
 
 function showRecommended() { # Basic recommendations for the user
 whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
@@ -129,8 +134,8 @@ whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
     - K8s managers      : 2-4 core and 2 - 4 GiB RAM disk 16 - 32G.
     - K3s nodes minimum : min. 1 core and 512M RAM
 
-  - OS type set to      = L26
-  - IP address set to   = DHCP Remember to set DHCP Reservations
+  - OS type set to      = L26   Linux
+  - IP address set to   = DHCP  Remember to set DHCP Reservations
   - Qemu-Guest-Agent    = on
   - Autostart set to    = on " 18 78
 }
@@ -171,14 +176,14 @@ function c-info() { # print the Copyright
 EOF
 }
 
-cstring="Template Builder is Free and Open Sourse Software.\n \
-Copyright (c) 2021-2023 CasaUrsus\n \
-Author: nallej (CasaUrsus)\n \
-License: MIT  https://github.com/nallej/MyJourney/raw/main/LICENSE\n \
-This is Free and Open Sourse Software; you are free to change and redistribute it.\n \
+cstring="Template Builder is Free and Open Sourse Software.\n\
+Copyright (c) 2021-2023 CasaUrsus\n\
+- Author: nallej (CasaUrsus)\n\
+- License: MIT  https://github.com/nallej/MyJourney/raw/main/LICENSE\n\
+This is Free and Open Sourse Software; you are free to change and redistribute it.\n\
 \nSee the LICENSE file or the link for details.\n \
- - There is NO WARRANTY, read the code befor using.\n \
- - Part of the My Journey Project @ homelab.casaursus.net"
+ - There is NO WARRANTY, read the code befor using it.\n \
+ - Part of the My Journey Project @ homelab.casaursus.net\n"
 
 function header() { # print CasaUrsus. figlet -f standard CasaUrsus
   clear
@@ -205,19 +210,19 @@ EOF
 
 function useColors() { # define colors to be used
     # color code   color as bold
-    red=$'\e[31m'; redb=$'\e[1;31m' # call red with $red and bold as $redb
-    grn=$'\e[32m'; grnb=$'\e[1;32m' # call as green $grn as bold green $grnb
-    yel=$'\e[33m'; yelb=$'\e[1;33m' # call as yellow $yel as bold yellow $yelb
-    blu=$'\e[34m'; blub=$'\e[1;34m' # call as blue $blu as bold blue $blub
-    mag=$'\e[35m'; magb=$'\e[1;35m' # call as magenta $mag as bold magenta $magb
-    cyn=$'\e[36m'; cynb=$'\e[1;36m' # call as cyan $cyn as cyan bold $cynb
-    end=$'\e[0m'                    # End that color
-    okcm="${grnb}✔ ${end}"         # Green OK
-    nocm="${redb}✘ ${end}"         # Red NO
-    dlcm="${grnb}➟ ${end}"         # Indikate DownLoad
-    stcm="${cynb}➲ ${end}"         # STart of somthing
-    ccl="\\r\\033[K"                # Clear Current Line (carriage return + clear from cursor to EOL)
-
+    red=$'\e[31m'; redb=$'\e[1;31m'     # call red with $red and bold as $redb
+    grn=$'\e[32m'; grnb=$'\e[1;32m'     # call as green $grn as bold green $grnb
+    yel=$'\e[33m'; yelb=$'\e[1;33m'     # call as yellow $yel as bold yellow $yelb
+    blu=$'\e[34m'; blub=$'\e[1;34m'     # call as blue $blu as bold blue $blub
+    mag=$'\e[35m'; magb=$'\e[1;35m'     # call as magenta $mag as bold magenta $magb
+    cyn=$'\e[36m'; cynb=$'\e[1;36m'     # call as cyan $cyn as cyan bold $cynb
+    end=$'\e[0m'                        # End that color
+    okcm="${grnb}✔ ${end}"              # Green OK
+    nocm="${redb}✘ ${end}"              # Red NO
+    dlcm="${grnb}➟ ${end}"              # Indikate DownLoad
+    stcm="${cynb}➲ ${end}"              # Start of somthing
+    ccl="\\r\\033[K"                    # Clear Current Line (carriage return + clear from cursor to EOL)
+    time=${cynb}$(date +"%T")${end}     # Show time of somthing
     #Use them to print with colours: printf "%s\n" "Text in white ${blu}blue${end}, white and ${mag}magenta${end}.
 }
 
@@ -237,7 +242,7 @@ function spinner() { # display a animated spinner
     local delays=0.1 # Delay between each characte
 
     tput civis # Hide cursor and spinn
-    echo -e "${yelb} "
+    #echo -e "${yelb} "
     while :; do
         for character in "${array9[@]}"; do # Use this Array
             printf "%s" "$character"
@@ -278,7 +283,7 @@ function setLOG(){
 
 function askLicens() {
   if (whiptail --backtitle "$backTEXT" --title "Copyrigt and License" --defaultno --yesno \
-  "\n$cstring\n⚠️   Do You Accept the LICENSE?" 18 78 \
+  "\n$cstring\n⚠️ Do You Accept the LICENSE?" 20 78 \
     --no-button "No" --yes-button "Accept"); then
     echo "${grn}User Accepted the License. Yes, exit status was $?.${end}" >> $logFILE
     FILE=LICENSE
@@ -442,14 +447,18 @@ function setUSER() {
       cip_invalid="WARNING Password too short, or not matching! "
     done
     # Shoud NOT be used for production
-      if showPASSWD=true; then echo "${cyn}     -  Cloud-init password: $cip" >> $logFILE; fi
+        if showPASSWD=true; then 
+            echo "${cyn}     -  Cloud-init password: $cip" >> $logFILE
+        else
+            echo "${cyn}     -  Cloud-init password: /<hidden/>" >> $logFILE
+        fi
       #PASSWORD="$(openssl rand -base64 16)"
 
     #read -rp "     - set key from ~/.ssh/my_key    [y/N] : " my_key
     # Set Key name and address
     my_key=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --inputbox \
       "\nUsers SSH Public Key is: $my_key" \
-      10 48 $key_st 3>&1 1>&2 2>&3)
+      10 48 $initKEY 3>&1 1>&2 2>&3)
       echo "${cyn}     -  My key: $my_key" >> $logFILE
 
 }
@@ -479,7 +488,7 @@ function setBASE() {
 
     # Core count selector
     sizeC=$(whiptail  --backtitle "$backTEXT" --title "Base Settings" --radiolist \
-    "\nChoose the number of Cores" 14 48 6 \
+    "\nChoose the number of Cores/Socket" 14 48 6 \
     "1" "for normal VMs and Workers " ON \
     "2" "for basic VMs and Managers " OFF \
     "3" "large VMs" OFF \
@@ -500,25 +509,26 @@ while read -r ONOFF TAG ITEM; do
   OPTION_MENU+=("$TAG" "$ITEM " "$ONOFF")
 done < <(
   cat <<EOF
-ON QGA Qemu-Guest-Agent
-ON nano nano editor, ncurses-term
-ON git git
-OFF UnUp unattended-upgrades On
-OFF F2B Fail2Ban Security
-OFF clam clamav, clamav-daemon
-OFF mailu mailutils
-OFF Do-ce Docker-CE Alpine
-OFF Po-ce Portainer-CE Alpine
-OFF PoA Portainer Agent
-OFF Do-ee ﹩ Docker    (-EE)
-OFF Po-be ﹩ Portainer (-BE)
-OFF K3s make K3s HA-settings TBA
-OFF K8s make K8s settings
-
+ON Qemu-Guest-Agent Qemu-Guest-Agent
+ON nano editor and ncurses-term
+ON git Git Hub/Lab use
+on nala APT frontend
+OFF unattended-upgrades set to On
+ON Fail2Ban Security
+OFF clamav antivirus and daemon
+OFF mailutils needs FQDN
+OFF Docker-CE Alpine
+OFF Dockge Docker Management
+OFF Portainer-CE Alpine
+OFF Agent Portainer Agent
+OFF Docker \$\$\$ license
+OFF Portainer-BE \$\$\$ license
+OFF K3s TBA a K3s HA-Cluster
+OFF K8s make a K8s Cluster
 EOF
 )
 OPTIONS=$(whiptail --backtitle "$backTEXT" --title "Options List" --checklist --separate-output \
-"\nSelect Options for the VM:\n" 20 $((LONGA + 16)) 12 "${OPTION_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
+"\nSelect Options for the VM:\n" 20 $((LONGA + 33)) 12 "${OPTION_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 [ -z "$OPTIONS" ] && {
   whiptail --backtitle "$backTEXT" --title "No Options Selected" --msgbox "It appears that no Options was selected" 10 68
 }
@@ -529,7 +539,7 @@ else
   echo "${cynb}   - User selected options:${end}" >> $logFILE
   for CHOICE in $OPTIONS; do
     case "$CHOICE" in
-    "QGA")
+    "Qemu-Guest-Agent")
       o1="y"
       echo "${cyn}     -  qemu-guest-agent${end}" >> $logFILE
       ;;
@@ -540,50 +550,57 @@ else
     "git")
       o3="y"
       echo "${cyn}     -  git${end}" >> $logFILE
+      ;;      
+    "nala")
+      o21="y"
+      echo "${cyn}     -  nala${end}" >> $logFILE
       ;;
-    "UnUp")
+    "unattended-upgrades")
       o4="y"
       echo "${cyn}     -  unattended-upgrades${end}" >> $logFILE
       ;;
-    "F2B")
+    "Fail2Ban")
       o5="y"
       echo "${cyn}     -  fail2ban${end}" >> $logFILE
       ;;
-    "clam")
+    "clamav")
       o6="y"
       echo "${cyn}     -  clamav-daemon${end}" >> $logFILE
       ;;
-    "mailu")
+    "mailutils")
       o7="y"
       echo "${cyn}     -  mailutils${end}" >> $logFILE
       ;;
-    "Do-ce")
+    "Docker-CE")
       o10="y"
       echo "${cyn}     -  Docker-CE${end}" >> $logFILE
       ;;
-    "Po-ce")
+    "Dockge")
+      o20="y"
+      ;;
+    "Portainer-CE")
       o11="y"
       echo "${cyn}     -  Portainer-CE${end}" >> $logFILE
       ;;
-    "PoA")
+    "Agent")
       o12="y"
       echo "${cyn}     -  Portainer Agent${end}" >> $logFILE
       ;;
-    "Do-ee")
+    "Docker")
       o13="y"
-      echo "${cyn}     -  Docker-EE ﹩${end}" >> $logFILE
+      echo "${cyn}     -  Docker-EE \$\$\$${end}" >> $logFILE
       ;;
-    "Po-be")
+    "Portainer-BE")
       o14="y"
-      echo "${cyn}     -  Portainer ﹩${end}" >> $logFILE
+      echo "${cyn}     -  Portainer \$\$\$${end}" >> $logFILE
       ;;
     "K3s")
       o8="y"
-      echo "${cyn}     -  make K3s settings${end}" >> $logFILE
+      echo "${cyn}     -  make a K3s cluster${end}" >> $logFILE
       ;;
     "K8s")
       o9="y"
-      echo "${cyn}     -  make K8s HA-settings${end}" >> $logFILE
+      echo "${cyn}     -  make a K8s cluster${end}" >> $logFILE
       ;;      
     *)
       echo "${red}⚠ Unsupported item $CHOICE! ${end}" >> $logFILE
@@ -598,29 +615,29 @@ function toCREATE() {
 # What are we to create only a VM, only a Template or both
 if (whiptail --backtitle "$backTEXT" --title "What to Create" --yesno \
   "\n Create a VM or a Template Stack?" \
-  10 48 --no-button "Single VM" --yes-button "Template Stack"); then
+  10 48 --no-button "One VM" --yes-button "Stack"); then
   tok=true # do the yes, a Template
   templateNO=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nTemplate ID" 10 48 9000 3>&1 1>&2 2>&3)
+        "\nTemplate ID" 10 48 $initTEMPLATENO 3>&1 1>&2 2>&3)
   templateNAME=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nTemplate Name" 10 48 k8s-template 3>&1 1>&2 2>&3)
+        "\nTemplate Name" 10 48 $initTEMPLATENAME 3>&1 1>&2 2>&3)
   echo "${cyn}     -  Template $templateNO $templateNAME" >> $logFILE
   #Create also some Clones of the Template
   if (whiptail --backtitle "$backTEXT" --title "What to Create" --yesno \
        "\n  Create Clones of the Template?" 10 48 ); then
         # do the yes, a Template
         firstCLONE=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nID of first clone" 10 48 5000 3>&1 1>&2 2>&3)
+        "\nID of first clone" 10 48 $initNO1STCLONE 3>&1 1>&2 2>&3)
         numberCLONES=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nNumber of clones 3" 10 48 3 3>&1 1>&2 2>&3)
+        "\nNumber of clones" 10 48 $initNOCLONES 3>&1 1>&2 2>&3)
         cname=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nName of clone(s) node-1 to node-$numberCLONES" 10 48 node- 3>&1 1>&2 2>&3)
+        "\nName of clone(s) $initCLONENAME1 to $initCLONENAME$numberCLONES" 10 48 node- 3>&1 1>&2 2>&3)
         first="${cname}1"
         if [ $numberCLONES = 1 ]; then
-            createMSG=" ${okcm}${cyn} $(date +"%T")  $numberCLONES Clone: $firstCLONE $first $numberCLONES "
+            createMSG="     - $numberCLONES Clone: $firstCLONE $first $numberCLONES "
         else
             last=$(($firstCLONE + $numberCLONES))
-            createMSG=" ${okcm}${cyn} $(date +"%T")  $numberCLONES Clones: $firstCLONE $first - $last $cname$numberCLONES"
+            createMSG="     -  $numberCLONES Clones: $firstCLONE $first - $last $cname$numberCLONES"
         fi
         echo "$createMSG" >> $logFILE
   fi
@@ -628,9 +645,9 @@ else
     tok=false # No, a Single VM
 fi
     vmNO=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nID for the VM" 10 48 8000 3>&1 1>&2 2>&3)
+        "\nVM ID" 10 48 $initVMNO 3>&1 1>&2 2>&3)
     vmNAME=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nName of the VM" 10 48 k8s-master 3>&1 1>&2 2>&3)
+        "\nName of the VM" 10 48 $initVMNAME 3>&1 1>&2 2>&3)
     echo "${cyn}     -  VM $vmNO $vmNAME" >> $logFILE
 }
 
@@ -664,13 +681,14 @@ function createBase() {
       else
         cp $pathISO$nameISO base.qcow2  &> /dev/null
     fi
-    echo "${stcm}${cyn} $(date +"%T")  Create base $sizeD image" >> $logFILE
 
     qemu-img resize base.qcow2 $sizeD
     # 16G is typical - Resize the disk to your needs, 8 - 32 GiB is normal
     # Add Qemu-Guest-Agent and any other packages you’d like in your base image.
     # libguestfs-tools has to be installed on the node.
     # Add or delete add-ons according to your needs
+    echo "${stcm}${cyn} $(date +"%T")  Create base $sizeD image" >> $logFILE
+
     echo "# Firstboot commands created from myTemplateBuilder" > firstboot.sh
     vc=""
     if [[ $o1 == 'y' ]]; then vc="$vc --install qemu-guest-agent"; fi
@@ -678,6 +696,7 @@ function createBase() {
         vc="$vc --install nano"
         vc="$vc --install ncurses-term"; fi
     if [[ $o3 == 'y' ]]; then vc="$vc --install git"; fi
+    if [[ $o21 == 'y' ]]; then vc="$vc --install nala"; fi    
     if [[ $o4 == 'y' ]]; then vc="$vc --install unattended-upgrades"; fi
     if [[ $o5 == 'y' ]]; then vc="$vc --install fail2ban"; fi
     if [[ $o6 == 'y' ]]; then
@@ -719,9 +738,14 @@ function createBase() {
         echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
         echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
         echo "apt-get update" >> firstboot.sh
-        if [[ test == [yY] ]]; then echo "usermod -aG docker $ciu" >> firstboot.sh; fi
+        if [[ testMODE = true ]]; then echo "usermod -aG docker $ciu" >> firstboot.sh; fi
         echo "apt-get install -y docker-ce containerd.io docker-ce-cli docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin" >> firstboot.sh
-    fi    
+    fi  
+    if [[ $o20 == 'y' ]]; then
+        echo "/home/$ciu/docker/dockge/" >> firstboot.sh
+        # Dockge management app is a great tool and replaces Portainer-CE in my lab. Storage strategy /home/<user>/docker/ dockge (for its data) and stacks (for the <app>/compose.yaml)
+        echo "docker run -d -p 5001:5001 --name Dockge --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /home/$ciu/docker/dockge/data:/app/data -v /home/$ciu/docker/stacks:/home/$ciUSER/docker/stacks -e DOCKGE_STACKS_DIR=/home/$ciUSER/docker/stacks louislam/dockge:latest" >> firstboot.sh
+      fi  
     if [[ $o11 == 'y' ]]; then
         echo "mkdir -p /home/$ciu/docker/portainer/portainer-data" >> firstboot.sh
         echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:alpine" >> firstboot.sh
@@ -750,10 +774,14 @@ function createBase() {
     fi
     echo "cp /root/virt-sysprep-firstboot.log /home/$ciu/firstboot.log" >> firstboot.sh
     vc="$vc --firstboot firstboot.sh --add base.qcow2"
-    virt-customize $vc >> $logFILE 2>&1
-    echo ">>>> virt-customize:$vc " >> $logFILE
-    echo ">>>> firstboot:"&cat firstboot.sh >> $logFILE
-    echo "${okcm}${cyn} $(date +"%T")  base.qcow2 $sizeD created" >> $logFILE
+    virt-customize $vc
+    echo -e "\n>>>> virt-customize --------------------------------------------------------" >> $logFILE
+    echo "$vc" >> $logFILE
+    echo -e "<<<< virt-customize ---------------------------------------------------------\n" >> $logFILE
+    echo -e ">>>> firstboot --------------------------------------------------------------" >> $logFILE
+    cat firstboot.sh >> $logFILE
+    echo -e "<<< firstboot --------------------------------------------------------------\n" >> $logFILE
+    echo "${okcm} ${time}  base.qcow2 $sizeD created" >> $logFILE
 }
 
 function createVM() {
@@ -842,14 +870,13 @@ function createClones() { # Cloning the template
     do
         xx=$(($firstCLONE + $x))
         x=$(( $x + 1 ))
-        qm clone $templateNO $xx --name $cname$x --full >> $logFILE 2>&1
+        qm clone $templateNO $xx --name $cname$x --full
         #note=${# # Clone of $templateNO  $templateNAME\nuses $CI as base\nBridge: $vmbr}
         #if [[ tag > 0 ]]; then note="${note}, vlan $vlan"; fi
         #echo -e "$note" >> /etc/pve/qemu-server/$xx.conf
         echo "# # VM $xx $cname$x" >> /etc/pve/qemu-server/$xx.conf
-        #echo "# - Template $templateNO $templateNAME" >> /etc/pve/qemu-server/$xx.conf
-        printf "\b"
-        echo "  ${okcm}${cyn} $(date +"%T")  Clone $xx created"
+        #echo " ${okcm}${cyn} $(date +"%T")  Clone $xx created"
+        echo "${okcm}${cyn} $(date +"%T")  Cloned VM $xx $cname$x created" >> $logFILE
     done
 
     # first="${cname}1"
@@ -909,10 +936,16 @@ toCREATE                    # What shall we Create today
 # Install or not to Install ==================================================#
 
 if (whiptail --backtitle "$backTEXT" --title \
-  "\nCreate a VM, a Template and/or Clones" --yesno --defaultno \
+  "\nCreate a VM, a Template and Clones" --yesno --defaultno \
   "\n  ⚠️  Do you like to proceed  -  Install  or  Exit " \
   10 68 --no-button "Exit" --yes-button "Install"); then
-  echo "${magb}   -  Installation started  $(date +"%F %T")${end}" >> $logFILE
+  echo "${okcm}${magb} User selected Installation to start  $(date +"%F %T")${end}" >> $logFILE
+
+###############################################################################
+ #                                                                           #
+  #   ✋   N O  n e e d  t o  E D I T  B e l o w  t h i s  P o i n t   🚫  #
+ #                                                                           #
+###############################################################################
 
 # Headers --------------------------------------------------------------------#
     printf ${yelb}; header; header-2; printf ${end}
@@ -921,33 +954,29 @@ if (whiptail --backtitle "$backTEXT" --title \
     echo "-- Installation started"
     runSpinner run    # Run the Spinner
 # Create the VM --------------------------------------------------------------#
-
-    createBase #>> $logFILE 2>&1
+    (createBase >> $logFILE 2>&1)
     printf "\b"
     echo "${okcm} base.qcow2 image created"
 
-#    (createVM >> $logFILE 2>&1)
-    createVM
+    (createVM >> $logFILE 2>&1)
     printf "\b"
     echo "${okcm} VM $vmNO created as $vmNAME"
 # Create the Template --------------------------------------------------------#
     if [[ $tok = true ]]; then
-#        createTemplate &> /dev/null
-        createTemplate >> $logFILE 2>&1
+        createTemplate &> /dev/null
         printf "\b"
-        echo "${okcm} Template created: $templateNO $templateNAME"
+        echo "  ${okcm} Template created: $templateNO $templateNAME"
 
         # Create the Clones --------------------------------------------------#
         if [[ $numberCLONES -gt 0 ]]; then
-#            (createClones &> /dev/null)
-            createClones # >> $logFILE 2>&1
+            (createClones &> /dev/null)
             printf "\b"
             first="${cname}1"
             if [ $numberCLONES = 1 ]; then
                echo "  ${okcm} Clone created: $firstCLONE $first $numberCLONES"
             elif [[ $numberCLONES > 1 ]]; then
                last=$(($firstCLONE + $numberCLONES - 1))
-               echo "  ${okcm} Clones created: $firstCLONE $first - $last $cname$numberCLONES"
+               echo "  ${okcm} Clone(s) created: $firstCLONE $first - $last $cname$numberCLONES"
             fi
         fi
     fi
@@ -963,7 +992,6 @@ read -rp "Show the log [y/N] : " pl; if [[ $pl == [yY] ]]; then cat $logFILE; fi
 
 # ⚠️ Setup Aborted ⚠️ ========================================================#
 else
-    runSpinner off  # Terminate the Spinner
     echo -e "${red}== Installation was aborted!${end}"
     echo -e "${yelb}⚠ User canceld the install ⚠${end}" >> $logFILE
 fi
