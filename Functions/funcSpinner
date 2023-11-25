@@ -1,5 +1,4 @@
-spinner() # Function to display a animated spinner
-{
+function spinner() { # display a animated spinner
     # The different Spinner Arrays to choose from
     local array1=("◐" "◓" "◑" "◒")
     local array2=("░" "▒" "▓" "█")
@@ -9,11 +8,15 @@ spinner() # Function to display a animated spinner
     local array6=('-' '\' '|' '/') # L to R
     local array7=('-' '/' '|' '\') # R to L
     local array9=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
+    local array10=("▏" "▎" "▍" "▌" "▋" "▊" "▉" "█")
+    local array11=("▁" "▂" "▃" "▄" "▅" "▆" "▇" "█")
 
     local delays=0.1 # Delay between each characte
+
     tput civis # Hide cursor and spinn
+    #echo -e "${yelb} "
     while :; do
-        for character in "${array9[@]}"; do # Use Array #
+        for character in "${array9[@]}"; do # Use this Array
             printf "%s" "$character"
             sleep "$delays"
             printf "\b"  # Move cursor back
@@ -21,16 +24,16 @@ spinner() # Function to display a animated spinner
     done
 }
 
-Start the spinner when needed
-# Run the spinner in the background and Save the PID
-spinner &
-spinner_pid=$!
-
-
-Stop the Spinner when not needed any more and return of the cursor
-# Terminate the Spinner
-kill "$spinner_pid"
-wait "$spinner_pid" 2>/dev/null
-# Show the Cursor Again
-tput cnorm
-
+function runSpinner() {
+    local ONOFF=$1
+    if [ $ONOFF == 'run' ]; then
+        # Run the spinner in the background and Save the PID
+        spinner &
+        spinner_pid=$!
+    else
+       # Terminate the Spinner
+       kill "$spinner_pid"; wait "$spinner_pid" 2>/dev/null
+       tput cnorm # Show the Cursor Again
+       echo -e "${end} "
+    fi
+}
