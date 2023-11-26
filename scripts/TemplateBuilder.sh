@@ -6,17 +6,17 @@
 
 # Install this script by:
 #  - open a terminal in the Proxmox node as root
-#  - run wget: wget -q --show-progress https://github.com/nallej/MyJourney/raw/main/scripts/myTemplateBuilder.sh
-#  - chmod +x myTemplateBuilder.sh
+#  - run wget: wget -q --show-progress https://github.com/nallej/MyJourney/raw/main/scripts/TemplateBuilder.sh
+#  - chmod +x TemplateBuilder.sh
 #
 # Edit the script is very important, set these to use for auto creation:
 #  - set miniFILE -LOCATION = minimal Cloud Image
 #  - set stdFILE -LOCATION  = server Cloud Image
-#  - set passwdLENGHT       = Minimi lenght of passwords
-#  - set admin              = admin user
+#  - set passLENGHT         = Minimi lenght of passwords
+#  - set initUSER           = admin user
 #  - set initPASSWD         = admin user password
 #  - showPASSWD             = Show Password in log true/false
-#  - set initKEY            = name and address of your puplic key like   - ~/.ssh/my_key
+#  - set initKEY            = name and address of your puplic key like   - ~/.ssh/my_key.pub
 #  - set testMODE           = Set to true for elevated privilidges in Testing / HomeLab mode
 #  - set logFILE            = name and address to the logFILEile
 #  - set ISO paths          = local or external path to ISO Storage
@@ -41,32 +41,36 @@
 #------------------------------------------------------------------------------
 # 📂 Minimal Cloud Image - example Ubuntu 22.04. Just edit to use your favorite
 #------------------------------------------------------------------------------
-# File name
+# File name of the qcow2 file with our OS
      mini=ubuntu-22.04-minimal-cloudimg-amd64.img
-# Locaction of the file
+# Locaction of the file + the file
      miniFile="https://cloud-images.ubuntu.com/minimal/releases/jammy/release/$mini"
 #------------------------------------------------------------------------------
 # 📂 Server Cloud Image - example Ubuntu 22.04. Just edit to use your favorite
 #------------------------------------------------------------------------------
-# File name
-     #std=jammy-server-cloudimg-amd64-disk-kvm.img
-     std=jammy-server-cloudimg-amd64.img
-# Locaction of the file
-     stdFile="https://cloud-images.ubuntu.com/jammy/current/$std"
+# File name  of the qcow2 file with our OS
+     #std=jammy-server-cloudimg-amd64.img  # alternative: std=jammy-server-cloudimg-amd64-disk-kvm.img
+     std=debian-12-genericcloud-amd64.qcow2
+# Locaction of the file + the file
+     #stdFile="https://cloud-images.ubuntu.com/jammy/current/$std"
+     stdFile="https://cloud.debian.org/images/cloud/bookworm/latest/$std"
+# Alternatives
+# For virtual use, smaller by excluding drivers for physical hardware    : https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
+# HW and virtual,  for e.g. OpenStack, DigitalOcean and also on real rust: https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
 #------------------------------------------------------------------------------
 # 👤 Addmin user pre-fills
 #------------------------------------------------------------------------------
      # 🔟 Create a long and complicated password
      #   6 is a joke,  8 is something,  12 is semi ok,  16 is ok,  20 is good.
-     passl=16 #length of password
-     admin=Administrator
-     passwd=Pa$$w0rd
-     showPASSWD=true     # Show Password in log true/false
-     # 🔐 SSH Public Key or download it in the GUI into the cloud-init
-     initKEY=~/.ssh/my_key
+     # 🔐 SSH Public Key or download it later in the GUI into the cloud-init
+     initUSER=Administrator
+     passLENGHT=16                  #length of password
+     initPASSWD=L0ng4ndC0mplicatedPa$$w0rd
+     showPASSWD=true                # Show Password in log true/false
+     initKEY=~/.ssh/my_key.pub
 #------------------------------------------------------------------------------
      # 🔐 Add user to Docker Groupe - NOT recommended for production
-     testMODE=true # Set to true for elevated privilidges in Testing / HomeLab mode
+     testMODE=true                  # Set to true for elevated privilidges in Testing / HomeLab mode
 #------------------------------------------------------------------------------
 # 📑 Name of your LOG file
      logFILE=~/TemplateBuilder.log
@@ -77,7 +81,7 @@
     path_iso_local="/var/lib/vz/template/iso/"
     name_iso_local=local
 # Default NFS if any
-    path_iso_NFS="/mnt/tank/PVE/ISO/"
+    path_iso_NFS="/mnt/Sammiot/PVE/ISO/"
     name_iso_NFS=ISO
 # More defaults if needed
     #path_iso_1= < path >
@@ -93,7 +97,7 @@
 #------------------------------------------------------------------------------
      initVMNO=8000                  # suggested VM numbre
      initVMNAME=k8s-ctrlr           # suggested VM name
-     initTEMPLATENO=9000            # suggested Template number 
+     initTEMPLATENO=9000            # suggested Template number
      initTEMPLATENAME=k8s-template  # suggested Template name
      initNOCLONES=3                 # suggested how many Clones to create
      initNO1STCLONE=5001            # suggested number for 1st Clone
@@ -112,7 +116,7 @@
 
 # Version history ============================================================
 
-version="myTempBuilder.sh is part of the My HomeLab Journey Project
+version="TemplateBuilder.sh is part of the My HomeLab Journey Project
 - https://homelab.casaursus.net
 - https://homelab.casaursus.net/proxmox-automation
 - https://homelab.casaursus.net/setting-up-kubernetes-k8s
@@ -122,11 +126,11 @@ Version History:
 - v2.0 04.01.2023  v2.1 09.01.2023  v2.2 29.01.2023
 - v3.0 30.05.2023  v3.1 31.05.2023  v3.2 01.06.2023  v3.3 12.10.2023
 - v4.0 12.10.2023  v4.1 31.10.2023
-- v5.0 25.11.2023"
+- v5.0 25.11.2023  v5.1 "
 
 function showRecommended() { # Basic recommendations for the user
 whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
-"\nRemember to edit the script before executing:
+"Remember to edit the script before executing:
   - basic settings are 1 core/socket and 1 GiB RAM
   - normal disk size for a VM is 8 - 16 G, but sometimes 4 or even 32 G
     - K8s workers nodes : small 1-2 core and 1-2 GiB RAM, disk 8 - 16 G
@@ -136,7 +140,8 @@ whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
   - OS type set to      = L26   Linux 2.6 - 6.X Kernel
   - IP address set to   = DHCP  Remember to set DHCP Reservations
   - Qemu-Guest-Agent    = on
-  - Autostart set to    = on " 18 78
+  - Autostart set to    = on 
+  - Use a Public KEY" 18 78
 }
 
 ###############################################################################
@@ -148,14 +153,14 @@ whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
 pgrm="TemplateBuilder"
 ver="5.0"
 
-stopNotRoot(){ # Function Check for root privilidges and exit if not
+function stopNotRoot(){ # Function Check for root privilidges and exit if not
 if [[ "$EUID" != 0 ]]; then
     echo -e "\e[0;31mYou need to be root! Pleas run as sudo.\033[0m" # Message in read
     exit
 fi
 }
 
-setRoot() { # Function I am root 
+function setRoot() { # Function I am root 
 if [[ "$EUID" = 0 ]]; then
     echo -e "\n${okcm} Initialaizing: $pgrm version $ver"          # I am root
 else
@@ -171,36 +176,7 @@ else
 fi
 }
 
-function showGuide() {
-whiptail --backtitle "$backTEXT" --title "Notice" --msgbox \
-"This script generates a single VM or a Template and cloned VMs, \
-\nfunctionallity is detemend by your Y/N answers
-Run this script as root or sudo.
-  - to make it executable: chmod +x myTemplateBuilder.sh.
-
- To edit the script is very important:
-  - location and name of your public key
-    or upload your puplic key to use for auto creation to: ~/.ssh/my_key
-  - what Cloud Images to use
-  - where are the Cloud Images stored
-  - default user related things, name, password and key, logging 
-
-  See the EDIT Section " 20 78
-}
-
-function c-info() { # print the Copyright
-  clear
-  cat <<"EOF"
-
-  Copyright (c) 2021-2023 CasaUrsus
-  Author: nallej (CasaUrsus)
-  License: MIT
-  https://github.com/nallej/MyJourney/raw/main/LICENSE
-
-EOF
-}
-
-cstring="Template Builder is Free and Open Sourse Software.\n\
+cstring="Template Builder is Free and Open Sourse Software.\n\n\
 Copyright (c) 2021-2023 CasaUrsus\n\
 - Author: nallej (CasaUrsus)\n\
 - License: MIT  https://github.com/nallej/MyJourney/raw/main/LICENSE\n\
@@ -306,8 +282,8 @@ function setLOG(){
 }
 
 function askLicens() {
-  if (whiptail --backtitle "$backTEXT" --title "Copyrigt and License" --defaultno --yesno \
-  "\n$cstring\n⚠️ Do You Accept the LICENSE agreement?" 20 78 \
+  if (whiptail --backtitle "$backTEXT" --title "Copyrigt © and License" --defaultno --yesno \
+  "$cstring\n⚠️ Do You Accept the LICENSE agreement?" 20 78 \
     --no-button "No" --yes-button "Accept"); then
     echo "${grn}User Accepted the License. Yes, exit status was $?.${end}" >> $logFILE
     FILE=LICENSE
@@ -324,6 +300,36 @@ else
 fi
 
 whiptail --backtitle "$backTEXT" --title "Version History" --msgbox "$version" 18 78
+}
+
+function showGuide() {
+whiptail --backtitle "$backTEXT" --title "Notice" --msgbox \
+"This script generates a single VM or a Template and VMs. 
+  - functionallity is detemend by your Y/N answers
+This script will run as root or sudo.
+  - to make it executable: chmod +x TemplateBuilder.sh.
+
+ To edit the script is very important:
+  - location and name of public key to be useed in auto  reation 
+    - your or an other public key
+    - copy one into: ~/.ssh/my_key.pub
+  - what Cloud Images to use
+  - where are the Cloud Images stored
+  - default user related things, name, password and key ... 
+
+  See the EDIT Section " 20 78
+}
+
+function c-info() { # print the Copyright
+  clear
+  cat <<"EOF"
+
+  Copyright (c) 2021-2023 CasaUrsus
+  Author: nallej (CasaUrsus)
+  License: MIT
+  https://github.com/nallej/MyJourney/raw/main/LICENSE
+
+EOF
 }
 
 ###############################################################################
@@ -344,6 +350,10 @@ function guestfs() {
         echo "${okcm}${cyn} libguestfs-tools installed  $(date +"%T") ${end}" >> $logFILE
     fi
 }
+
+#-----------------------------------------------------------------------------#
+#    B A S I C   S E T T I N G S   F O R   V M's   A N D   T E M P L A T E    #
+#-----------------------------------------------------------------------------#
 
 # Function call my $1=minimal/server CHANGE server to STANDARD
 function dlFile() { # Download the Cloud Image
@@ -459,15 +469,15 @@ function setUSER() {
     # Set Cloid-init user
     ciu=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --inputbox \
       "\nCreate with CI user" \
-      10 48 $admin 3>&1 1>&2 2>&3)
+      10 48 $initUSER 3>&1 1>&2 2>&3)
       echo "${cyn}     -  Cloud-init user: $ciu" >> $logFILE
 
     # Create a long and complicated password 6 is a joke 8 is something 12 is semi ok 16 is ok 20 is good
-    while [[ "$cip" != "$cip_repeat" || ${#cip} -lt $passl ]]; do
+    while [[ "$cip" != "$cip_repeat" || ${#cip} -lt $passLENGHT ]]; do
       cip=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --passwordbox \
-        "\n${cip_invalid}Please enter a password (6 chars min.): " 10 48 $passwd 3>&1 1>&2 2>&3)
+        "\n${cip_invalid}Please enter a password ($passLENGHT chars min.): " 10 48 $initPASSWD 3>&1 1>&2 2>&3)
       cip_repeat=$(whiptail  --backtitle "$backTEXT" --title "Create CI User" --passwordbox \
-        "\nPlease repeat the password: " 10 48 $passwd 3>&1 1>&2 2>&3)
+        "\nPlease repeat the password: " 10 48 $initPASSWD 3>&1 1>&2 2>&3)
       cip_invalid="WARNING Password too short, or not matching! "
     done
     # Shoud NOT be used for production
@@ -478,12 +488,11 @@ function setUSER() {
         fi
       #PASSWORD="$(openssl rand -base64 16)"
 
-    #read -rp "     - set key from ~/.ssh/my_key    [y/N] : " my_key
     # Set Key name and address
-    my_key=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --inputbox \
-      "\nUsers SSH Public Key is: $my_key" \
+    myKEY=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --inputbox \
+      "\nUsers SSH Public Key is: $initKEY" \
       10 48 $initKEY 3>&1 1>&2 2>&3)
-      echo "${cyn}     -  My key: $my_key" >> $logFILE
+      echo "${cyn}     -  My key: $myKEY" >> $logFILE
 
 }
 
@@ -537,9 +546,9 @@ ON Qemu-Guest-Agent Qemu-Guest-Agent
 ON nano editor and ncurses-term
 ON git Git Hub/Lab use
 on nala APT frontend
-OFF unattended-upgrades set to On
+ON unattended-upgrades set to On
 ON Fail2Ban Security
-OFF clamav antivirus and daemon
+ON clamav antivirus and daemon
 OFF mailutils needs FQDN
 OFF Docker-CE Alpine
 OFF Dockge Docker Management
@@ -548,7 +557,7 @@ OFF Agent Portainer Agent
 OFF Docker \$\$\$ license
 OFF Portainer-BE \$\$\$ license
 OFF K3s TBA a K3s HA-Cluster
-OFF K8s make a K8s Cluster
+OFF K8s make a K8s Cluster TBA
 EOF
 )
 OPTIONS=$(whiptail --backtitle "$backTEXT" --title "Options List" --checklist --separate-output \
@@ -619,11 +628,11 @@ else
       echo "${cyn}     -  Portainer \$\$\$${end}" >> $logFILE
       ;;
     "K3s")
-      o8="y"
+      o16="y"
       echo "${cyn}     -  make a K3s cluster${end}" >> $logFILE
       ;;
     "K8s")
-      o9="y"
+      o15="y"
       echo "${cyn}     -  make a K8s cluster${end}" >> $logFILE
       ;;      
     *)
@@ -727,34 +736,9 @@ function createBase() {
         vc="$vc --install clamav"
         vc="$vc --install clamav-daemon"; fi
     if [[ $o7 == 'y' ]]; then vc="$vc --install mailutils"; fi
-
-    # if [[ $o8 == 'y' ]]; then
-    # --firstboot-command 'sudo apt-get update'
-    # --install containerd,curl \
-    # --firstboot-command 'sudo apt-get install software-properties-common'\
-    # --firstboot-command 'sudo apt-get update' \
-    # --firstboot-command 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg' \
-    # --firstboot-command 'echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list' \
-    # #virt-customize -a base.qcow2 --firstboot-command 'sudo apt-get update && sudo apt-get upgrade'
-    # --firstboot-command 'sudo swapoff -a' \
-    # --mkdir /etc/containerd \
-    # --firstboot-command 'containerd config default | sudo tee /etc/containerd/config.toml' \
-    # --firstboot-command 'echo "br_netfilter" > /etc/modules-load.d/k8s.conf' \
-    # --firstboot-command 'sed -i "s/^\( *SystemdCgroup = \)false/\1true/" /etc/containerd/config.toml' \
-    # --firstboot-command 'sed -i -e "/#net.ipv4.ip_forward=1/c\net.ipv4.ip_forward=1" etc/sysctl.conf' \
-    # --firstboot-command 'sudo apt-get update && sudo apt install -y kubeadm kubectl kubelet' \
-    # --firstboot-command 'sudo truncate -s 0 /etc/machine-id' \
-    # --firstboot-command 'sudo rm /var/lib/dbus/machine-id' \
-    # --firstboot-command 'sudo ln -s /etc/machine-id /var/lib' \"
-    # fi
-    # #if [[ $o9 == 'y' ]]; then ; fi
+    # if [[ $o8 == 'y' ]]; then;  fi
+    # if [[ $o9 == 'y' ]]; then ; fi
     if [[ $o10 == 'y' ]]; then # || $o13 == 'y' ]]; then
-        # vc="$vc --install software-properties-common"
-        # vc="$vc --install apt-transport-https"
-        # vc="$vc --install ca-certificates"
-        # vc="$vc --install apt-utils"
-        # vc="$vc --install gnupg"
-        # vc="$vc --install curl"
         echo "apt-get install -y software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl"  >> firstboot.sh
         echo "mkdir -p /etc/apt/keyrings" >> firstboot.sh
         echo "mkdir -p /home/$ciu/docker/" >> firstboot.sh
@@ -796,6 +780,30 @@ function createBase() {
         echo "mkdir -p /home/$ciu/docker/portainer/portainer-data" >> firstboot.sh
         echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:alpine" >> firstboot.sh
     fi
+    if [[ $o15 == 'y' ]]; then
+        echo "${cyn}     -  make K8s HA-settings${end}" >> $logFILE
+        echo "apt-get update" >> firstboot.sh
+        echo "apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
+        echo "apt-get update" >> firstboot.sh
+        echo "curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg" >> firstboot.sh
+        echo "echo \"deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main\" | tee /etc/apt/sources.list.d/kubernetes.list" >> firstboot.sh
+        echo "swapoff -a" >> firstboot.sh
+        echo "mkdir /etc/containerd" >> firstboot.sh
+        echo "containerd config default | tee /etc/containerd/config.toml" >> firstboot.sh
+        echo "echo \"br_netfilter\" > /etc/modules-load.d/k8s.conf" >> firstboot.sh
+        echo "sed -i \"s/^\( *SystemdCgroup = \\)false/\\1true/\" /etc/containerd/config.toml" >> firstboot.sh
+        echo "sed -i -e \"/#net.ipv4.ip_forward=1/c\\net.ipv4.ip_forward=1\" etc/sysctl.conf" >> firstboot.sh
+        echo "apt-get update && sudo apt install -y kubeadm kubectl kubelet" >> firstboot.sh
+        echo "truncate -s 0 /etc/machine-id" >> firstboot.sh
+        echo "rm /var/lib/dbus/machine-id" >> firstboot.sh
+        echo "ln -s /etc/machine-id /var/lib" >> firstboot.sh
+    fi 
+    # if [[ o16 == 'y' ]]; then
+    #     setMGMT-0
+    #     setMGMT-VMs
+    #     setWORKERs
+    #     #code 
+    # fi    
     echo "cp /root/virt-sysprep-firstboot.log /home/$ciu/firstboot.log" >> firstboot.sh
     vc="$vc --firstboot firstboot.sh --add base.qcow2"
     virt-customize $vc
@@ -808,6 +816,22 @@ function createBase() {
     echo "${okcm} ${time}  base.qcow2 $sizeD created" >> $logFILE
 }
 
+#------------------------------------------------------------------------------
+#  C R E A T E   t h e   V M / T e m p l a t e / C l o n e s   S e c t i o n  #
+#------------------------------------------------------------------------------
+
+# --scsihw virtio-scsi-pci --scsi0 ...  # Attache the disk to the base of the VM
+# --ide2 $storageVM:cloudinit           # Attach the cloudinit file - you might need to EDIT it later !
+# --boot c --bootdisk scsi0             # Make the cloud init drive bootable and only boot from this disk
+# --serial0 socket --vga serial0        # Add serial console, to be able to see console output!
+# --onboot 1                            # Autostart vm at boot - default is 0 - Ususlly most VM's are allway running
+# --agent 1                             # Use Qemu Guest Agent - default is 0
+# --ostype l26                          # Set OS type Linux 5.x kernel 2.6 - default is other
+# --ipconfig0 ip="dhcp"                 # Set dhcp on
+# --ciuser $ciu                         # "admin"        use your imagination
+# --cipassword $cip                     # "Pa$$w0rd"     use a super complicated one
+# --sshkey ~/.ssh/my_key.pub            # sets the users public key for the vm
+
 function createVM() {
 # Creat a VM or a Template based on the base.qcow2 file
     local note
@@ -819,26 +843,24 @@ function createVM() {
     echo "${okcm}${cyn} $(date +"%T")    - $ibase $storageVM" >> $logFILE
     # Set options --------------------------------------------------------#
     qm disk import $vmNO base.qcow2 $storageVM > /dev/null 2>&1                 # Import the disc to the base of the VM. Where to put the VM local-lvm
-    qm set $vmNO --scsihw virtio-scsi-pci --scsi0 $storageVM:vm-$vmNO-disk-0    # Attache the disk to the base of the VM
-    qm set $vmNO --ide2 $storageVM:cloudinit                                    # Attach the cloudinit file - you might need to EDIT it later !
-    qm set $vmNO --boot c --bootdisk scsi0                                      # Make the cloud init drive bootable and only boot from this disk
-    qm set $vmNO --serial0 socket --vga serial0                                 # Add serial console, to be able to see console output!
-    qm set $vmNO --onboot 1                                                     # Autostart vm at boot - default is 0 - Ususlly most VM's are allway running
-    qm set $vmNO --agent 1                                                      # Use Qemu Guest Agent - default is 0
-    qm set $vmNO --ostype l26                                                   # Set OS type Linux 5.x kernel 2.6 - default is other
-    qm set $vmNO --ipconfig0 ip="dhcp"                                          # Set dhcp on
-    qm set $vmNO --ciuser $ciu                                                  # "admin"        use your imagination
-    qm set $vmNO --cipassword $cip                                              # "Pa$$w0rd"     use a super complicated one
-    qm set $vmNO --sshkey ~/.ssh/my_key                                         # sets the users key to the vm
-    #if [[ $my_key > " " ]]; then qm set $vmNO --sshkey $my_key; fi     # sets the users key to the vm
+    if [ ${#myKEY} > 0 ]; then
+        qm set $vmNO --scsihw virtio-scsi-pci --scsi0 $storageVM:vm-$vmNO-disk-0 --ide2 $storageVM:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga serial0 --onboot 1 --agent 1 --ostype l26 --ipconfig0 ip="dhcp" --ciuser $ciu --cipassword $cip --sshkey $myKEY
+    else
+        qm set $vmNO --scsihw virtio-scsi-pci --scsi0 $storageVM:vm-$vmNO-disk-0 --ide2 $storageVM:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga serial0 --onboot 1 --agent 1 --ostype l26 --ipconfig0 ip="dhcp" --ciuser $ciu --cipassword $cip
+    fi
+    #if [ ${#myKEY} > 0 ]; then qm set $vmNO --sshkey $myKEY; fi     # sets the users key to the vm
     # Create the Notes window
     echo "# # VM $vmNO $vmNAME" >> /etc/pve/qemu-server/$vmNO.conf
     echo "#- RAM    : $sizeM" >> /etc/pve/qemu-server/$vmNO.conf
     echo "#- Core   : $sizeC" >> /etc/pve/qemu-server/$vmNO.conf
-    echo "#- User   : $ciu, $cip" >> /etc/pve/qemu-server/$vmNO.conf
+    if $showPASSWD; then
+         echo "#- User   : $ciu, $cip" >> /etc/pve/qemu-server/$vmNO.conf
+    else
+         echo "#- User   : $ciu" >> /etc/pve/qemu-server/$vmNO.conf
+    fi
     echo "#- Bridge : $vmbr" >>  /etc/pve/qemu-server/$vmNO.conf
     if [[ $vlan > 0 ]]; then echo "#  vLAN: $vlan" >> /etc/pve/qemu-server/$vmNO.conf; fi
-    if [[ $my_key > " " ]]; then echo "# - SSH Key: $my_key" >> /etc/pve/qemu-server/$vmNO.conf; fi
+    if [ ${#myKEY} > 0 ];  then echo "# - SSH Key: $myKEY" >> /etc/pve/qemu-server/$vmNO.conf; fi
     echo "#- Storage: $storageVM" >> /etc/pve/qemu-server/$vmNO.conf
     echo "#- Base   : $nameISO" >> /etc/pve/qemu-server/$vmNO.conf
     echo "#  from: $pathISO" >> /etc/pve/qemu-server/$vmNO.conf
@@ -856,25 +878,23 @@ function createTemplate() {
     echo "${okcm}${cyn} $(date +"%T")    - $ibase"  >> $logFILE
     # Set options --------------------------------------------------------#
     qm disk import $templateNO base.qcow2 $storageVM > /dev/null 2>&1                       # Import the disc to the base of the template. Where to put the VM local-lvm
-    qm set $templateNO --scsihw virtio-scsi-pci --scsi0 $storageVM:vm-$templateNO-disk-0    # Attache the disk to the base of the template
-    qm set $templateNO --ide2 $storageVM:cloudinit                                          # Attach the cloudinit file - you might need to EDIT it later !
-    qm set $templateNO --boot c --bootdisk scsi0                                            # Make the cloud init drive bootable and only boot from this disk
-    qm set $templateNO --serial0 socket --vga serial0                                       # Add serial console, to be able to see console output!
-    qm set $templateNO --onboot 1                                                           # Autostart vm at boot - default is 0 - Ususlly most VM's are allway running
-    qm set $templateNO --agent 1                                                            # Use Qemu Guest Agent - default is 0
-    qm set $templateNO --ostype l26                                                         # Set OS type Linux 5.x kernel 2.6 - default is other
-    qm set $templateNO --ipconfig0 ip="dhcp"                                                # Set dhcp on
-    qm set $templateNO --ciuser $ciu                                                        # "admin"        use your imagination
-    qm set $templateNO --cipassword $cip                                                    # "Pa$$w0rd"     use a super complicated one
-    if [[ $my_key > " " ]]; then qm set $templateNO --sshkey $my_key; fi            # sets the users key to the vm
-
+    if [ ${#myKEY} > 0 ]; then
+        qm set $templateNO --scsihw virtio-scsi-pci --scsi0 $storageVM:vm-$templateNO-disk-0 --ide2 $storageVM:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga serial0 --onboot 1 --agent 1 --ostype l26 --ipconfig0 ip="dhcp" --ciuser $ciu --cipassword $cip --sshkey $myKEY
+    else
+        qm set $templateNO --scsihw virtio-scsi-pci --scsi0 $storageVM:vm-$templateNO-disk-0 --ide2 $storageVM:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga serial0 --onboot 1 --agent 1 --ostype l26 --ipconfig0 ip="dhcp" --ciuser $ciu --cipassword $cip
+    fi
+    # Create the Notes window
     echo "# # Template $templateNO $templateNAME" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#- RAM    : $sizeM" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#- Core   : $sizeC" >> /etc/pve/qemu-server/$templateNO.conf
-    echo "#- User   : $ciu, $cip" >> /etc/pve/qemu-server/$templateNO.conf
+    if $showPASSWD; then
+        echo "#- User   : $ciu, $cip" >> /etc/pve/qemu-server/$templateNO.conf
+    else
+        echo "#- User   : $ciu" >> /etc/pve/qemu-server/$templateNO.conf
+    fi
     echo "#- Bridge : $vmbr" >>  /etc/pve/qemu-server/$templateNO.conf
     if [[ $vlan > 0 ]]; then echo "#  vLAN: $vlan" >> /etc/pve/qemu-server/$templateNO.conf; fi
-    if [[ $my_key > " " ]]; then echo " - SSH Key: $my_key" >> /etc/pve/qemu-server/$templateNO.conf; fi
+    if [ ${#myKEY} > 0 ]; then echo " - SSH Key: $myKEY" >> /etc/pve/qemu-server/$templateNO.conf; fi
     echo "#- Storage: $storageVM" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#- Base   : $nameISO" >> /etc/pve/qemu-server/$templateNO.conf
     echo "#  from : $pathISO" >> /etc/pve/qemu-server/$templateNO.conf
@@ -898,6 +918,7 @@ function createClones() { # Cloning the template
         echo "${okcm}${cyn} $(date +"%T")  Cloned VM $xx $cname$x created" >> $logFILE
     done
 }
+#-----------------------------------------------------------------------------#
 
 function init() {
     clear; printf ${yelb}; header-2; printf ${end} # Show header-2
@@ -952,10 +973,10 @@ toCREATE                    # What shall we Create Today, a VM or a Template+Clo
 
 # Install or not to Install ==================================================#
 if (whiptail --backtitle "$backTEXT" --title \
-  "\nCreate a VM, a Template and Clones" --yesno --defaultno \
-  "\n  ⚠️  Do you like to proceed  -  Install  or  Exit " \
+  "Create a single VM or a Template + Clones" --yesno --defaultno \
+  "\n    ⚠️ Do you like to proceed  -  Install  or  Exit " \
   10 68 --no-button "Exit" --yes-button "Install"); then
-  echo "${okcm}${magb} User selected Installation to start  $(date +"%F %T")${end}" >> $logFILE
+  echo -e "\n${okcm}${magb} User selected Installation to start  $(date +"%F %T")${end}" >> $logFILE
 
 ###############################################################################
  #                                                                           #
@@ -981,7 +1002,7 @@ if (whiptail --backtitle "$backTEXT" --title \
     if [[ $tok = true ]]; then
         createTemplate &> /dev/null
         printf "\b"
-        echo "${okcm} Template created: $templateNO $templateNAME"
+        echo "${okcm} Template $templateNO created as $templateNAME"
 
         # Create the Clones --------------------------------------------------#
         if [[ $numberCLONES -gt 0 ]]; then
@@ -989,10 +1010,10 @@ if (whiptail --backtitle "$backTEXT" --title \
             printf "\b"
             first="${cname}1"
             if [ $numberCLONES = 1 ]; then
-               echo "${okcm} Clone created: $firstCLONE $first $numberCLONES"
+               echo "${okcm} Clone $firstCLONE created as $first"
             elif [[ $numberCLONES > 1 ]]; then
                last=$(($firstCLONE + $numberCLONES - 1))
-               echo "${okcm} Clone(s) created: $firstCLONE $first - $last $cname$numberCLONES"
+               echo "${okcm} Clones $firstCLONE - $last created as $first - $cname$numberCLONES"
             fi
         fi
     fi
