@@ -49,12 +49,12 @@
 # 📂 Server Cloud Image - example Ubuntu 22.04. Just edit to use your favorite
 #------------------------------------------------------------------------------
 # File name  of the qcow2 file with our OS
-     #std=jammy-server-cloudimg-amd64.img  # alternative: std=jammy-server-cloudimg-amd64-disk-kvm.img
-     std=debian-12-genericcloud-amd64.qcow2
+     std=jammy-server-cloudimg-amd64.img  # alternative: std=jammy-server-cloudimg-amd64-disk-kvm.img
+     #std=debian-12-genericcloud-amd64.qcow2
 # Locaction of the file + the file
-     #stdFile="https://cloud-images.ubuntu.com/jammy/current/$std"
-     stdFile="https://cloud.debian.org/images/cloud/bookworm/latest/$std"
-# Alternatives
+     stdFile="https://cloud-images.ubuntu.com/jammy/current/$std"
+     #stdFile="https://cloud.debian.org/images/cloud/bookworm/latest/$std"
+# Alternatives Needs editing ot Docker install
 # For virtual use, smaller by excluding drivers for physical hardware    : https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
 # HW and virtual,  for e.g. OpenStack, DigitalOcean and also on real rust: https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
 #------------------------------------------------------------------------------
