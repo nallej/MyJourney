@@ -1,5 +1,5 @@
 # Stop the corosync and the pve-cluster services on the node:
-# wget https://github.com/nallej/MyJourney/blob/main/StopDelCorosync.sh
+# wget https://github.com/nallej/MyJourney/raw/main/StopDelCorosync.sh
 
 systemctl stop pve-cluster
 systemctl stop corosync
