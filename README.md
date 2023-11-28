@@ -4,7 +4,7 @@ To host the Docker Compose files for the blog on homelab.casaursus.net
 ## Newest scripts 
 My newest scripts will be found in the **SCRIPTS** section
 - My new Template builder script can be or pulled by git or downloaded from <br>
-https://raw.github.com/nallej/MyJourney/raw/main/scripts/myTemplateBuilder.sh?ref=homelab.casaursus.net
+https://github.com/nallej/MyJourney/raw/main/scripts/myTemplateBuilder.sh?ref=homelab.casaursus.net
 - It automate template creation for VMs and K0s, K3s and K8s clusters
 - New version 5.0 is in beta testing
 
