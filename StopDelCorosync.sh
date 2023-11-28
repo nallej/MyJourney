@@ -24,3 +24,14 @@ echo "Remove any *.conf left in /etc/pve/lxc"
 echo "Remove any *.conf left in /etc/pve/nodes/<OLD NODE>/qemu-server"
 echo "Remove any *.conf left in /etc/pve/nodes/<OLD NODE>/lxc"
 echo ""
+#
+# Browser errors
+# You can maybe fix it by:
+# rm remove /etc/pve/priv/pve-root-ca.key /etc/pve/pve-root-ca.pem
+# rm /etc/pve/local/pve-ssl.pem /etc/pve/local/pve-ssl.key /etc/pve/local/pveproxy-ssl.pem /etc/pve/local/pveproxy-ssl.key (on each node!)
+# run pvecm updatecerts
+# run systemctl restart pveproxy
+#
+# Now the GUI should work again, with the default self-signed certificates. 
+# In the GUI or 'pvenode' upload your certificate + key 
+# (it will be stored in '/etc/pve/local/pveproxy-ssl.pem' / '/etc/pve/local/pveproxy-ssl.key'
