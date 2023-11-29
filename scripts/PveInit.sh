@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+# Download: wget https://github.com/nallej/MyJourney/raw/main/scripts/PveInit.sh
 clear
 echo "This script will add my personal preferenses to Proxmox nodes"
 echo ""
@@ -7,7 +7,7 @@ echo "  Adding apps to your system:"
 echo "  - bat, cat on steroids"
 echo "  - exa, ls as a modern app"
 echo "  - nala, apt with a modern look"
-echo "  
+echo ""
 # Add bat exa nala
 apt update && apt install -y bat exa nala >>install.log 2>&1
 echo "  Adding aliases to your bash and a new prompt"
