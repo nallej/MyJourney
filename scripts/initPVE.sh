@@ -21,4 +21,6 @@ echo "  - add any other alias you like
 echo "  - remove what you do not like"
 #echo "  - exit from bat type q"
 #To start using the new bash, type: . .bash_aliases (note the periods)"
+chmod 700 .initPVE.sh
+. .initPVE.sh
 . .bash_aliases
