@@ -91,6 +91,6 @@ ex ()
 }
 
 # Use Personal Prompt
-source ~/.bash_prompt
+[[ -f ~/.bash_prompt ]] && source ~/.bash_prompt
 
 
