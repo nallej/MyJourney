@@ -305,8 +305,8 @@ function askLicens() {
       echo "${blu}LICENSE file exist in this directory.${end}" >> $logFILE
   else
       wget https://github.com/nallej/MyJourney/raw/main/LICENSE &> /dev/null
-      echo "${blu}LICENSE file now in this directory.${end}" >> $logFILE
-      echo -e "\nTemplate Builder is Free and Open Sourse Software.\n  - There is NO WARRANTY, to the extent permitted by law.\n  - Part of the My Journey Project @ homelab.casaursus.net" > /etc/motd
+      echo -"${blu}LICENSE file now in this directory.${end}" >> $logFILE
+      echo -e "\nTemplate Builder is Free and Open Sourse Software.\n  - There is NO WARRANTY, to the extent permitted by law.\n  - Part of the My Journey Project @ homelab.casaursus.net\n" >> /etc/motd
     fi
 else
   echo "${red}⚠ User selected to Decline, exit status was $?. ⚠${end}" >> $logFILE
