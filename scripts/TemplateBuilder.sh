@@ -114,7 +114,8 @@
      initNOCLONES=2                 # suggested how many Clones to create
      initNO1STCLONE=3002            # suggested number for 1st Clone
      initCLONENAME=node-            # suggested Clone namebas for e.g. node-1
-     initVLAN=30                    # the prefered VLAN
+     initVLAN=vmbr2                 # the preferd virtual bridge
+     initTAG=30                     # the prefered VLAN
      logFILE=~/TemplateBuilder.log  # Name of your LOG file
 #------------------------------------------------------------------------------
 #    E n d   o f   t h e   E d i t a b l e   S e c t i o n                    #
@@ -465,13 +466,13 @@ function setLAN(){
     # Set the Virtual Bridge
     vmbr=$(whiptail --backtitle "$backTEXT" --title "VLAN Dialog" --inputbox \
     "\nVirtual Bridge to be useed" \
-    10 48 vmbr2 3>&1 1>&2 2>&3)
+    10 48 initVMBR 3>&1 1>&2 2>&3)
     echo "${cyn}     -  Bridge: $vmbr" >> $logFILE
     # Use a Virtual LAN
     if whiptail --backtitle "$backTEXT"  --title "VLAN Dialog" --yesno \
        "\nDo you need to use a VLAN?" 10 48; then
        vlan=$(whiptail --backtitle "$backTEXT" --title "VLAN Dialog" --inputbox\
-       "\nVLAN to use for the VM/Template" 10 48 $initVLAN  3>&1 1>&2 2>&3)
+       "\nVLAN to use for the VM/Template" 10 48 $initTAG  3>&1 1>&2 2>&3)
        echo "${cyn}     -  VLAN: $vlan" >> $logFILE
     else
         vlan=0
@@ -514,8 +515,8 @@ function setBASE() {
     # Disk size selector
     sizeD=$(whiptail --backtitle "$backTEXT" --title "Base Settings" --radiolist \
     "\n Expand the Disk Size to" 14 48 5 \
-    "4G" " 4 GiB" OFF \
-    "8G" " 8 GiB for basic VMs" ON \
+    "4G" " 4 GiB" ON \
+    "8G" " 8 GiB for basic VMs" OFF \
     "16G" "16 GiB for basic VMs" OFF \
     "32G" "32 GiB for large VMs" OFF \
     "64G" "32 GiB for extra large VMs" OFF \
@@ -997,7 +998,7 @@ function init() {
 ###############################################################################
 
 # Code Section ===============================================================#
-backt="myTempBuilder.sh is part of the My HomeLab Journey Project"  #Background text
+backTEXT="$pgrm $ver is part of the My HomeLab Journey Project"  #Background text
 # Initialization menu --------------------------------------------------------#
 
 useColors                   # Use color codes
