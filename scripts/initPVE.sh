@@ -6,13 +6,16 @@ echo " Adding apps"
 echo " - bat, cat on steroids"
 echo " - exa, ls as a modern app"
 echo " - nala, apt frontend with a modern look"
-apt update && apt install -y bat exa nala
+read -rp "Install the set [y/N]: " ben
+[[ "$ben" == 'yY ]] && apt update && apt install -y bat exa nala
 
 # Adding aliases to your bash and a new prompt
-# Add to or change the bash commands
-wget https://github.com/nallej/MyJourney/raw/main/.bash_aliases
+echo "Add aliases or change the bash commands with aliases"
+read -rp "Install bash_aliases [y/N]: " ali
+[[ "$ali" == 'yY' ]] && wget https://github.com/nallej/MyJourney/raw/main/.bash_aliases
 # And also the personal bash prompt 
-wget https://github.com/nallej/MyJourney/raw/main/.bash_prompt
+echo " Implove the bash prompl [y/N]: " pro
+[[ "$pro" == 'yY' ]] && wget https://github.com/nallej/MyJourney/raw/main/.bash_prompt
 
 # Activate the changes
 # Adding bash_aliases to bashrc. Usually not needed
@@ -23,7 +26,9 @@ echo "  - add any other alias you like"
 echo "  - remove what you do not like"
 #echo "  - exit from bat type q"
 
-#To start using the new bash, type: . .bash_aliases (note the periods)"
-chmod 700 .initPVE.sh
-. .initPVE.sh
-. .bash_aliases
+echo "To start using the new bash, type: . .bash_aliases (note the periods)"
+echo #chmod 700 .initPVE.sh#
+echo ". .initPVE.sh"
+echo ". .bash_aliases"
+read -rp "Start using new settings [y/Y] " sta
+[[ "$sta" == 'yY' ]] && source .bash_aliases
