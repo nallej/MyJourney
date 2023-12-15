@@ -5,10 +5,13 @@ clear
 # Add bat, exa and nala
 # apt update && apt install -y bat exa nala
 # Adding aliases to your bash and a new prompt"
-wget https://github.com/nallej/MyJourney/raw/main/.bash_aliases
-#wget https://github.com/nallej/MyJourney/raw/main/.bash_prompt
+#wget https://github.com/nallej/MyJourney/raw/main/.bash_aliases
+wget https://github.com/nallej/MyJourney/raw/main/.bash_aliases -O .bash-personal
+wget https://github.com/nallej/MyJourney/raw/main/.bash_prompt
 # Activate the changes
 # - Adding bash_aliases to bashrc"
-#echo "[[ -f ~/.bash_aliases ]] && . ~/.bash_aliases" >> .bashrc
+# echo "[[ -f ~/.bash_aliases ]] && . ~/.bash_aliases" >> .bashrc
+echo "[[ -f ~/.bash-personal ]] && . ~/.bash-personal" >> .bashrc
 # echo "To start using the new bash, type: . .bash_aliases (note the periods)"
-. .bash_aliases
+#. .bash_aliases
+. .bash-personal
