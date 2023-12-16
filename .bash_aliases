@@ -37,6 +37,7 @@ alias dcd='docker-compose down'
 
 ## system related
 alias fzfbat='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
+# usage: help <command>
 alias bathelp='bat --plain --language=help'
 help() { "$@" --help 2>&1 | bathelp }
 # zsh only! ---------------------------------------------------------#
