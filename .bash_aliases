@@ -40,8 +40,8 @@ alias fzfbat='fzf --preview "bat --color=always --style=numbers --line-range=:50
 alias bathelp='bat --plain --language=help'
 help() { "$@" --help 2>&1 | bathelp }
 # zsh only! ---------------------------------------------------------#
-alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'         #
-alias -g -- --help='--help 2>&1 | bat --language=help --style=plain' #
+#alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'         #
+#alias -g -- --help='--help 2>&1 | bat --language=help --style=plain' #
 # -------------------------------------------------------------------#
 alias bat='batcat'
 #alias cat='bat'
