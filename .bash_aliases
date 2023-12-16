@@ -1,6 +1,7 @@
 # some more aliases
 # restart by source .bashrc or restart
 # restart by . ~/.bash_aliases
+
 ## ls commands
 alias ls='ls --color=auto'
 alias ll='ls -alFh --color=auto'
@@ -16,21 +17,32 @@ alias lsdid='ls -l /dev/disk/by-id'
 #alias exat='exa --long --icons --tree '
 alias exa='exa --long'
 alias exat='exa --long --tree '
+
 ## confirm before overwriting something
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
+
 ## Colorize grep output (good for log files)
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
+
 ## docker related
 alias dcn='nano docker-compose.yml'
 alias dcup='docker-compose up -d'
 alias dcupl='docker-compose up -d && docker-compose logs -f'
 alias dcr='docker-compose restart'
 alias dcd='docker-compose down'
+
 ## system related
+alias fzfbat='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
+alias bathelp='bat --plain --language=help'
+help() { "$@" --help 2>&1 | bathelp }
+# zsh only! ---------------------------------------------------------#
+alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'         #
+alias -g -- --help='--help 2>&1 | bat --language=help --style=plain' #
+# -------------------------------------------------------------------#
 alias bat='batcat'
 #alias cat='bat'
 #alias cat='batcat'
@@ -54,7 +66,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 ## IP related
-#### Use your subnet mask here /24 
+#### Use your subnet mask here /24 /64
 alias myip="echo My LAN-ip: $(ip address | grep /24 | awk '{print $2}')"
 #alias lanip="ip a | grep inet | awk '{print $2}' | cut -f2 -d:"
 #alias wanip='echo WanIp: $(curl ipinfo.io/ip)'
