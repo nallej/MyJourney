@@ -40,7 +40,7 @@
      initKEY=~/.ssh/my_key.pub     # typically ~/.ssh/id_ed25519.pub
 #------------------------------------------------------------------------------
      # 🔐 Add user to Docker Groupe - NOT recommended for production
-     testMODE=true                  # true//false. Set to true for elevated privilidges in Testing / HomeLab mode
+     testMODE=true                  # Set to true/false for elevated privilidges in Testing / HomeLab mode
 #------------------------------------------------------------------------------
 # 📂 Server Cloud Image - add and/or edit to use your favorite OS
 #------------------------------------------------------------------------------
