@@ -628,7 +628,7 @@ OFF Portainer-CE Alpine
 OFF Agent Portainer Agent
 OFF Docker \$\$\$ license
 OFF Portainer-BE \$\$\$ license
-OFF K0s TBA a K0s Cluster TBA
+OFF K0s TBA a K0s Cluster
 OFF K3s TBA a K3s Cluster TBA
 OFF K3s TBA a K3s HA-Cluster TBA
 OFF K8s make a K8s Cluster TBA
