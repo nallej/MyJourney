@@ -35,11 +35,11 @@ alias dcupl='docker-compose up -d && docker-compose logs -f'
 alias dcr='docker-compose restart'
 alias dcd='docker-compose down'
 
-## system related
-alias fzfbat='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
+## system related on any deb based use batcat all other use bat
+alias fzfbat='fzf --preview "batcat --color=always --style=numbers --line-range=:500 {}"'
 # usage: help <command>
-alias bathelp='bat --plain --language=help'
-help() { "$@" --help 2>&1 | bathelp }
+#alias bathelp='bat --plain --language=help'
+#help() { "$@" --help 2>&1 | bathelp }
 # zsh only! ---------------------------------------------------------#
 #alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'         #
 #alias -g -- --help='--help 2>&1 | bat --language=help --style=plain' #
@@ -66,6 +66,7 @@ alias 'cd..'='cd ..'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+
 ## IP related
 #### Use your subnet mask here /24 /64
 alias myip="echo My LAN-ip: $(ip address | grep /24 | awk '{print $2}')"
@@ -74,8 +75,10 @@ alias myip="echo My LAN-ip: $(ip address | grep /24 | awk '{print $2}')"
 #alias netspeed='sudo curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -'
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
 #alias sää='curl wttr.in'
 #alias mikä='curl cheat.sh/'
+
 # Extracting archive files
 # # usage: ex <file>
 ex ()
