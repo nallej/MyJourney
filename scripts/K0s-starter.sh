@@ -6,6 +6,7 @@ echo ""
 read -rp "Init the Controller [y/N] " x
 if [ "$x" = "y" ]; then
     #yes a Controller
+    curl -sSLf https://get.k0s.sh | sudo sh
     sudo k0s install controller --enable-worker # or standalone
     sudo systemctl start k0scontroller.service
     sudo k0s token create --role worker --expiry 1h > k0s.token
@@ -20,6 +21,7 @@ if [ "$x" = "y" ]; then
     sudo k0s kubectl get nodes
 else
     # no on of the Workers
+    curl -sSLf https://get.k0s.sh | sudo sh
     sudo k0s install worker --token-file k0s.token
     sudo k0s start
     sudo k0s status
