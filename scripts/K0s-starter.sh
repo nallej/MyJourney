@@ -6,7 +6,7 @@ echo ""
 read -rp "Init the Controller [y/N] " x
 if [ "$x" = "y" ]; then
     #yes a Controller
-    #sudo k0s install controller --enable-worker # or standalone
+    sudo k0s install controller --enable-worker # or standalone
     sudo systemctl start k0scontroller.service
     sudo k0s token create --role worker --expiry 1h > k0s.token
     read -rp "IP worker 1: " IPworker1
