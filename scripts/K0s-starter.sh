@@ -11,8 +11,10 @@ if [ "$x" = "y" ]; then
     sudo k0s token create --role worker --expiry 1h > k0s.token
     read -rp "IP worker 1: " IPworker1
     read -rp "IP worker 2: " IPworker2
-    sudo scp k0s.token $user@$IPworker1
-    sudo scp k0s.token $user@$IPworker2
+    # ssh-keyscan -H $IPworker1 >> ~/.ssh/known_hosts
+    # ssh-keyscan -H $IPworker2 >> ~/.ssh/known_hosts
+    sudo scp k0s.token $USER@$IPworker1:/home/$USER
+    sudo scp k0s.token $USER@$IPworker2:/home/$USER
     sudo k0s start
     sudo k0s status
     sudo k0s kubectl get nodes
