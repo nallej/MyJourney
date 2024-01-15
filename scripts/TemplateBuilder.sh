@@ -33,7 +33,7 @@
      # 🔟 Create a long and complicated password
      #   6 is a joke,  8 is something,  12 is semi ok,  16 is ok,  20 is good.
      # 🔐 SSH Public Key or download it later in the GUI into the cloud-init
-     initUSER=Administrator        # admin user name
+     initUSER=pomo Administrator        # admin user name
      passLENGHT=16                 # length of password
      initPASSWD=Passw0rd           # a long and complicated password
      showPASSWD=false              # Show Password in log true/false
@@ -90,13 +90,13 @@
 # 📂 Local and External PATHs to your ISO files. See  /etc/pve/storage.cfg
 #    Using manual settings makes complicated storage setups easier to use.
 #------------------------------------------------------------------------------
-# Default Local Storage. 
+# Default Local Storage.
     nameISO1=local
     pathISO1="/var/lib/vz/template/iso/"
 # Local ISO storage
     nameISO2=localISO
     pathISO2="/storage/ISO/template/iso/"
-# Default NFS if any, use the NFS-storage name you have 
+# Default NFS if any, use the NFS-storage name you have
     nameISO3=nfsISO
     pathISO3="/mnt/pve/nfsISO/template/iso/"
 # Default USB if any, use the USB-storage name you have
@@ -135,7 +135,7 @@
  #                                                                           #
 ###############################################################################
 pgrm="TemplateBuilder"
-pver="5.1-15"
+pver="5.2-15"
 
 # Version history ============================================================
 
@@ -149,7 +149,7 @@ Version History:
 - v2.0 04.01.2023  v2.1 09.01.2023  v2.2 29.01.2023
 - v3.0 30.05.2023  v3.1 31.05.2023  v3.2 01.06.2023  v3.3 12.10.2023
 - v4.0 12.10.2023  v4.1 31.10.2023
-- v5.0 25.11.2023  v5.1 18.12.2023  v5.2 "
+- v5.0 25.11.2023  v5.1 18.12.2023  v5.2 31.12.2023"
 
 newTEXT="
 TemplateBuilder is Free and Open Sourse Software.
@@ -183,7 +183,8 @@ EOF
 function showRecommended() { # Basic recommendations for the user
 whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
 "Remember to edit the script before executing:
-  - basic settings are 1 core/socket and 1 GiB RAM
+  - basic settings are 1 core/socket and 1 GiB RAM, Shell: xterm.js
+
   - normal disk size for a VM is 8 - 16 G, but sometimes 4 or even 32 G
     - K8s workers nodes : small 1-2 core and 1-2 GiB RAM, disk 8 - 16 G
     - K8s managers      : 2-4 core and 2 - 4 GiB RAM disk 16 - 32G.
@@ -336,10 +337,10 @@ function askLicens() {
         wget https://github.com/nallej/MyJourney/raw/main/LICENSE &> /dev/null
         install -D $HOME/LICENSE /usr/share/doc/templatebuilder/copyright
         echo "${blu}LICENSE file now in this directory.${end}" >> $logFILE
- 
+
         if [ -e "$motd_file" ]; then                # Check if the motd file exists
             if [ ! -e "$backup_file" ]; then        # Check if the backup file doesn't exist
-                cp "$motd_file" "$backup_file"      # Create a backup of the original motd file  
+                cp "$motd_file" "$backup_file"      # Create a backup of the original motd file
                 echo "$newTEXT" >> "$motd_file"    # Append your new text to the motd file
             fi
         fi
@@ -401,62 +402,24 @@ function dlFile() { # Download the Cloud Image
     local NAME    # Short name O
     fileISO=$1
     case $TYPE in
-        $osFILE1)
-            familyISO=$osFAMILY1
-            locationOS=$osLOCATION1
-            ;;
-        $osFILE2)
-            familyISO=$osFAMILY2
-            locationOS=$osLOCATION2
-            ;;
-        $osFILE3)
-            familyISO=$osFAMILY3
-            locationOS=$osLOCATION3
-            ;;
-        $osFILE4)
-            familyISO=$osFAMILY4
-            locationOS=$osLOCATION4
-            ;;
-        $osFILE5)
-            familyISO=$osFAMILY5
-            locationOS=$osLOCATION5
-            ;;
-        $osFILE6)
-            familyISO=$osFAMILY6
-            locationOS=$osLOCATION6
-            ;;
-        $osFILE7)
-            familyISO=$osFAMILY7
-            locationOS=$osLOCATION7
-            ;;
-        $osFILE8)
-            familyISO=$osFAMILY8
-            locationOS=$osLOCATION8
-            ;;
-        $osFILE9)
-            familyISO=$osFAMILY9
-            locationOS=$osLOCATION9
-            ;;
+        $osFILE1) familyISO=$osFAMILY1 ; locationOS=$osLOCATION1 ;;
+        $osFILE2) familyISO=$osFAMILY2 ; locationOS=$osLOCATION2 ;;
+        $osFILE3) familyISO=$osFAMILY3 ; locationOS=$osLOCATION3 ;;
+        $osFILE4) familyISO=$osFAMILY4 ; locationOS=$osLOCATION4 ;;
+        $osFILE5) familyISO=$osFAMILY5 ; locationOS=$osLOCATION5 ;;
+        $osFILE6) familyISO=$osFAMILY6 ; locationOS=$osLOCATION6 ;;
+        $osFILE7) familyISO=$osFAMILY7 ; locationOS=$osLOCATION7 ;;
+        $osFILE8) familyISO=$osFAMILY8 ; locationOS=$osLOCATION8 ;;
+        $osFILE9) familyISO=$osFAMILY9 ; locationOS=$osLOCATION9 ;;
     esac
 
     case $storageISO in
-        $nameISO1)
-            pathISO=$pathISO1 #"/var/lib/vz/template/iso/"
-            ;;
-        $nameISO2)
-            pathISO=$pathISO2
-            ;;            
-        $nameISO3)
-            pathISO=$pathISO3
-            ;;
-        $nameISO4)
-            pathISO=$pathISO4
-            ;;
-        $nameISO5)
-            pathISO=$pathISO5
-            ;;
+        $nameISO1) pathISO=$pathISO1 ;; #"/var/lib/vz/template/iso/"
+        $nameISO2) pathISO=$pathISO2 ;;
+        $nameISO3) pathISO=$pathISO3 ;;
+        $nameISO4) pathISO=$pathISO4 ;;
+        $nameISO5) pathISO=$pathISO5 ;;
     esac
-
     if [[ "$newBASE" == true || ! -f base.qcow2 ]]; then
         if  [ -f $pathISO$fileISO ]; then #elif
             echo  "${okcm}${magb} $fileISO ${end}${cyn}exist in $storageISO" >> $logFILE
@@ -467,7 +430,6 @@ function dlFile() { # Download the Cloud Image
             echo "${dlcm}${magb} $locationOS$fileISO ${end}${cyn} downloaded to $storageISO path: $pathISO  $(date +"%T") ${end}" >> $logFILE
         fi
     fi
-
 }
 
 function getPool() { # Show basic pool info and Select a Pool
@@ -475,15 +437,9 @@ function getPool() { # Show basic pool info and Select a Pool
     local LABEL
     local TYPE
     case $ST in
-    VM)
-      LABEL='VM/CT storage'
-      TYPE=$zfs_st
-      ;;
-    ISO)
-      LABEL='IMG/ISO storage'
-      TYPE=$img_st
-      ;;
-    *) exit ;;
+        VM) LABEL='VM/CT storage' ; TYPE=$zfs_st ;;
+        ISO) LABEL='IMG/ISO storage' ; TYPE=$img_st ;;
+        *) exit ;;
     esac
     local -a LIST
     while read -r line; do
@@ -499,12 +455,12 @@ function getPool() { # Show basic pool info and Select a Pool
     done < <(echo "$TYPE" | awk 'NR>1')
     # Select storage location
     if [ $((${#LIST[@]} / 3)) -eq 0 ]; then
-      echo "${nocm}${red}Unable to detect valid storage location for ISO storage.${end}" >> $logFILE
-    elif [ $((${#LIST[@]} / 3)) -eq 1 ]; then
-      printf ${LIST[0]}
-    else
-      local POOL
-      while [ -z "${POOL:+x}" ]; do
+        echo "${nocm}${red}Unable to detect valid storage location for ISO storage.${end}" >> $logFILE
+      elif [ $((${#LIST[@]} / 3)) -eq 1 ]; then
+        printf ${LIST[0]}
+      else
+        local POOL
+        while [ -z "${POOL:+x}" ]; do
         POOL=$(whiptail --backtitle "$backTEXT" --title "Select Storage Pool" --radiolist \
           "\nStorage pool to use for the ${LABEL,,}\nSelect with [Space] and Accept with [Enter]\n" \
           18 $(($LONGA + 23)) 6 \
@@ -526,7 +482,7 @@ function setLAN(){
        vlan=$(whiptail --backtitle "$backTEXT" --title "VLAN Dialog" --inputbox\
        "\nVLAN to use for the VM/Template" 10 48 $initVLAN  3>&1 1>&2 2>&3)
        echo "${cyn}     -  VLAN: $vlan" >> $logFILE
-    else
+      else
         vlan=0
         echo "${cyn}     -  User selected NOT to use a VLAN" >> $logFILE
     fi
@@ -604,6 +560,11 @@ function setOPTIONS() {
 
 OPTION_MENU=()
 LONGA=0
+
+echo "# Firstboot commands created from TemplateBuilder" > firstboot.sh
+vcapt="apt-get install -y "
+vc=" --install "
+
 while read -r ONOFF TAG ITEM; do
   OFFSET=2
   ((${#ITEM} + OFFSET > LONGA)) && LONGA=${#ITEM}+OFFSET
@@ -618,21 +579,22 @@ on nala APT frontend
 ON unattended-upgrades set to On
 ON Fail2Ban Security
 ON clamav antivirus and daemon
+OFF 2FA OATHtool, Google Authenticator
 OFF mailutils needs FQDN
 OFF bat better cat
 OFF exa better ls
 OFF fzf fuzzy find
+OFF myBash add personal settings
 OFF Docker-CE Alpine
 OFF Dockge Docker Management
 OFF Portainer-CE Alpine
 OFF Agent Portainer Agent
 OFF Docker \$\$\$ license
 OFF Portainer-BE \$\$\$ license
-OFF K0s TBA a K0s Cluster
-OFF K3s TBA a K3s Cluster TBA
-OFF K3s TBA a K3s HA-Cluster TBA
-OFF K8s make a K8s Cluster TBA
-OFF myBash add personal settings
+OFF K0s a K0s Cluster
+OFF K3s a K3s ClusterTBA
+OFF K3s-HAa TBA K3s HA-Cluster TBA
+OFF K8s make a K8s Cluster
 OFF AlpineDocker Docker on Apline
 EOF
 )
@@ -648,102 +610,128 @@ else
   echo "${cynb}   - User selected options:${end}" >> $logFILE
   for CHOICE in $OPTIONS; do
     case "$CHOICE" in
-    "Qemu-Guest-Agent")
-      o1="y"
-      echo "${cyn}     -  qemu-guest-agent${end}" >> $logFILE
-      ;;
-    "spice-vdagent")
-      o8="y"
-      echo "${cyn}     -  spice-vdagent${end}" >> $logFILE
-      ;;  
-    "nano")
-      o2="y"
-      echo "${cyn}     -  nano editor, ncurses-term${end}" >> $logFILE
-      ;;
-    "git")
-      o3="y"
-      echo "${cyn}     -  git${end}" >> $logFILE
-      ;;
-    "nala")
-      o21="y"
-      echo "${cyn}     -  nala${end}" >> $logFILE
-      ;;
-    "unattended-upgrades")
-      o4="y"
-      echo "${cyn}     -  unattended-upgrades${end}" >> $logFILE
-      ;;
-    "Fail2Ban")
-      o5="y"
-      echo "${cyn}     -  fail2ban${end}" >> $logFILE
-      ;;
-    "clamav")
-      o6="y"
-      echo "${cyn}     -  clamav-daemon${end}" >> $logFILE
-      ;;
-    "mailutils")
-      o7="y"
-      echo "${cyn}     -  mailutils${end}" >> $logFILE
-      ;;
-    "bat")
-      o22="y"
-      echo "${cyn}     -  bat${end}" >> $logFILE
-      ;;
-    "exa")
-      o23="y"
-      echo "${cyn}     -  exa${end}" >> $logFILE
-      ;;
-    "fzf")
-      o24="y"
-      echo "${cyn}     -  fzf${end}" >> $logFILE
-      ;;
+    "Qemu-Guest-Agent") vc="$vc,qemu-guest-agent" ;        echo "${cyn}     -  qemu-guest-agent${end}" >> $logFILE ;;
+    "spice-vdagent") vc="$vc,spice-vdagent" ;              echo "${cyn}     -  spice-vdagent${end}" >> $logFILE ;;
+    "nano") vc="$vc,nano,ncurses-term" ;                   echo "${cyn}     -  nano editor, ncurses-term${end}" >> $logFILE ;;
+    "git") vc="$vc,git" ;                                  echo "${cyn}     -  git${end}" >> $logFILE ;;
+    "nala") vc="$vc,nala" ;                                echo "${cyn}     -  nala${end}" >> $logFILE ;;
+    "unattended-upgrades") vc="$vc,unattended-upgrades" ;  echo "${cyn}     -  unattended-upgrades${end}" >> $logFILE ;;
+    "Fail2Ban") vc="$vc,fail2ban" ;                        echo "${cyn}     -  fail2ban${end}" >> $logFILE ;;
+    "clamav") vc="$vc,clamav,clamav-daemon" ;              echo "${cyn}     -  clamav-daemon${end}" >> $logFILE ;;
+    "2FA") vc="$vc,oathtool,libpam-google-authenticator" ; echo "${cyn}     -  OATH Toolkit, Google Authenticator${end}" >> $logFILE ;;
+    "mailutils")  vc="$vc,mailutils" ;                     echo "${cyn}     -  mailutils${end}" >> $logFILE ;;
+    "bat") vc="$vc,bat" ;                                  echo "${cyn}     -  bat${end}" >> $logFILE ;;
+    "exa") vc="$vc,exa" ;                                  echo "${cyn}     -  exa${end}" >> $logFILE ;;
+    "fzf") vc="$vc,fzf" ;                                  echo "${cyn}     -  fzf${end}" >> $logFILE  ;;
     "Docker-CE")
-      o10="y"
+      echo "apt-get update && apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
+      echo "mkdir -p /etc/apt/keyrings" >> firstboot.sh
+      echo "mkdir -p /home/$ciu/docker/" >> firstboot.sh
+      if [[ "$familyISO" == 'ubuntu' ]]; then
+            echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+            echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+            echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
+        elif [[ "$familyISO" == 'debian' ]]; then
+            echo "curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+            echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+            echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
+        else
+            echo " EXIT Wrong OS Family!" >> $logFILE
+            exit
+      fi
+      echo "apt-get update && apt-get install -y docker-ce containerd.io docker-ce-cli docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin" >> firstboot.sh
+      if [ "$testMODE" = true ]; then echo "usermod -aG docker $ciu" >> firstboot.sh; fi
       echo "${cyn}     -  Docker-CE${end}" >> $logFILE
       ;;
     "Dockge")
-      o20="y"
+      echo "/home/$ciu/docker/dockge/" >> firstboot.sh
+      # Dockge management app is a great tool and replaces Portainer-CE in my lab. Storage strategy /home/<user>/docker/ dockge (for its data) and stacks (for the <app>/compose.yaml)
+      echo "docker run -d -p 5001:5001 --name Dockge --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /home/$ciu/docker/dockge/data:/app/data -v /home/$ciu/docker/stacks:/home/$ciUSER/docker/stacks -e DOCKGE_STACKS_DIR=/home/$ciUSER/docker/stacks louislam/dockge:latest" >> firstboot.sh
       echo "${cyn}     -  Dockge${end}" >> $logFILE
       ;;
     "Portainer-CE")
-      o11="y"
+      echo "mkdir -p /home/$ciu/docker/portainer/portainer-data" >> firstboot.sh
+      echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:alpine" >> firstboot.sh
       echo "${cyn}     -  Portainer-CE${end}" >> $logFILE
       ;;
     "Agent")
-      o12="y"
+      echo "docker run -d -p 9001:9001 --name portainer-agent --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker/volumes:/var/lib/docker/volumes portainer/agent:alpine" >> firstboot.sh
       echo "${cyn}     -  Portainer Agent${end}" >> $logFILE
       ;;
     "Docker")
-      o13="y"
+      echo "apt-get update && apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
+      #vc="$vc,apt-utils"
+      #vc="$vc,curl"
+      #vc="$vc,software-properties-common"
+      #vc="$vc,apt-transport-https"
+      #vc="$vc,ca-certificates"
+      #vc="$vc,gnupg"
+      echo "mkdir -p /etc/apt/keyrings" >> firstboot.sh
+      echo "mkdir -p /home/$ciu/docker/" >> firstboot.sh
+      echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+      echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
+      echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
+      echo "apt-get update" >> firstboot.sh
+      echo "apt-get install -y docker containerd.io docker-cli docker-compose-plugin docker-rootless-extras docker-buildx-plugin" >> firstboot.sh
       echo "${cyn}     -  Docker-EE \$\$\$${end}" >> $logFILE
       ;;
     "Portainer-BE")
-      o14="y"
+      echo -e "mkdir -p /home/$ciu/docker/portainer/portainer-data" >> firstboot.sh
+      echo -e "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:alpine" >> firstboot.sh
       echo "${cyn}     -  Portainer \$\$\$${end}" >> $logFILE
       ;;
     "K0s")
-      o16="y"
+      echo "apt-get update && apt-get install -y containerd curl" >> firstboot.sh
+      echo "su - $ciu"  >> firstboot.sh
+      echo "curl -sSLf https://get.k0s.sh | sh" >> firstboot.sh
+      echo "wget https://github.com/nallej/MyJourney/raw/main/scripts/K0s-starter.sh -O /home/$ciu/K0s-starter.sh" >> firstboot.sh
+      echo "chmod a+x /home/$ciu/K0s-starter.sh" >> firstboot.sh
       echo "${cyn}     -  make a K0s cluster${end}" >> $logFILE
       ;;
     "K3s")
-      o17="y"
+      # Create 1 server (VM) and 2 agents (clones)
+      echo "apt-get update && apt-get install -y containerd curl" >> firstboot.sh
+      echo "curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=v1.27.8+k3s2 sh -" >> firstboot.sh
+      echo "wget https://github.com/nallej/MyJourney/raw/main/scripts/K0s-starter.sh -O /home/$ciu/K3s-starter.sh" >> firstboot.sh
+      echo "chmod a+x /home/$ciu/K3s-starter.sh" >> firstboot.sh
       echo "${cyn}     -  make a K3s cluster${end}" >> $logFILE
       ;;
     "K3s-HA")
-      o18="y"
       echo "${cyn}     -  make a K3s HA-cluster${end}" >> $logFILE
       ;;
     "K8s")
-      o15="y"
+      echo "${cyn}     -  make K8s HA-settings${end}" >> $logFILE
+      echo "apt-get update && apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
+      echo "apt-get update" >> firstboot.sh
+      echo "curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg" >> firstboot.sh
+      echo "echo \"deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main\" | tee /etc/apt/sources.list.d/kubernetes.list" >> firstboot.sh
+      echo "swapoff -a" >> firstboot.sh
+      echo "mkdir /etc/containerd" >> firstboot.sh
+      echo "containerd config default | tee /etc/containerd/config.toml" >> firstboot.sh
+      echo "echo \"br_netfilter\" > /etc/modules-load.d/k8s.conf" >> firstboot.sh
+      echo "sed -i \"s/^\( *SystemdCgroup = \\)false/\\1true/\" /etc/containerd/config.toml" >> firstboot.sh
+      echo "sed -i -e \"/#net.ipv4.ip_forward=1/c\\net.ipv4.ip_forward=1\" etc/sysctl.conf" >> firstboot.sh
+      echo "apt-get update && sudo apt-get install -y kubeadm kubectl kubelet" >> firstboot.sh
+      # echo "truncate -s 0 /etc/machine-id" >> firstboot.sh
+      # echo "rm /var/lib/dbus/machine-id" >> firstboot.sh
+      # echo "ln -s /etc/machine-id /var/lib" >> firstboot.sh
+      # echo "systemd-machine-id-setup" >> firstboot.sh
       echo "${cyn}     -  make a K8s cluster${end}" >> $logFILE
       ;;
     "myBash")
-      o30="y"
+      echo "lsb_release" >> firstboot.sh
+      echo "chmod a+x /home/$ciu/initVM.sh" >> firstboot.sh
       echo "${cyn}     -  myBashAddOns${end}" >> $logFILE
       ;;
     "AlpineDocker")
-      o40="y"
+      echo "# Firstboot commands created from TemplateBuilder" > firstboot.sh
+      echo "apk update" >> firstboot.sh
+      echo "apk add docker docker-compose" >> firstboot.sh
+      echo "rc-update add docker" >> firstboot.sh
+      echo "service docker start" >> firstboot.sh
+      echo "addgroup $ciu docker" >> firstboot.sh
       echo "${cyn}     -  Docker in Alpine Linux${end}" >> $logFILE
-      ;;  
+      ;;
     *)
       echo "${red}⚠ Unsupported item $CHOICE! ${end}" >> $logFILE
       exit 1
@@ -836,113 +824,12 @@ function createBase() {
     # libguestfs-tools has to be installed on the node.
     # Add or delete add-ons according to your needs
     echo "${stcm}${cyn} $(date +"%T")  Initialized base image" >> $logFILE
-
+# ======================== Delete ->
     echo "# Firstboot commands created from TemplateBuilder" > firstboot.sh
     vcapt="apt-get install -y "
     vc=" --install "
-    if [[ $o1 == 'y' ]]; then vc="$vc,qemu-guest-agent"; fi #vc="$vc --install qemu-guest-agent"; fi
-    if [[ $o2 == 'y' ]]; then vc="$vc,nano,ncurses-term"; fi
-#        vc="$vc --install nano"
- #       vc="$vc --install ncurses-term"; fi
-    if [[ $o3 == 'y' ]]; then vc="$vc,git"; fi
-    if [[ $o4 == 'y' ]]; then vc="$vc,unattended-upgrades"; fi
-    if [[ $o5 == 'y' ]]; then vc="$vc,fail2ban"; fi
-    if [[ $o6 == 'y' ]]; then vc="$vc,clamav,clamav-daemon"; fi
-    if [[ $o8 == 'y' ]]; then vc="$vc,spice-vdagent"; fi
-    if [[ $o7 == 'y' ]]; then vc="$vc,mailutils"; fi
-    if [[ $o21 == 'y' ]]; then vc="$vc,nala"; fi #echo "apt-get install -y nala" >> firstboot.sh; fi #vcapt="$vcapt nala"
-    if [[ $o22 == 'y' ]]; then vc="$vc,bat"; fi #echo "apt-get install -y bat" >> firstboot.sh; fi #vcapt="$vcapt bat"
-    if [[ $o23 == 'y' ]]; then vc="$vc,exa"; fi #echo "apt-get install -y exa" >> firstboot.sh; fi #vcapt="$vcapt exa"
-    if [[ $o24 == 'y' ]]; then vc="$vc,fzf"; fi #echo "apt-get install -y fzf" >> firstboot.sh; fi #vcapt="$vcapt fzf"
-    if [[ $o10 == 'y' ]]; then # || $o13 == 'y' ]]; then
-        echo "apt-get update && apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
-        echo "mkdir -p /etc/apt/keyrings" >> firstboot.sh
-        echo "mkdir -p /home/$ciu/docker/" >> firstboot.sh
-        if [[ "$familyISO" == 'ubuntu' ]]; then
-            echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
-            echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
-            echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
-        elif [[ "$familyISO" == 'debian' ]]; then
-            echo "curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
-            echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
-            echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
-        else
-            echo " EXIT Wrong OS Family!" >> $logFILE
-            exit
-        fi
-        echo "apt-get update && apt-get install -y docker-ce containerd.io docker-ce-cli docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin" >> firstboot.sh
-        if [ "$testMODE" = true ]; then echo "usermod -aG docker $ciu" >> firstboot.sh; fi
-
-    fi
-    if [[ $o20 == 'y' ]]; then
-        echo "/home/$ciu/docker/dockge/" >> firstboot.sh
-        # Dockge management app is a great tool and replaces Portainer-CE in my lab. Storage strategy /home/<user>/docker/ dockge (for its data) and stacks (for the <app>/compose.yaml)
-        echo "docker run -d -p 5001:5001 --name Dockge --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /home/$ciu/docker/dockge/data:/app/data -v /home/$ciu/docker/stacks:/home/$ciUSER/docker/stacks -e DOCKGE_STACKS_DIR=/home/$ciUSER/docker/stacks louislam/dockge:latest" >> firstboot.sh
-      fi
-    if [[ $o11 == 'y' ]]; then
-        echo "mkdir -p /home/$ciu/docker/portainer/portainer-data" >> firstboot.sh
-        echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:alpine" >> firstboot.sh
-    fi
-    if [[ $o12 == 'y' ]]; then
-        echo "docker run -d -p 9001:9001 --name portainer-agent --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker/volumes:/var/lib/docker/volumes portainer/agent:alpine" >> firstboot.sh
-    fi
-    if [[ $o13 == 'y' ]]; then
-        vc="$vc,apt-utils"
-        #vc="$vc --install curl"
-        vc="$vc,software-properties-common"
-        vc="$vc,apt-transport-https"
-        #vc="$vc --install ca-certificates"
-        vc="$vc,gnupg"
-        echo "mkdir -p /etc/apt/keyrings" >> firstboot.sh
-        echo "mkdir -p /home/$ciu/docker/" >> firstboot.sh
-        echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
-        echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
-        echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
-        echo "apt-get update" >> firstboot.sh
-        echo "apt-get install -y docker containerd.io docker-cli docker-compose-plugin docker-rootless-extras docker-buildx-plugin" >> firstboot.sh
-    fi
-    if [[ $o14 == 'y' ]]; then
-        echo "mkdir -p /home/$ciu/docker/portainer/portainer-data" >> firstboot.sh
-        echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:alpine" >> firstboot.sh
-    fi
-    if [[ $o15 == 'y' ]]; then
-        echo "${cyn}     -  make K8s HA-settings${end}" >> $logFILE
-        echo "apt-get update && apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
-        echo "apt-get update" >> firstboot.sh
-        echo "curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | dd status=none of=/usr/share/keyrings/kubernetes-archive-keyring.gpg" >> firstboot.sh
-        echo "echo \"deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main\" | tee /etc/apt/sources.list.d/kubernetes.list" >> firstboot.sh
-        echo "swapoff -a" >> firstboot.sh
-        echo "mkdir /etc/containerd" >> firstboot.sh
-        echo "containerd config default | tee /etc/containerd/config.toml" >> firstboot.sh
-        echo "echo \"br_netfilter\" > /etc/modules-load.d/k8s.conf" >> firstboot.sh
-        echo "sed -i \"s/^\( *SystemdCgroup = \\)false/\\1true/\" /etc/containerd/config.toml" >> firstboot.sh
-        echo "sed -i -e \"/#net.ipv4.ip_forward=1/c\\net.ipv4.ip_forward=1\" etc/sysctl.conf" >> firstboot.sh
-        echo "apt-get update && sudo apt-get install -y kubeadm kubectl kubelet" >> firstboot.sh
-        # echo "truncate -s 0 /etc/machine-id" >> firstboot.sh
-        # echo "rm /var/lib/dbus/machine-id" >> firstboot.sh
-        # echo "ln -s /etc/machine-id /var/lib" >> firstboot.sh
-        # echo "systemd-machine-id-setup" >> firstboot.sh
-    fi
-    if [[ $o16 == 'y' ]]; then
-        echo "apt-get install -y containerd" >> firstboot.sh
-        echo "curl -sSLf https://get.k0s.sh | sh" >> firstboot.sh
-        echo "wget https://github.com/nallej/MyJourney/raw/main/scripts/K0s-starter.sh -O /home/$ciu/K0s-starter.sh" >> firstboot.sh
-        echo "chmod a+x /home/$ciu/K0s-starter.sh" >> firstboot.sh
-    fi
-    if [[ $o30 = 'y' ]]; then
-        echo "wget https://github.com/nallej/MyJourney/raw/main/scripts/initVM.sh -O /home/$ciu/initVM.sh" >> firstboot.sh
-        echo "chmod a+x /home/$ciu/initVM.sh" >> firstboot.sh
-        #echo "source /home/$ciu/initVM.sh" >> firstboot.sh
-    fi
-    if [[ $040 = "y" ]]; then
-        echo "# Firstboot commands created from TemplateBuilder" > firstboot.sh
-        echo "apk update" >> firstboot.sh
-        echo "apk add docker docker-compose" >> firstboot.sh
-        echo "rc-update add docker" >> firstboot.sh
-        echo "service docker start" >> firstboot.sh
-        echo "addgroup $ciu docker" >> firstboot.sh
-    fi    
     #echo "reboot" >> firstboot.sh
+# =================== Delete -|
     echo "truncate -s 0 /etc/machine-id" >> firstboot.sh
     echo "systemd-machine-id-setup" >> firstboot.sh
     echo "cp /root/virt-sysprep-firstboot.log /home/$ciu/firstboot.log" >> firstboot.sh
@@ -1082,7 +969,7 @@ function init() {
     runSpinner run
     # Read the storage pools -------------------------------------------------#
     zfs_st=$(pvesm status -content rootdir)
-    img_st=$(pvesm status -content iso) 
+    img_st=$(pvesm status -content iso)
     #ctt_st=$(pvesm status -content vztmpl)
     motd_file="/etc/motd"
     backup_file="/etc/motd.old"
@@ -1169,13 +1056,13 @@ if (whiptail --backtitle "$backTEXT" --title \
     echo "${cyn}-  $(date +"%T")  Cloud Image creation started" >> $logFILE
     echo "-- Installation started"
     runSpinner run    # Run the Spinner
-# Base Image     
+# Base Image
     (copyBASE >> $logFILE 2>&1)
     printf "\b"
     echo "${okcm} base.qcow2 image created"
     (createBase >> $logFILE 2>&1)
     printf "\b"
-    echo "${okcm} base.qcow2 image initialized"    
+    echo "${okcm} base.qcow2 image initialized"
 
 # Create the VM --------------------------------------------------------------#
 
