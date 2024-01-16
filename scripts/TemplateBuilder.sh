@@ -33,7 +33,7 @@
      # 🔟 Create a long and complicated password
      #   6 is a joke,  8 is something,  12 is semi ok,  16 is ok,  20 is good.
      # 🔐 SSH Public Key or download it later in the GUI into the cloud-init
-     initUSER=pomo Administrator        # admin user name
+     initUSER=Administrator        # admin user name
      passLENGHT=16                 # length of password
      initPASSWD=Passw0rd           # a long and complicated password
      showPASSWD=false              # Show Password in log true/false
@@ -1125,4 +1125,3 @@ else
     echo -e "${red}== Installation was aborted!${end}"
     echo -e "${yelb}⚠ User canceld the install ⚠${end}" >> $logFILE
 fi
-# End of Script ###############################################################
