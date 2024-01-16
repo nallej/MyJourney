@@ -4,6 +4,23 @@
 # For more info see: https://pve.proxmox.com/pve-docs/qm.conf.5.html          #
 #-----------------------------------------------------------------------------#
 
+# Install this script by open a terminal in the Proxmox node as root:
+#  - run wget: wget -q --show-progress https://github.com/nallej/MyJourney/raw/main/scripts/TemplateBuilder.sh
+#  - chmod +x TemplateBuilder.sh or chmod 700 TemplateBuilder.sh
+#
+# Edit the script is very important for a smooth experience.
+#
+# This script generate a workin VM or a Template or a set of VMs
+#
+# The functionallity is detemend by your Y/N answers
+# ⚠️ Select by [Space] and enter selection with [OK] or [Enter]
+#
+# In Case of Machin-ID errors (same IP on nodes)
+#    - Erase the machine id: sudo truncate -s 0 /etc/machine-id
+#    - Remove the linked: sudo rm /var/lib/dbus/machine-id
+#    - Re-Create symbolic link: sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
+
+
 ###############################################################################
  #                                                                           #
   #       👍    👍     E D I T  t h i s  S E C T I O N      👍    👍       #
@@ -118,7 +135,7 @@
  #                                                                           #
 ###############################################################################
 pgrm="TemplateBuilder"
-pver="5.2-15"
+pver="5.2-16"
 
 # Version history ============================================================
 
@@ -385,23 +402,23 @@ function dlFile() { # Download the Cloud Image
     local NAME    # Short name O
     fileISO=$1
     case $TYPE in
-        $osFILE1) familyISO=$osFAMILY1 ; locationOS=$osLOCATION1 ;;
-        $osFILE2) familyISO=$osFAMILY2 ; locationOS=$osLOCATION2 ;;
-        $osFILE3) familyISO=$osFAMILY3 ; locationOS=$osLOCATION3 ;;
-        $osFILE4) familyISO=$osFAMILY4 ; locationOS=$osLOCATION4 ;;
-        $osFILE5) familyISO=$osFAMILY5 ; locationOS=$osLOCATION5 ;;
-        $osFILE6) familyISO=$osFAMILY6 ; locationOS=$osLOCATION6 ;;
-        $osFILE7) familyISO=$osFAMILY7 ; locationOS=$osLOCATION7 ;;
-        $osFILE8) familyISO=$osFAMILY8 ; locationOS=$osLOCATION8 ;;
-        $osFILE9) familyISO=$osFAMILY9 ; locationOS=$osLOCATION9 ;;
+            $osFILE1) familyISO=$osFAMILY1 ; locationOS=$osLOCATION1 ;;
+            $osFILE2) familyISO=$osFAMILY2 ; locationOS=$osLOCATION2 ;;
+            $osFILE3) familyISO=$osFAMILY3 ; locationOS=$osLOCATION3 ;;
+            $osFILE4) familyISO=$osFAMILY4 ; locationOS=$osLOCATION4 ;;
+            $osFILE5) familyISO=$osFAMILY5 ; locationOS=$osLOCATION5 ;;
+            $osFILE6) familyISO=$osFAMILY6 ; locationOS=$osLOCATION6 ;;
+            $osFILE7) familyISO=$osFAMILY7 ; locationOS=$osLOCATION7 ;;
+            $osFILE8) familyISO=$osFAMILY8 ; locationOS=$osLOCATION8 ;;
+            $osFILE9) familyISO=$osFAMILY9 ; locationOS=$osLOCATION9 ;;
     esac
 
     case $storageISO in
-        $nameISO1) pathISO=$pathISO1 ;; #"/var/lib/vz/template/iso/"
-        $nameISO2) pathISO=$pathISO2 ;;
-        $nameISO3) pathISO=$pathISO3 ;;
-        $nameISO4) pathISO=$pathISO4 ;;
-        $nameISO5) pathISO=$pathISO5 ;;
+            $nameISO1) pathISO=$pathISO1 ;; #"/var/lib/vz/template/iso/"
+            $nameISO2) pathISO=$pathISO2 ;;
+            $nameISO3) pathISO=$pathISO3 ;;
+            $nameISO4) pathISO=$pathISO4 ;;
+            $nameISO5) pathISO=$pathISO5 ;;
     esac
     if [[ "$newBASE" == true || ! -f base.qcow2 ]]; then
         if  [ -f $pathISO$fileISO ]; then #elif
@@ -519,8 +536,8 @@ function setBASE() {
     "\nChoose the Size of RAM" 14 48 5 \
     "512" ".5 GiB for small nodes" OFF \
     "1024" "1  GiB for basic VMs" ON \
-    "2048" "2  GiB for basic VMs" OFF \
-    "4096" "4  GiB for hevy load VMs" OFF \
+    "2048" "2  GiB for basic Docker VMs" OFF \
+    "4096" "4  GiB for heavy load VMs" OFF \
     "8192" "8  GiB for extra heavy load VMs" OFF \
     3>&1 1>&2 2>&3)
     echo "${cyn}     -  RAM size: $sizeM${end}" >> $logFILE
@@ -539,13 +556,12 @@ function setBASE() {
 }
 
 function setOPTIONS() {
-    #add init vc and firstboot.sh
-
+echo "${okcm}${cyn} user: $ciu in setOPTIONS ${end}" >> $logFILE
 OPTION_MENU=()
 LONGA=0
+USER=$ciu
 
 echo "# Firstboot commands created from TemplateBuilder" > firstboot.sh
-vcapt="apt-get install -y "
 vc=" --install "
 
 while read -r ONOFF TAG ITEM; do
@@ -576,7 +592,7 @@ OFF Docker \$\$\$ license
 OFF Portainer-BE \$\$\$ license
 OFF K0s a K0s Cluster
 OFF K3s a K3s ClusterTBA
-OFF K3s-HAa TBA K3s HA-Cluster TBA
+OFF K3s-HA TBA K3s HA-Cluster TBA
 OFF K8s make a K8s Cluster
 OFF AlpineDocker Docker on Apline
 EOF
@@ -609,7 +625,7 @@ else
     "Docker-CE")
       echo "apt-get update && apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
       echo "mkdir -p /etc/apt/keyrings" >> firstboot.sh
-      echo "mkdir -p /home/$ciu/docker/" >> firstboot.sh
+      echo "mkdir -p /home/$USER/docker/" >> firstboot.sh
       if [[ "$familyISO" == 'ubuntu' ]]; then
             echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
             echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
@@ -623,17 +639,17 @@ else
             exit
       fi
       echo "apt-get update && apt-get install -y docker-ce containerd.io docker-ce-cli docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin" >> firstboot.sh
-      if [ "$testMODE" = true ]; then echo "usermod -aG docker $ciu" >> firstboot.sh; fi
+      if [ "$testMODE" = true ]; then echo "usermod -aG docker $USER" >> firstboot.sh; fi
       echo "${cyn}     -  Docker-CE${end}" >> $logFILE
       ;;
     "Dockge")
-      echo "/home/$ciu/docker/dockge/" >> firstboot.sh
+      echo "/home/$USER/docker/dockge/" >> firstboot.sh
       # Dockge management app is a great tool and replaces Portainer-CE in my lab. Storage strategy /home/<user>/docker/ dockge (for its data) and stacks (for the <app>/compose.yaml)
-      echo "docker run -d -p 5001:5001 --name Dockge --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /home/$ciu/docker/dockge/data:/app/data -v /home/$ciu/docker/stacks:/home/$ciUSER/docker/stacks -e DOCKGE_STACKS_DIR=/home/$ciUSER/docker/stacks louislam/dockge:latest" >> firstboot.sh
+      echo "docker run -d -p 5001:5001 --name Dockge --restart=unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v /home/$USER/docker/dockge/data:/app/data -v /home/$USER/docker/stacks:/home/$USER/docker/stacks -e DOCKGE_STACKS_DIR=/home/$USER/docker/stacks louislam/dockge:latest" >> firstboot.sh
       echo "${cyn}     -  Dockge${end}" >> $logFILE
       ;;
     "Portainer-CE")
-      echo "mkdir -p /home/$ciu/docker/portainer/portainer-data" >> firstboot.sh
+      echo -e "mkdir -p /home/$USER/docker/portainer/portainer-data" >> firstboot.sh
       echo "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:alpine" >> firstboot.sh
       echo "${cyn}     -  Portainer-CE${end}" >> $logFILE
       ;;
@@ -650,33 +666,32 @@ else
       #vc="$vc,ca-certificates"
       #vc="$vc,gnupg"
       echo "mkdir -p /etc/apt/keyrings" >> firstboot.sh
-      echo "mkdir -p /home/$ciu/docker/" >> firstboot.sh
+      echo "mkdir -p /home/$USER/docker/" >> firstboot.sh
       echo "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >> firstboot.sh
       echo "chmod a+r /etc/apt/keyrings/docker.gpg" >> firstboot.sh
       echo "echo \"deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \$(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" >> firstboot.sh
-      echo "apt-get update" >> firstboot.sh
-      echo "apt-get install -y docker containerd.io docker-cli docker-compose-plugin docker-rootless-extras docker-buildx-plugin" >> firstboot.sh
+      echo "apt-get update && apt-get install -y docker containerd.io docker-cli docker-compose-plugin docker-rootless-extras docker-buildx-plugin" >> firstboot.sh
       echo "${cyn}     -  Docker-EE \$\$\$${end}" >> $logFILE
       ;;
     "Portainer-BE")
-      echo -e "mkdir -p /home/$ciu/docker/portainer/portainer-data" >> firstboot.sh
+      echo -e "mkdir -p /home/$USER/docker/portainer/portainer-data" >> firstboot.sh
       echo -e "docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ee:alpine" >> firstboot.sh
       echo "${cyn}     -  Portainer \$\$\$${end}" >> $logFILE
       ;;
     "K0s")
       echo "apt-get update && apt-get install -y containerd curl" >> firstboot.sh
-      echo "su - $ciu"  >> firstboot.sh
+      echo "su - $USER"  >> firstboot.sh
       echo "curl -sSLf https://get.k0s.sh | sh" >> firstboot.sh
-      echo "wget https://github.com/nallej/MyJourney/raw/main/scripts/K0s-starter.sh -O /home/$ciu/K0s-starter.sh" >> firstboot.sh
-      echo "chmod a+x /home/$ciu/K0s-starter.sh" >> firstboot.sh
+      echo "wget https://github.com/nallej/MyJourney/raw/main/scripts/K0s-starter.sh -O /home/$USER/K0s-starter.sh" >> firstboot.sh
+      echo "chmod a+x /home/$USER/K0s-starter.sh" >> firstboot.sh
       echo "${cyn}     -  make a K0s cluster${end}" >> $logFILE
       ;;
     "K3s")
       # Create 1 server (VM) and 2 agents (clones)
       echo "apt-get update && apt-get install -y containerd curl" >> firstboot.sh
       echo "curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=v1.27.8+k3s2 sh -" >> firstboot.sh
-      echo "wget https://github.com/nallej/MyJourney/raw/main/scripts/K0s-starter.sh -O /home/$ciu/K3s-starter.sh" >> firstboot.sh
-      echo "chmod a+x /home/$ciu/K3s-starter.sh" >> firstboot.sh
+      echo "wget https://github.com/nallej/MyJourney/raw/main/scripts/K0s-starter.sh -O /home/$USER/K3s-starter.sh" >> firstboot.sh
+      echo "chmod a+x /home/$USER/K3s-starter.sh" >> firstboot.sh
       echo "${cyn}     -  make a K3s cluster${end}" >> $logFILE
       ;;
     "K3s-HA")
@@ -702,8 +717,8 @@ else
       echo "${cyn}     -  make a K8s cluster${end}" >> $logFILE
       ;;
     "myBash")
-      echo "lsb_release" >> firstboot.sh
-      echo "chmod a+x /home/$ciu/initVM.sh" >> firstboot.sh
+      echo "wget https://github.com/nallej/MyJourney/raw/main/scripts/initVM.sh -O /home/$USER/initVM.sh" >> firstboot.sh
+      echo "chmod a+x /home/$USER/initVM.sh" >> firstboot.sh
       echo "${cyn}     -  myBashAddOns${end}" >> $logFILE
       ;;
     "AlpineDocker")
@@ -712,7 +727,7 @@ else
       echo "apk add docker docker-compose" >> firstboot.sh
       echo "rc-update add docker" >> firstboot.sh
       echo "service docker start" >> firstboot.sh
-      echo "addgroup $ciu docker" >> firstboot.sh
+      echo "addgroup $USER docker" >> firstboot.sh
       echo "${cyn}     -  Docker in Alpine Linux${end}" >> $logFILE
       ;;
     *)
@@ -760,7 +775,7 @@ fi
     vmNO=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
         "\nVM ID" 10 48 $initVMNO 3>&1 1>&2 2>&3)
     vmNAME=$(whiptail --backtitle "$backTEXT" --title "What to Create" --inputbox \
-        "\nName of the VM" 10 48 $initVMNAME 3>&1 1>&2 2>&3)
+        "\nVM Name, only a-z|0-9|- are allowed!" 10 48 $initVMNAME 3>&1 1>&2 2>&3)
     echo "${cyn}     -  VM $vmNO $vmNAME" >> $logFILE
 }
 
@@ -789,13 +804,13 @@ function copyBASE(){
 # Create base.qcow2 as a base for a VM using a CI
     echo "${stcm}${cyn} $(date +"%T")  Copy $pathISO$fileISO -> base.qcow2" >> $logFILE
     if [ -f base.qcow2 ]; then
-        cp --remove-destination $pathISO$fileISO base.qcow2  &> /dev/null
+        cp --remove-destination $pathISO$fileISO base.qcow2 &> /dev/null
       else
-        cp $pathISO$fileISO base.qcow2  &> /dev/null
+        cp $pathISO$fileISO base.qcow2 &> /dev/null
     fi
     echo "${stcm}${cyn} $(date +"%T")  Created raw image base.qcow2" >> $logFILE
 
-    qemu-img resize base.qcow2 $sizeD
+    qemu-img resize base.qcow2 $sizeD &> /dev/null 
     # NOTE The bigger a disk should be, the longer it takes to resize and copy it!
     # 16G is typical - Resize the disk to your needs, 8 - 32 GiB is normal
     echo "${stcm}${cyn} $(date +"%T")  Resized the base.qcow2 to $sizeD" >> $logFILE
@@ -807,18 +822,15 @@ function createBase() {
     # libguestfs-tools has to be installed on the node.
     # Add or delete add-ons according to your needs
     echo "${stcm}${cyn} $(date +"%T")  Initialized base image" >> $logFILE
-# ======================== Delete ->
-    echo "# Firstboot commands created from TemplateBuilder" > firstboot.sh
-    vcapt="apt-get install -y "
-    vc=" --install "
-    #echo "reboot" >> firstboot.sh
-# =================== Delete -|
+    
     echo "truncate -s 0 /etc/machine-id" >> firstboot.sh
     echo "systemd-machine-id-setup" >> firstboot.sh
-    echo "cp /root/virt-sysprep-firstboot.log /home/$ciu/firstboot.log" >> firstboot.sh
+    echo -e "cp /root/virt-sysprep-firstboot.log /home/$ciu/firstboot.log" >> firstboot.sh
     echo "systemctl reboot --no-wall" >> firstboot.sh
+    
     vc="$vc --firstboot firstboot.sh --add base.qcow2"
-    virt-customize $vc
+    virt-customize $vc &> /dev/null
+
     echo -e "\n>>>> virt-customize --------------------------------------------------------" >> $logFILE
     echo "$vc" >> $logFILE
     echo -e "<<<< virt-customize ---------------------------------------------------------\n" >> $logFILE
@@ -856,15 +868,15 @@ function createVM() {
     echo "${okcm}${cyn} $(date +"%T")    - $ibase $storageVM" >> $logFILE
     #cp base.qcow2 vm-base.qcow2
     # Set options --------------------------------------------------------#
-    qm disk import $vmNO base.qcow2 $storageVM > /dev/null 2>&1                 # Import the disc to the base of the VM. Where to put the VM local-lvm
+    qm disk import $vmNO base.qcow2 $storageVM > /dev/null 2>&1           # Import the disc to the base of the VM. Where to put the VM local-lvm
 
     if [[ ${#myKEY} > 0 ]]; then
-        qm set $vmNO --scsihw virtio-scsi-pci --scsi0 $storageVM:vm-$vmNO-disk-0 --ide2 $storageVM:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga std --onboot 1 --agent 1 --ostype l26 --ipconfig0 ip="dhcp" --ciuser $ciu --cipassword $cip --sshkey $myKEY
-    else
-        qm set $vmNO --scsihw virtio-scsi-pci --scsi0 $storageVM:vm-$vmNO-disk-0 --ide2 $storageVM:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga std --onboot 1 --agent 1 --ostype l26 --ipconfig0 ip="dhcp" --ciuser $ciu --cipassword $cip
+        qm set $vmNO --scsihw virtio-scsi-pci --scsi0 $storageVM:vm-$vmNO-disk-0 --ide2 $storageVM:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga serial0 --onboot 1 --agent 1 --ostype l26 --ipconfig0 ip="dhcp" --ciuser $ciu --cipassword $cip --sshkey $myKEY  > /dev/null 2>&1
+      else
+        qm set $vmNO --scsihw virtio-scsi-pci --scsi0 $storageVM:vm-$vmNO-disk-0 --ide2 $storageVM:cloudinit --boot c --bootdisk scsi0 --serial0 socket --vga serial0 --onboot 1 --agent 1 --ostype l26 --ipconfig0 ip="dhcp" --ciuser $ciu --cipassword $cip  > /dev/null 2>&1
     fi
 
-    #if [ ${#myKEY} > 0 ]; then qm set $vmNO --sshkey $myKEY; fi     # sets the users key to the vm
+    #if [ ${#myKEY} > 0 ]; then qm set $vmNO --sshkey $myKEY; fi           # sets the users key to the vm
     #qm disk resize $vmNO scsi0 $sizeD
 
     # Create the Notes window
@@ -877,7 +889,6 @@ function createVM() {
     else
          echo "#- User   : $ciu" >> /etc/pve/qemu-server/$vmNO.conf
     fi
-
     # Create the Notes window
     echo "#- Bridge : $vmbr" >>  /etc/pve/qemu-server/$vmNO.conf
     if [[ $vlan > 0 ]]; then echo "#  vLAN: $vlan" >> /etc/pve/qemu-server/$vmNO.conf; fi
@@ -885,6 +896,7 @@ function createVM() {
     echo "#- Storage: $storageVM" >> /etc/pve/qemu-server/$vmNO.conf
     echo "#- Base   : $fileISO" >> /etc/pve/qemu-server/$vmNO.conf
     echo "#- from   : $pathISO" >> /etc/pve/qemu-server/$vmNO.conf
+    echo "#- Shell  : xterm.js" >> /etc/pve/qemu-server/$vmNO.conf
 
     #echo -e '#foo-bar\n' >> /etc/pve/lxc/VMID.conf
     echo "${okcm}${cyn} $(date +"%T")  VM $vmNO $vmNAME Created" >> $logFILE
@@ -968,7 +980,7 @@ function init() {
 ###############################################################################
 
 # Code Section ===============================================================#
-backTEXT="$pgrm $pver; part of the My HomeLab Journey Project"   #Background text
+backTEXT="$pgrm $pver; part of the My HomeLab Journey Project" #Background text
 # Initialization menu --------------------------------------------------------#
 
 useColors                   # Use color codes
@@ -1003,12 +1015,12 @@ CI=$(whiptail  --backtitle "$backTEXT" --title "Choose the Image to use as Base 
 
 if (whiptail --backtitle "$backTEXT" --title \
   "Copy a new QCow2-file or us the current one" --yesno --defaultno \
-  "\n    ⚠️ Do you like to use Current  -  or Copy a NEW one " \
-  10 68 --no-button "Copy New" --yes-button "Current"); then
-  echo -e "\n${okcm}${magb} User selected to use the current base.qcoq2  $(date +"%F %T")${end}" >> $logFILE
+  "\n    ⚠️ Do you like to use Current  -  or Copy a NEW file " \
+  10 68 --no-button "New" --yes-button "Old"); then
+  echo -e "\n${okcm}${magb} User selected to use the current base.qcow2  $(date +"%F %T")${end}" >> $logFILE
   newBASE=false
 else
-  echo -e "\n${okcm}${magb} User selected to use a new copy of base.qco2  $(date +"%F %T")${end}" >> $logFILE
+  echo -e "\n${okcm}${magb} User selected to use a new copy of base.qcow2  $(date +"%F %T")${end}" >> $logFILE
   newBASE=true
   dlFile $CI
 fi
@@ -1017,10 +1029,15 @@ fi
 echo "${cynb}   - User selected the ${magb}$CI${end}${cyn} image and:${end}" >> $logFILE
 # Set basic parameters for VM/Template
 setBASE                     # Set Disk Size, RAM size and # of Cores
+echo "${okcm} base settings"
 setLAN                      # Set Bridge and VLAN
-setOPTIONS                  # Set more Options
-storageVM=$(getPool VM)     # Set Storage fo the VM e.g. local-zfs
+echo "${okcm} LAN settings"
 setUSER                     # Create the user, Passwork and Private Key to use
+echo "${okcm} user created"
+setOPTIONS                  # Set more Options
+echo "${okcm} options selected"
+storageVM=$(getPool VM)     # Set Storage fo the VM e.g. local-zfs
+echo "${okcm} user set"
 toCREATE                    # What shall we Create Today, a VM or a Template+Clones
 
 # End of Code Section and Initialization Menu ================================#
@@ -1040,38 +1057,27 @@ if (whiptail --backtitle "$backTEXT" --title \
     echo "-- Installation started"
     runSpinner run    # Run the Spinner
 # Base Image
-    (copyBASE >> $logFILE 2>&1)
+    copyBASE # >> $logFILE 2>&1)
     printf "\b"
     echo "${okcm} base.qcow2 image created"
-    (createBase >> $logFILE 2>&1)
+    echo "-- Start creating a new base.qcow2"    
+    createBase #>> $logFILE 2>&1)
     printf "\b"
-    echo "${okcm} base.qcow2 image initialized"
+    echo "${okcm} New base.qcow2 image created"
 
 # Create the VM --------------------------------------------------------------#
 
 
-    (createVM >> $logFILE 2>&1)
+    createVM #>> $logFILE 2>&1)
     printf "\b"
     echo "${okcm} VM $vmNO created as $vmNAME"
 # Create the Template --------------------------------------------------------#
-    if [ "$tok" = true ]; then
+    if [[ "$tok" = true ]]; then
         createTemplate &> /dev/null
         printf "\b"
         echo "${okcm} Template $templateNO created as $templateNAME"
 
         # Create the Clones --------------------------------------------------#
-    #     if [[ $numberCLONES -gt 0 ]]; then
-    #         (createClones &> /dev/null)
-    #         printf "\b"
-    #         first="${cname}1"
-    #         if [ $numberCLONES = 1 ]; then
-    #            echo "${okcm} Clone $firstCLONE created as $first"
-    #         elif [[ $numberCLONES > 1 ]]; then
-    #            last=$(($firstCLONE + $numberCLONES - 1))
-    #            echo "${okcm} Clones $firstCLONE - $last created as $first - $cname$numberCLONES"
-    #         fi
-    #     fi
-    # fi
         echo "${stcm}${cyn} $(date +"%T")  Clone creation started" >> $logFILE
         x=0
         while [ $x -lt $numberCLONES ]
@@ -1083,14 +1089,6 @@ if (whiptail --backtitle "$backTEXT" --title \
             echo "${okcm} Clone $xx $cname$x created"
             #echo "${okcm}${cyn} $(date +"%T") Cloned VM $xx $cname$x created" >> $logFILE
         done
-        # first="${cname}1"
-        # printf "\b"
-        # if [ $numberCLONES = 1 ]; then
-        #    echo "${okcm} Clone $firstCLONE created as $first"
-        # elif [[ $numberCLONES > 1 ]]; then
-        #    last=$(($firstCLONE + $numberCLONES - 1))
-        #    echo "${okcm} Clones $firstCLONE - $last created as $first - $cname$numberCLONES"
-        # fi
     fi
 
     echo -e "\n${grnb}== Installation is completed. See log for details."
@@ -1108,3 +1106,4 @@ else
     echo -e "${red}== Installation was aborted!${end}"
     echo -e "${yelb}⚠ User canceld the install ⚠${end}" >> $logFILE
 fi
+# End of Script ###############################################################
