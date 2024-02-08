@@ -6,7 +6,7 @@ My newest scripts will be found in the **SCRIPTS** section
 - My new Template builder script can be or pulled by git or downloaded from <br>
 https://github.com/nallej/MyJourney/raw/main/scripts/myTemplateBuilder.sh?ref=homelab.casaursus.net
 - It automate template creation for VMs and K0s, K3s and K8s clusters
-- New version 5.0 is in beta testing 
+- New version 5.2 
   https://github.com/nallej/MyJourney/raw/main/scripts/TemplateBuilder.sh
 
 
@@ -22,6 +22,11 @@ Initial pull: `wget https://raw.githubusercontent.com/nallej/MyJourney/main/1-in
 Make the script executable : `chmod +x 1-install.sh`
 
 ## Other
+Clear an old key : <br>`ssh-keygen -f "/etc/ssh/ssh_known_hosts" -R "10.10.10.10"`
+
+Generate a new key : <br>`ssh-keygen -t ed25519 -C "user@example.com"` 
+
+Add your public key : <br>`ssh-copy-id -i ~/.ssh/id_ed25519.pub user@10.10.10.10` <br> save as filename use -f filename
 
 Updat Proxmox bash with my preferenses:<br>`wget https://github.com/nallej/MyJourney/raw/main/BashAddon.sh`<br> 
 
