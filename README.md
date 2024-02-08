@@ -23,10 +23,10 @@ Make the script executable : `chmod +x 1-install.sh`
 
 ## Other
 Clear an old key : <br>`ssh-keygen -f "/etc/ssh/ssh_known_hosts" -R "10.10.10.10"`
+Generate a new key : <br>`ssh-keygen -t ed25519 -C "user@example.com"` <br> save as filneme -f filename
+Add your public key : <br>`ssh-copy-id -i ~/.ssh/id_ed25519.pub user@10.10.10.10` <br> 
 
-Generate a new key : <br>`ssh-keygen -t ed25519 -C "user@example.com"` 
-
-Add your public key : <br>`ssh-copy-id -i ~/.ssh/id_ed25519.pub user@10.10.10.10` <br> save as filename use -f filename
+Fix node ssh key issue: <br>`ssh -o "HostKeyAlias=node103" root@10.10.10.103`<br>
 
 Updat Proxmox bash with my preferenses:<br>`wget https://github.com/nallej/MyJourney/raw/main/BashAddon.sh`<br> 
 
