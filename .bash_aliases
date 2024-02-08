@@ -36,6 +36,11 @@ alias dcupl='docker-compose up -d && docker-compose logs -f'
 alias dcr='docker-compose restart'
 alias dcd='docker-compose down'
 
+# ssh keys
+alias newkey='ssh-keygen -t ed25519 -C "user@example.com" -f ${1}'
+alias remkey='ssh-keygen -f "/etc/ssh/ssh_known_hosts" -R "${1}"'
+alias addkey='ssh-copy-id -i ~/.ssh/id_ed25519.pub ${1} '
+
 ## system related on any deb based use batcat all other use bat
 alias fzfbat='fzf --preview "batcat --color=always --style=numbers --line-range=:500 {}"'
 # usage: help <command>
