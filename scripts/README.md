@@ -31,3 +31,7 @@ Both versions will be kept due to refrensing in blog posts
   - use as a script
 - my.wol.nodes;
   - a list of nodes, used to copy into the script
+
+# NEWS
+## New scripts
+- figurine.sh Draw large colorfull hostnames at login. Uses the figurine package, download and extract
