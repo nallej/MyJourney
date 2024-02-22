@@ -24,14 +24,12 @@ Both versions will be kept due to refrensing in blog posts
 ![TB5 2](https://github.com/nallej/MyJourney/assets/24981516/30e1599d-1286-48e1-85bf-81e2f9f1ab5e)
 
 
-# WoL scripts
-- wolstart
-  - to be used as a command
-- wolstart.sh
-  - use as a script
-- my.wol.nodes;
-  - a list of nodes, used to copy into the script
-
 # NEWS
+## Newest scrips
+- DoDoDeb.sh (debian) install Docker and Dockge on any VM, for Ubuntu DoDoU.sh
 ## New scripts
 - figurine.sh Draw large colorfull hostnames at login. Uses the figurine package, download and extract
+- wolstart
+  - wolstart     - to be used as a command
+  - wolstart.sh  - use as a script
+  - my.wol.nodes - a list of nodes, used to copy into the script
