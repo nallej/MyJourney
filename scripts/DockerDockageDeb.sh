@@ -26,7 +26,7 @@ sudo docker run -d -p 5001:5001 --name Dockge --restart=unless-stopped -v /var/r
 #systemctl enable docker.service
 
 # While you can run Docker as a root user, doing so is discouraged,
-# because of potential security risks and accidental modifications to your Debian host system. 
+# because of potential security risks and accidental modifications to your host system. 
 # Instead, manage Docker operations under a non-root user account to enhance security.
 #sudo useradd -m $USER -p userPASSWORD  #dockeruser, -m create home directory -p password
 sudo usermod -aG docker $USER           #dockeruser
