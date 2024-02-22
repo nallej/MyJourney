@@ -1,6 +1,7 @@
 #!/bin/bash
 # Create a VM running Docker & Dockge for our stacks
 # Run as normal user in ~/
+# wget https://github.com/nallej/MyJourney/raw/main/scripts/DoDoU.sh
 
 # Make the directory for oure stacks
 mkdir -p /home/$USER/docker/
@@ -30,5 +31,7 @@ sudo docker run -d -p 5001:5001 --name Dockge --restart=unless-stopped -v /var/r
 # While you can run Docker as a root user, doing so is discouraged,
 # because of potential security risks and accidental modifications to your host system. 
 # Instead, manage Docker operations under a non-root user account to enhance security.
-#sudo useradd -m $USER -p userPASSWORD  #dockeruser, -m create home directory -p password
+#
+# sudo useradd -m $USER -p userPASSWORD  #dockeruser, -m create home directory -p password
+# sudo adduser $USER sudo                 # Superuser
 sudo usermod -aG docker $USER           #dockeruser
