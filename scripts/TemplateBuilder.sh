@@ -581,7 +581,7 @@ ON clamav antivirus and daemon
 OFF 2FA OATHtool, Google Authenticator
 OFF mailutils needs FQDN
 OFF bat better cat
-OFF exa better ls
+OFF eza better ls
 OFF fzf fuzzy find
 OFF myBash add personal settings
 OFF Docker-CE Alpine
@@ -620,7 +620,7 @@ else
     "2FA") vc="$vc,oathtool,libpam-google-authenticator" ; echo "${cyn}     -  OATH Toolkit, Google Authenticator${end}" >> $logFILE ;;
     "mailutils")  vc="$vc,mailutils" ;                     echo "${cyn}     -  mailutils${end}" >> $logFILE ;;
     "bat") vc="$vc,bat" ;                                  echo "${cyn}     -  bat${end}" >> $logFILE ;;
-    "exa") vc="$vc,exa" ;                                  echo "${cyn}     -  exa${end}" >> $logFILE ;;
+    "eza") vc="$vc,eza" ;                                  echo "${cyn}     -  exa${end}" >> $logFILE ;;
     "fzf") vc="$vc,fzf" ;                                  echo "${cyn}     -  fzf${end}" >> $logFILE  ;;
     "Docker-CE")
       echo "apt-get update && apt-get install -y containerd software-properties-common apt-transport-https ca-certificates apt-utils gnupg curl" >> firstboot.sh
