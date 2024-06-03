@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Standard Unix Shebang
+
+# Copyright (c) 2020-2024 casaursus
+# Author: nallej (casaursus)
+# License: MIT
+# https://github.com/nallej/Scripts/raw/main/LICENSE
+
+# Variables and functions =====================================================
+
+## Standard Error handling settings for a script ----------------------------##
+# This is making the script more robust by using:                             #
+# set -euo pipefail                                                           #
+#   -e: Exit immediately if a command exits with a non-zero status            #
+#       Ensuring fast fail on errors (set -e)                                 #
+#   -u: Treat unset variables as an error and exit immediately                #
+#       Avoiding the use of unset variables                                   #
+#   -o pipefail: Return exit status of last command in pipeline that failed   #
+#      Ensuring pipelines fail if any command within them fails               #
+# shopt -s  inherit_errexit nullglob                                          #
+#   - inherit_errexit: If set, the -e option will be inherited in             #
+#                      shell functions and command substitutions              #
+#   - nullglob: If set, bash allows filename patterns that match              #
+#   -           no files to expand to a null string, rather than themselves   #
+#               Preventing non-matching globs from causing issues by          #
+#               expanding to a null string                                    #
+set -euo pipefail                                                             #
+shopt -s inherit_errexit nullglob                                             #
+##---------------------------------------------------------------------------##
+
+## Placeholders for messages: OK, Error, Info --------##
+function msg_info() { # Just a info-msg                #
+  local msg="$1"                                       #
+  echo -ne " ${DASH} ${YEL}${msg}..."                  #
+}                                                      #
+function msg_ok() { # OK msg                           #
+  local msg="$1"                                       #
+  echo -e "${CCL} ${OKCM} ${GRE}${msg}${ENDC}"         #
+}                                                      #
+function msg_error() { # Error-msg                     #
+  local msg="$1"                                       #
+  echo -e "${CCL} ${NOCM} ${RED}${msg}${ENDC}"         #
+}                                                      #
+##----------------------------------------------------##
