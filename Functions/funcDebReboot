@@ -1,0 +1,17 @@
+function reboot() { # reboot the server
+  CHOICE=$(whiptail --backtitle "CasaUrsus Debian Scripts" --title "REBOOT" --menu "\nReboot Server now? (recommended)" 11 58 2 \
+    "yes" " " \
+    "no" " " 3>&2 2>&1 1>&3)
+  case $CHOICE in
+  yes)
+    msg_info "Rebooting Server"
+    sleep 2
+    msg_ok "Completed Post Install Routines"
+    reboot
+    ;;
+  no)
+    msg_error "Selected not to Reboot Server (Reboot IS recommended!)"
+    msg_ok "Completed Post Install Routines"
+    ;;
+  esac
+}
