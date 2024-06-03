@@ -1,0 +1,13 @@
+## Main section ######################################################################
+clear
+header
+header_2
+echo -e "\nThis script will Perform Routines for a somthing nice to happen.\n"
+while true; do
+  read -p "Start the Install Script [y/n]?" st
+  case $st in
+  [Yy]*) break ;;
+  [Nn]*) clear; exit ;;
+  *) echo "Please answer yes or no." ;;
+  esac
+done
