@@ -1,0 +1,1 @@
+whiptail --msgbox "$(cat /etc/hosts)" 20 60
