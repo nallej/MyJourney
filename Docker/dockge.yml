@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  dockge:
+    ports:
+      - 5001:5001
+    container_name: Dockge
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/$USER/docker/dockge/data:/app/data
+      - /home/$USER/docker/stacks:/home/$USER/docker/stacks
+    environment:
+      - DOCKGE_STACKS_DIR=/home/$USER/docker/stacks
+    image: louislam/dockge:latest
+networks: {}
