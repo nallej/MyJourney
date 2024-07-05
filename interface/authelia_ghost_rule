@@ -3,18 +3,18 @@ Authelia rules for Ghost:
 2. login to admin page - deny all other
 3. enter Ghost pages - allow all
 
-
+  # Allow admin users to sign in by 2FA
   - domain: 'test.example.com'
     policy: 'two-factor'
     subject:
       - 'groupe:admins'
     resources:
       - '^/ghost([/?].*$'
-
+ # Deny everyone else from setup
   - domain: 'test.example.com'
     policy: 'deny'
     resources:
       - '^/ghost([/?].*$'
-
+# Allow everyone to watch pages
   - domain: 'test.example.com'
     policy: 'public'
