@@ -1,0 +1,20 @@
+Authelia rules for Ghost:
+1. login to admin page - admins only
+2. login to admin page - deny all other
+3. enter Ghost pages - allow all
+
+
+  - domain: 'test.example.com'
+    policy: 'two-factor'
+    subject:
+      - 'groupe:admins'
+    resources:
+      - '^/ghost([/?].*$'
+
+  - domain: 'test.example.com'
+    policy: 'deny'
+    resources:
+      - '^/ghost([/?].*$'
+
+  - domain: 'test.example.com'
+    policy: 'public'
