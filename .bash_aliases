@@ -2,7 +2,7 @@
 # restart by source .bashrc or restart
 # restart by . ~/.bash_aliases
 
-#mkdir and cd intoit
+#mkdir and cd into it
 alias mkcd='function _mkcd() { mkdir -p "$1" && cd "$1"; }; _mkcd'
 
 ## ls commands
@@ -45,6 +45,8 @@ alias remkey='ssh-keygen -f "/etc/ssh/ssh_known_hosts" -R "${1}"'
 alias addkey='ssh-copy-id -i ~/.ssh/id_ed25519.pub ${1} '
 
 ## system related on any deb based use batcat all other use bat
+# Set the TZ
+alias setz="timedatectl set-timezone $1"
 alias fzfbat='fzf --preview "batcat --color=always --style=numbers --line-range=:500 {}"'
 # usage: help <command>
 #alias bathelp='bat --plain --language=help'
