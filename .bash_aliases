@@ -5,7 +5,7 @@
 #mkdir and cd into it
 alias mkcd='function _mkcd() { mkdir -p "$1" && cd "$1"; }; _mkcd'
 # Create Script
-script() {
+newsh() {
     touch "$1" && chmod +x "$1" && echo "#!/bin/bash" > "$1" && nano "$1"
 }
 
