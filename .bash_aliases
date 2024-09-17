@@ -5,7 +5,9 @@
 #mkdir and cd into it
 alias mkcd='function _mkcd() { mkdir -p "$1" && cd "$1"; }; _mkcd'
 # Create Script
-alias script='touch "$1" && chmod +x "$1" && echo "#!/bin/bash" > "$1" && nano "$1"'
+script() {
+    touch "$1" && chmod +x "$1" && echo "#!/bin/bash" > "$1" && nano "$1"
+}
 
 ## ls commands
 alias ls='ls --color=auto'
