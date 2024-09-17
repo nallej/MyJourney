@@ -2,6 +2,9 @@
 # restart by source .bashrc or restart
 # restart by . ~/.bash_aliases
 
+#mkdir and cd intoit
+alias mkcd='function _mkcd() { mkdir -p "$1" && cd "$1"; }; _mkcd'
+
 ## ls commands
 alias ls='ls --color=auto'
 alias ll='ls -alFh --color=auto'
