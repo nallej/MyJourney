@@ -1,3 +1,6 @@
+# Rice login with figurine
+Make a bright welcom and a cler indication of Node, Clister and IP
+
 # Template Builder  
 The new version 5.0, is released 25.11.2023 but still in beta. 
 This day the sunset is the last for some time, the sun rises next time 17 January, in the nortern part of our country.
