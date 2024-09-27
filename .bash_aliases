@@ -43,7 +43,7 @@ alias dcupl='docker-compose up -d && docker-compose logs -f'
 alias dcr='docker-compose restart'
 alias dcd='docker-compose down'
 
-# ssh keys
+## ssh keys
 alias newkey='ssh-keygen -t ed25519 -C "user@example.com" -f ${1}'
 alias remkey='ssh-keygen -f "/etc/ssh/ssh_known_hosts" -R "${1}"'
 alias addkey='ssh-copy-id -i ~/.ssh/id_ed25519.pub ${1} '
@@ -76,6 +76,8 @@ alias upall='sudo apt-get update && sudo apt-get dist-upgrade -y'
 alias nhost='sudo nano /etc/hosts'
 alias df='df -h'
 alias free='free -m'
+alias f2b='fail2ban-regex systemd-journal /etc/fail2ban/filter.d/proxmox.conf'
+
 ## cd aliases
 alias 'cd..'='cd ..'
 alias ..='cd ..'
