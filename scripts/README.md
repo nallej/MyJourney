@@ -1,5 +1,7 @@
 # Rice login with figurine
 Make a bright welcom and a cler indication of Node, Clister and IP
+![image](https://github.com/user-attachments/assets/3cb82aa6-dff6-425a-a7de-a63e8c0d5ced)
+
 
 # Template Builder  
 The new version 5.0, is released 25.11.2023 but still in beta. 
