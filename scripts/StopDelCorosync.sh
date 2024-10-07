@@ -24,6 +24,8 @@ echo "Remove any *.conf left in /etc/pve/lxc"
 echo "Remove any *.conf left in /etc/pve/nodes/<OLD NODE>/qemu-server"
 echo "Remove any *.conf left in /etc/pve/nodes/<OLD NODE>/lxc"
 echo ""
+echo "Remove ghost of old node can be removed from /etc/pve/corosync.conf" 
+echo ""
 #
 # Browser errors
 # You can maybe fix it by:
