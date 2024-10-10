@@ -1,13 +1,17 @@
-# some more aliases
+# Some more aliases use in .bash_aliases or .bashrc-personal 
 # restart by source .bashrc or restart
 # restart by . ~/.bash_aliases
 
 #mkdir and cd into it
 alias mkcd='function _mkcd() { mkdir -p "$1" && cd "$1"; }; _mkcd'
+
 # Create Script
 newsh() {
     touch "$1" && chmod +x "$1" && echo "#!/bin/bash" > "$1" && nano "$1"
 }
+
+# Create, chmod and edit
+alias newfile='f() { touch "$1" && chmod 700 "$1" && nano "$1"; }; f'
 
 ## ls commands
 alias ls='ls --color=auto'
