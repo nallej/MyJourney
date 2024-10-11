@@ -34,6 +34,7 @@ Both versions will be kept due to refrensing in blog posts
 
 # NEWS
 ## Newest scrips
+- LynisInstall.sh For installing Lynis from apt
 - DoDoDeb.sh (debian) install Docker and Dockge on any VM, for Ubuntu DoDoU.sh
 ## New scripts
 - figurine.sh Draw large colorfull hostnames at login. Uses the figurine package, download and extract
