@@ -1,3 +1,10 @@
+# Download a script
+wget https://raw.githubusercontent.com/nallej/MyJourney/main/BashAddon.sh 
+
+chmod +x BashAddon.sh or chmod 700 TheScriptName.sh
+
+./BashAddon.sh
+
 # Rice Proxmox login with figurine
 Make a bright welcome and a clear indication of **Node**, **Cluster** and **IP**
 
