@@ -10,8 +10,9 @@ echo "This script will add my personal preferenses to Proxmox nodes"
 echo ""
 
 echo "  Adding bat exa (cat and ls on steroids) to your system"
-apt-get update && apt-get install -y bat exa >>addon.log 2>&1
-
+apt-get update >addon.log 2>&1
+apt-get install -y bat exa >>addon.log 2>&1
+#apt-get install -y iperf3 ethtool net-tools etherwake hwinfo lm-sensors i2c-tools btop tshark >>addon.log 2>&1
 echo "Adding Fail2ban security enhansment"
 # Add Fail2ban security enhancement to this node
 apt-get update && apt-get install fail2ban -y >>addon.log 2>&1
