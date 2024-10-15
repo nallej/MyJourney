@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# wget https://github.com/nallej/MyJourney/raw/main/newBashAddon.sh
+# ---------------------------------------- #
+# Edit the script according to your needs! #
+# ---------------------------------------- #
+
+clear
+echo "This script will add my personal preferenses to Proxmox nodes"
+echo ""
+
+echo "  Adding bat exa (cat and ls on steroids) to your system"
+apt-get update && apt-get install -y bat exa >>addon.log 2>&1
+
+echo "Adding Fail2ban security enhansment"
+# Add Fail2ban security enhancement to this node
+apt-get update && apt-get install fail2ban -y >>addon.log 2>&1
+
+# security audis with lynis https://
+# git clone https://github.com/CISOfy/lynis
+
+echo "  Adding aliases to your bash and a new prompt"
+# Add to or change the bash commands  1>>$ok_log 2>>$ei_log
+wget https://github.com/nallej/MyJourney/raw/main/.bash_aliases >>addon.log 2>&1
+# And also the personal bash prompt
+wget https://github.com/nallej/MyJourney/raw/main/.bash_prompt >>addon.log 2>&1
+
+# Activate the changes
+echo ""
+echo ""
+echo "  Adding bash_aliases to bashrc"
+echo "alias ls=exa" >> .bashrc
+echo "alias ll='ls -l'" >> .bashrc
+echo "alias l='ls -la'" >> .bashrc
+echo "[[ -f ~/.bash_aliases ]] && . ~/.bash_aliases" >> .bashrc
+
+echo echo "Personized aliases added" >>addon.log 2>&1
+echo ""
+echo "Edit your new bash by nano .bash_aliases and make it yours"
+echo "    - change the IP mask if not /24 in [alias myip]"
+echo "    - add any alias you like"
+echo "    - comment out what you do not like"
+echo "    - exit from bat type q"
+echo "    To start using the new bash, type: . .bash_aliases (note the periods)"
+
+source .bash_aliases
