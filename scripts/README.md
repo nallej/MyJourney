@@ -1,9 +1,10 @@
 # Download a script
-wget https://raw.githubusercontent.com/nallej/MyJourney/main/BashAddon.sh 
-
-chmod +x BashAddon.sh or chmod 700 TheScriptName.sh
-
-./BashAddon.sh
+#### Download a script: 
+`wget https://github.com/nallej/MyJourney/raw/main/scripts/TheScriptName.sh`  
+#### Make it executable: 
+`chmod +x TheScriptName.sh or chmod 700 TheScriptName.sh` 
+#### Run it: 
+`./TheScriptName.sh`
 
 # Rice Proxmox login with figurine
 Make a bright welcome and a clear indication of **Node**, **Cluster** and **IP**
@@ -42,6 +43,8 @@ Both versions will be kept due to refrensing in blog posts
 # NEWS
 ## Newest scrips
 - LynisInstall.sh For installing Lynis from apt
+- cpuVxSUPPORT.sh Check for x86-64-v2-4 support
+- 
 - DoDoDeb.sh (debian) install Docker and Dockge on any VM, for Ubuntu DoDoU.sh
 ## New scripts
 - figurine.sh Draw large colorfull hostnames at login. Uses the figurine package, download and extract
