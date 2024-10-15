@@ -2,16 +2,24 @@
 # restart by source .bashrc or restart
 # restart by . ~/.bash_aliases
 
-#mkdir and cd into it
-alias mkcd='function _mkcd() { mkdir -p "$1" && cd "$1"; }; _mkcd'
+### Functions go here. Use as any ALIAS ###
+# make a directory and jump into it 
+mkcd() { mkdir -p "$1" && cd "$1"; }
+# make, chmod and nano a new script
+newsh() { touch "$1".sh && chmod +x "$1".sh && echo "#!/bin/bash" > "$1.sh" && nano "$1".sh; }
+# create, cmod and nano a file
+newfile() { touch "$1" && chmod 700 "$1" && nano "$1"; }
+new700() { touch "$1" && chmod 700 "$1" && nano "$1"; }
+new750() { touch "$1" && chmod 750 "$1" && nano "$1"; }
+new755() { touch "$1" && chmod 755 "$1" && nano "$1"; }
+newxfile() { touch "$1" && chmod +x "$1" && nano "$1"; }
 
-# Create Script
-newsh() {
-    touch "$1" && chmod +x "$1" && echo "#!/bin/bash" > "$1" && nano "$1"
-}
-
-# Create, chmod and edit
-alias newfile='f() { touch "$1" && chmod 700 "$1" && nano "$1"; }; f'
+## Other ways of doing it ##
+#alias mkcd='function _mkcd() { mkdir -p "$1" && cd "$1"; }; _mkcd'
+#newsh() {
+#    touch "$1" && chmod +x "$1" && echo "#!/bin/bash" > "$1" && nano "$1"
+#}
+#alias newfile='f() { touch "$1" && chmod 700 "$1" && nano "$1"; }; f'
 
 ## ls commands
 alias ls='ls --color=auto'
