@@ -1,5 +1,7 @@
 #Jay’s custom bash prompt
-#Save that file, and then open up your ~/.bashrc and place the following at the end of the file: source ~/.bash_prompt
+# Save that file, and then open up your ~/.bashrc or ~/.bash_aliases or ~/.bashrc-personal 
+# and place the following at the end of the file: source ~/.bash_prompt
+
 BRACKET_COLOR="\[\033[38;5;35m\]"
 CLOCK_COLOR="\[\033[38;5;35m\]"
 JOB_COLOR="\[\033[38;5;33m\]"
