@@ -201,6 +201,14 @@ createVM() # Funtion: creat a VM or a Template using a CI #### EDIT THE DEFAULTS
         qm set $tno --ipconfig0 ip="dhcp"                                     # Set dhcp on
         qm set $tno --ciuser $ciu                                             # "admin"        use your imagination
         qm set $tno --cipassword $cip                                         # "Pa$$w0rd"     use a super complicated one
+        qm set $tno --discard=on					      # Enable Thin-provisioning
+	# Tuning see:  
+        # https://forum.proxmox.com/threads/proxmox-ve-7-2-benchmark-aio-native-io_uring-and-iothreads.116755/
+        # https://kb.blockbridge.com/technote/proxmox-aio-vs-iouring/
+        #qm set $tno --ssd=1						      # SSD emulation
+	#qm set $tno --iothread=1					      # iothreads tuning
+        #qm set $tno --aio=native					      # aio tuning
+        #qm set $tno --aio=io_uring					      # aio tuning
         if [[ $my_key == [yY] ]]; then qm set $tno --sshkey ~/.ssh/my_key; fi # sets the users key to the vm
 
         ## More automation can be added to cloud-init, examples below ------------#
