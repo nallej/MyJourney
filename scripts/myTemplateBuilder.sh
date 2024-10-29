@@ -7,8 +7,8 @@
 
 # Install this script by:
 #  - open a terminal in the Proxmox node as root
-#  - run wget://https://raw.githubusercontent.com/nallej/MyJourney/main/myTemplateBuilder.sh
-#  - chmod +x myTemplateBuilder.sh
+#  - run wget https://github.com/nallej/MyJourney/raw/main/myTemplateBuilder.sh
+#  - chmod 700 myTemplateBuilder.sh
 #
 
 # Edit the script is very important:
