@@ -33,6 +33,9 @@ Updat Proxmox bash with my preferenses:<br>`wget https://github.com/nallej/MyJou
 Add to or change the bash commands:<br>`wget https://github.com/nallej/MyJourney/raw/main/.bash_aliases`<br>
 And also the personal bash prompt:<br>`wget https://github.com/nallej/MyJourney/raw/main/.bash_prompt`
 
+## No Nag
+sed -Ezi.bak "s/(function\(orig_cmd\) \{)/\1\n\torig_cmd\(\);\n\treturn;/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js && systemctl restart pveproxy.service
+
 ## Firewall errors
 Firewall errors can be really bad.
 To fix do `pve-firewall stop`
