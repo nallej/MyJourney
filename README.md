@@ -1,5 +1,5 @@
 # MyJourney
-To host the Docker Compose files for the blog on homelab.casaursus.net 
+To host the Docker Compose files for the blog on https://homelab.casaursus.net 
 
 ## Newest scripts 
 My newest scripts will be found in the **SCRIPTS** section
