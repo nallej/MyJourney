@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #-----------------------------------------------------------------------------#
 # For more info see: https://pve.proxmox.com/pve-docs/qm.conf.5.html          #
