@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # wget https://github.com/nallej/MyJourney/raw/main/newBashAddon.sh
 # ---------------------------------------- #
