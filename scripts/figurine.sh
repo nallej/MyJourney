@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #scp figurine root@192.0.2.41:/usr/local/bin
 #scp figurine.sh root@192.0.2.41:/etc/profile.d/
 echo "" #starwars, Stampranello, Contessa Contrast, Mini, Shadow
