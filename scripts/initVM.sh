@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Download: wget https://github.com/nallej/MyJourney/raw/main/scripts/initVM.sh
 clear
 echo "This script will add my personal preferenses to Proxmox nodes"
