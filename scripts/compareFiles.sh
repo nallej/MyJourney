@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 echo
 echo "Compare File 1 to File 2"
 
