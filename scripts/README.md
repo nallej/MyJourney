@@ -6,6 +6,10 @@
 #### Run it: 
 `./TheScriptName.sh`
 
+## shebang
+As bash isn't always located at /bin/bash we need to use:
+`#!/usr/bin/env bash` 
+
 # Rice Proxmox login with figurine
 Make a bright welcome and a clear indication of **Node**, **Cluster** and **IP**
 
