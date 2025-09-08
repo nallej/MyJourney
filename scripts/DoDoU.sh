@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Create a VM running Docker & Dockge for our stacks
 # Run as normal user in ~/
 # wget https://github.com/nallej/MyJourney/raw/main/scripts/DoDoU.sh
