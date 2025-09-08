@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Start setup os K0s Controller/Worker
 clear
 echo ""
