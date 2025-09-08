@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Stop the corosync and the pve-cluster services on the node:
 # wget https://github.com/nallej/MyJourney/raw/main/StopDelCorosync.sh
 
