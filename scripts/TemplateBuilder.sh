@@ -168,7 +168,8 @@ This is Free and Open Sourse Software; you are free to change and redistribute i
 
 # Functions section ===========================================================
 
-function cINFO() { # print a Copyright statement
+# Function that prints the Copyright statement
+cINFO() { 
   clear
   cat <<"EOF"
 
@@ -180,7 +181,8 @@ function cINFO() { # print a Copyright statement
 EOF
 }
 
-function showRecommended() { # Basic recommendations for the user
+# Function to set the recommended basics for the user
+showRecommended() { # function to set basic recommendations for the user
 whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
 "Remember to edit the script before executing:
   - basic settings are 1 core/socket and 1 GiB RAM, Shell: xterm.js
@@ -197,7 +199,8 @@ whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
   - Use a Public KEY" 18 78
 }
 
-function showGuide() {
+# Function for showing the guide
+showGuide() { 
 whiptail --backtitle "$backTEXT" --title "Notice" --msgbox \
 "This script generates a single VM or a Template and VMs.
   - functionallity is detemend by your choices and answers
@@ -215,7 +218,8 @@ This script will run as root or sudo.
   See the EDIT Section of the script" 20 78
 }
 
-function header2() { # print name of script. figlet -f standard TemplateBuilder
+# Function that prints the name of the script. figlet -f standard TemplateBuilder
+header2() { 
   cat <<"EOF"
  _____                    _       _       ____        _ _     _
 |_   _|__ _ __ ___  _ __ | | __ _| |_ ___| __ ) _   _(_) | __| | ___ _ __
@@ -232,14 +236,16 @@ EOF
  #                                                                           #
 ###############################################################################
 
-function stopNotRoot(){ # Function Check for root privilidges and exit if not
+# Function to check for root privilidges and exit if not
+stopNotRoot(){ 
 if [[ "$EUID" != 0 ]]; then
     echo -e "\e[0;31mYou need to be root! Pleas run as sudo.\033[0m" # Message in read
     exit
 fi
 }
 
-function setRoot() { # Function I am root
+# Function set I'm root
+setRoot() { 
 if [[ "$EUID" = 0 ]]; then
     echo -e "\n${okcm} Initialaizing: $pgrm version $pver"          # I am root
 else
@@ -255,7 +261,8 @@ else
 fi
 }
 
-function header() { # print CasaUrsus. figlet -f standard CasaUrsus
+# Function to print CasaUrsus. figlet -f standard CasaUrsus
+header() { 
   clear
   cat <<"EOF"
 
@@ -267,7 +274,8 @@ function header() { # print CasaUrsus. figlet -f standard CasaUrsus
 EOF
 }
 
-function useColors() { # define colors to be used
+# Function that define colors to be used
+useColors() { 
     # color code   color as bold
     red=$'\e[31m'; redb=$'\e[1;31m'     # call red with $red and bold as $redb
     grn=$'\e[32m'; grnb=$'\e[1;32m'     # call as green $grn as bold green $grnb
@@ -285,7 +293,8 @@ function useColors() { # define colors to be used
     #Use them to print with colours: printf "%s\n" "Text in white ${blu}blue${end}, white and ${mag}magenta${end}.
 }
 
-function spinner() { # display a animated spinner
+# Function to display a animated spinner
+spinner() { 
     # The different Spinner Arrays to choose from
     local array1=("◐" "◓" "◑" "◒")
     local array2=("░" "▒" "▓" "█")
@@ -311,7 +320,8 @@ function spinner() { # display a animated spinner
     done
 }
 
-function runSpinner() {
+# Funtion that run the spinner from 'spinner'
+runSpinner() {
     local ONOFF=$1
     if [ $ONOFF == 'run' ]; then
         # Run the spinner in the background and Save the PID
@@ -325,7 +335,8 @@ function runSpinner() {
     fi
 }
 
-function askLicens() {
+# Function to ask if user is Accepting the License
+askLicens() {
   if (whiptail --backtitle "$backTEXT" --title "Copyrigt © and License" --defaultno --yesno \
   "$cSTRING\n⚠️ Do You Accept the LICENSE agreement?" 20 78 \
     --no-button "No" --yes-button "Accept"); then
@@ -355,7 +366,8 @@ function askLicens() {
   whiptail --backtitle "$backTEXT" --title "Version History" --msgbox "$versionHISTORY" 18 78
 }
 
-function setLOG(){
+# Function setting the log files
+setLOG(){
     if [ -f "$logFILE" ]; then
        if (whiptail --backtitle "$backTEXT"  --title "Log File Dialog" --defaultno --yesno \
             "\n⚠️   You have a log file: $logFILE \
@@ -377,7 +389,8 @@ function setLOG(){
  #                                                                           #
 ###############################################################################
 
-function guestfs() {
+# Function to install Guest OS
+guestfs() {
     # Install the needed libguestfs-tools if it'smissing -------------------------#
     if dpkg -s libguestfs-tools &>/dev/null; then
         echo -e "${okcm}${magb} The libguestfs-tools was found"  >> $logFILE
@@ -395,7 +408,7 @@ function guestfs() {
 #-----------------------------------------------------------------------------#
 
 # Function call my $1=minimal/server CHANGE server to STANDARD
-function dlFile() { # Download the Cloud Image
+dlFile() { # Download the Cloud Image
     echo "${okcm}${cyn} selected OS: $1 in $storageISO ${end}" >> $logFILE
     local TYPE=$1
     local FILE    # URL
@@ -432,7 +445,8 @@ function dlFile() { # Download the Cloud Image
     fi
 }
 
-function getPool() { # Show basic pool info and Select a Pool
+# Function that Show the basic pool info and Select a Pool
+getPool() { 
     local ST=$1
     local LABEL
     local TYPE
@@ -470,7 +484,8 @@ function getPool() { # Show basic pool info and Select a Pool
     fi
 }
 
-function setLAN(){
+# Funtion to set the LAN info
+setLAN(){
     # Set the Virtual Bridge
     vmbr=$(whiptail --backtitle "$backTEXT" --title "VLAN Dialog" --inputbox \
     "\nVirtual Bridge to be useed" \
@@ -488,7 +503,8 @@ function setLAN(){
     fi
 }
 
-function setUSER() {
+# Function to set the user
+setUSER() {
     # Set Cloid-init user
     ciu=$(whiptail --backtitle "$backTEXT" --title "Create CI User" --inputbox \
       "\nCreate with CI user" \
@@ -519,7 +535,8 @@ function setUSER() {
 
 }
 
-function setBASE() {
+# Function setting the basic parameters
+setBASE() {
     # Disk size selector
     sizeD=$(whiptail --backtitle "$backTEXT" --title "Base Settings" --radiolist \
     "\n Expand the Disk Size to" 14 48 5 \
@@ -555,7 +572,8 @@ function setBASE() {
     echo "${cyn}     -  Cores: $sizeC" >> $logFILE
 }
 
-function setOPTIONS() {
+# Function to set the options
+setOPTIONS() {
 echo "${okcm}${cyn} user: $ciu in setOPTIONS ${end}" >> $logFILE
 OPTION_MENU=()
 LONGA=0
@@ -739,7 +757,8 @@ else
 fi
 }
 
-function toCREATE() {
+# Function to Creatre or Not to Create
+toCREATE() {
 # What are we to create only a VM, only a Template or both
 if (whiptail --backtitle "$backTEXT" --title "What to Create" --yesno \
   "\n Create a VM or a Template Stack?" \
@@ -800,7 +819,8 @@ fi
 # virt-customize -a /path/to/your/vm-image.qcow2 --firstboot /path/to/your/firstboot-script.sh
 # virt-customize -a base.qcow2 --firstboot.sh
 
-function copyBASE(){
+# Function to Resize and Copy ISO-file as the Base disk image
+copyBASE(){
 # Create base.qcow2 as a base for a VM using a CI
     echo "${stcm}${cyn} $(date +"%T")  Copy $pathISO$fileISO -> base.qcow2" >> $logFILE
     if [ -f base.qcow2 ]; then
@@ -816,7 +836,8 @@ function copyBASE(){
     echo "${stcm}${cyn} $(date +"%T")  Resized the base.qcow2 to $sizeD" >> $logFILE
 }
 
-function createBase() {
+# Function to create the Base
+createBase() {
 # Initialize base.qcow2 as a base for a VM using a CI
     # Add Qemu-Guest-Agent and any other packages you’d like in your base image.
     # libguestfs-tools has to be installed on the node.
@@ -856,7 +877,8 @@ function createBase() {
 # --cipassword $cip                     # "Pa$$w0rd"     use a super complicated one
 # --sshkey ~/.ssh/my_key.pub            # sets the users public key for the vm typically ~/.ssh/id_ed25519.pub
 
-function createVM() {
+# Function that will create a VM
+createVM() {
     # Creat a VM or a Template based on the base.qcow2 file
     # Later versions will have different setting for Template+clones and the VM
     local note
@@ -902,7 +924,8 @@ function createVM() {
     echo "${okcm}${cyn} $(date +"%T")  VM $vmNO $vmNAME Created" >> $logFILE
 }
 
-function createTemplate() {
+# Function to create a Template
+createTemplate() {
     # Create the template ex. 90000000
     local note
     echo "${stcm}${cyn} $(date +"%T")  Template creation started" >> $logFILE
@@ -942,7 +965,8 @@ function createTemplate() {
     echo "${okcm}${cyn} $(date +"%F %T")  Template $templateNO $templateNAME created" >> $logFILE
 }
 
-function createClones() { # Cloning the template
+# Function Cloning from a Template
+createClones() { # Cloning the template
     local note
     #echo "${stcm}${cyn} $(date +"%T")  Clone creation started" >> $logFILE
     #x=0
@@ -958,7 +982,8 @@ function createClones() { # Cloning the template
 }
 # Init Section ===============================================================#
 
-function init() {
+# Function to initialise the execution
+init() {
     clear; printf ${yelb}; header2; printf ${end} # Show name of script header
     # Start the Spinner
     runSpinner run
