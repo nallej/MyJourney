@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # wolstart.sh Wake on Lan for Proxmox Nodes
 # Part of the MyJourney project @ homelab.casaursus.net (based on a 20 year old script of mine)
