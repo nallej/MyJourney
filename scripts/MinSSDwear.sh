@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ### Extend the life of SSDs on a stand-alone Proxmox node
 # Run as root 
 # wget https://github.com/nallej/MyJourney/raw/main/scripts/MinSSDwear.sh
