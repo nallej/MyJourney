@@ -1,13 +1,16 @@
 # Download a script
 #### Download a script: 
 `wget https://github.com/nallej/MyJourney/raw/main/scripts/TheScriptName.sh`  
-#### Make it executable: 
-`chmod +x TheScriptName.sh or chmod 700 TheScriptName.sh` 
+
 #### Run it: 
-`./TheScriptName.sh`
+`./TheScriptName.sh` or `sh TheScriptName.sh` or `bash TheScriptName.sh` 
+
+#### Make it executable: 
+`chmod +x TheScriptName.sh or chmod 700 TheScriptName.sh` Run it: `./TheScriptName.sh`
+
 
 ## shebang
-As bash isn't always located at /bin/bash we need to use:
+As bash isn't always located at /bin/bash it's better to use:
 `#!/usr/bin/env bash` 
 
 # Rice Proxmox login with figurine
