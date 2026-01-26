@@ -1,0 +1,18 @@
+showRecommended() { # function to set basic recommendations for the user
+whiptail --backtitle "$backTEXT" --title "Recommended Settings" --msgbox \
+"Remember to edit the script before executing:
+  - basic settings are 1 core/socket and 1 GiB RAM, Shell: xterm.js
+
+  - normal disk size for a VM is 8 - 16 G, but sometimes 4 or even 32 G
+    - workers nodes : small 1-2 core and 1-2 GiB RAM, disk 8 - 16 G
+    - managers      : 2-4 core and 2 - 4 GiB RAM disk 16 - 32G.
+    - minimal nodes : min. 1 core and 512M RAM
+
+  - OS type set to      = L26   Linux 2.6 - 6.X Kernel
+  - IP address set to   = DHCP  Remember to set DHCP Reservations
+  - Qemu-Guest-Agent    = on
+  - Autostart set to    = on
+  - Use a Public KEY" 18 78
+}
+
+export -f showRecommended
