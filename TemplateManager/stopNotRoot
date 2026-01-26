@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Funtion that run the spinner from 'spinner'
+#
+#
+# Author: Nalle (CasaUrsus)
+# Date: 2019-09-14
+# License: MIT
+
+stopNotRoot(){ 
+if [[ "$EUID" != 0 ]]; then
+    echo -e "\e[0;31mYou need to be root! Pleas run as sudo.\033[0m" # Message in read
+    exit
+fi
+}
+
+export -f stopNotRoot
