@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Funtion that run the spinner from 'spinner'
+# Funtion that checks for root priviledges
 #
 #
 # Author: Nalle (CasaUrsus)
