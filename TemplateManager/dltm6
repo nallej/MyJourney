@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+#
+#
+# Author: Nalle (CasaUrsus)
+# Date: 2026-01-22
+# License: MIT
+
+# This script will download all the files needed for tm6
+
+clear
+cd /tank/tm  # Replace tank with your directory of choise
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/.env 2>/dev/null 
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/tm6 2>/dev/null
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/init 2>/dev/null
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/showGuide 2>/dev/null
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/guestfs 2>/dev/null
+
+cd ../func
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/setLOG 2>/dev/null
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/useColors 2>/dev/null
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/spinner 2>/dev/null
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/runSpinner 2>/dev/null
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/setRoot 2>/dev/null
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/stopNotRoot 2>/dev/null
+wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/askLicence 2>/dev/null
+
+echo "The tm6 files and functions downloaded."
+echo "You need to edit the .env file now."
