@@ -1,0 +1,31 @@
+askLicens() {
+  if (whiptail --backtitle "$backTEXT" --title "Copyrigt © and License" --defaultno --yesno \
+  "$cSTRING\n⚠️ Do You Accept the LICENSE agreement?" 20 78 \
+    --no-button "No" --yes-button "Accept"); then
+    echo "${grn}User Accepted the License. Yes, exit status was $?.${end}" >> $logFILE
+    FILE=LICENSE
+    if [ -f "$FILE" ]; then
+        echo "${blu}LICENSE file exist in this directory.${end}" >> $logFILE
+    else
+        wget https://github.com/nallej/MyJourney/raw/main/LICENSE &> /dev/null
+        install -D $HOME/LICENSE /usr/share/doc/templatemanager/copyright
+        echo "${blu}LICENSE file now in this directory.${end}" >> $logFILE
+
+        if [ -e "$motd_file" ]; then                # Check if the motd file exists
+            if [ ! -e "$backup_file" ]; then        # Check if the backup file doesn't exist
+                cp "$motd_file" "$backup_file"      # Create a backup of the original motd file
+                echo "$newTEXT" >> "$motd_file"    # Append your new text to the motd file
+            fi
+        fi
+
+        #echo -e "${/etc/otd}\nTemplateBuilder is Free and Open Sourse Software.\n  - There is NO WARRANTY, to the extent permitted by law.\n  - Part of the My Journey Project @ homelab.casaursus.net" >> /etc/motd
+    fi
+  else
+    echo "${red}⚠ User selected to Decline, exit status was $?. ⚠${end}" >> $logFILE
+    exit
+  fi
+  timeSTART=
+  whiptail --backtitle "$backTEXT" --title "Version History" --msgbox "$versionHISTORY" 18 78
+}
+
+export -f askLicence
