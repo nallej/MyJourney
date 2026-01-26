@@ -1,3 +1,11 @@
+#!/usr/bin/env bash
+# Funtion that handel the Licens
+#
+#
+# Author: Nalle (CasaUrsus)
+# Date: June 21, 2021
+# License: MIT
+
 askLicens() {
   if (whiptail --backtitle "$backTEXT" --title "Copyrigt © and License" --defaultno --yesno \
   "$cSTRING\n⚠️ Do You Accept the LICENSE agreement?" 20 78 \
