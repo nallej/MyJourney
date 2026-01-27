@@ -1,4 +1,3 @@
-# ----------------------------------------------------.
 #!/usr/bin/env bash
 #
 #
@@ -8,47 +7,45 @@
 
 # This script will download all the files needed for tm6
 
-# Set environment  -------------------.
-clear                                 |
-rm -rf tm func                        |
-#-------------------------------------.
+# Set environment  -------------------
+echo -e "\033[H\033[2J" #printf "\033c"
+rm -rf tm func
+#-------------------------------------
 
-# Initilaise -------------------------.
-dtm=$(date +"%Y-%m-%d %T")            |
-logFILE="LOG-$(date +"%Y-%m-%d").log" |
-mkdir tm func                         |
-#-------------------------------------.
+# Initilaise -------------------------
+dtm=$(date +"%Y-%m-%d %T")
+logFILE="LOG-$(date +"%Y-%m-%d").log"
+mkdir tm func
+#-------------------------------------
 
-# The TemplateManager 6 ===================================================================.
-cd tm                                                                                      |
-echo "Started at $dtm" > $logFILE                                                          |
-scripts=(".env" "header" "tm6" "init" "showGuide" "guestfs")                               |
-    for sh in "${scripts[@]}"; do                                                          |
-	wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/$sh 2>/dev/nul         |
-	if [[ $? == 0 ]]; then y="$sh downloaded"; else y="$sh not found"; fi                    |
-	echo "Processed: $sh – $y"                                                               |
-	echo "$y" >> $logFILE                                                                    |
-    done                                                                                   |
-dtm=$(date +"%Y-%m-%d %T")                                                                 |
-echo "Ended at $dtm" >> $logFILE                                                           |
-# =========================================================================================.
+# The TemplateManager 6 ====================================================================
+cd tm
+echo "Started at $dtm" > $logFILE
+scripts=(".env" "header" "tm6" "init" "showGuide" "guestfs")
+    for sh in "${scripts[@]}"; do
+	wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/$sh 2>/dev/nul
+	if [[ $? == 0 ]]; then y="Downloaded: $sh"; else y="Not found : $sh"; fi
+	echo "$y"; echo "$y" >> $logFILE
+    done
+dtm=$(date +"%Y-%m-%d %T")
+echo "Ended at $dtm" >> $logFILE
+# ==========================================================================================
 
-# Generic Support Files ===================================================================.
-cd ../func                                                                                 |
-echo "Started at $dtm" > $logFILE                                                          |
-scripts=("setLOG" "useColors" "spinner" "runSpinner" "setRoot" "stopNotRoot" "askLicense") |
-    for sh in "${scripts[@]}"; do                                                          |
-        wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/$sh 2>/dev/nul   |
-        if [[ $? == 0 ]]; then y="$sh downloaded"; else y="$sh not found"; fi              |
-        echo "$sh: $?-$y"                                                                  |
-        echo "$y" >> $logFILE                                                              |
-    done                                                                                   |
-dtm=$(date +"%Y-%m-%d %T")                                                                 |
-echo "Ended at $dtm" >> $logFILE                                                           |
-# =========================================================================================.
+# Generic Support Files ====================================================================
+cd ../func
+echo "Started at $dtm" > $logFILE
+scripts=("setLOG" "useColors" "spinner" "runSpinner" "setRoot" "stopNotRoot" "askLicense")
+    for sh in "${scripts[@]}"; do
+        wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/$sh 2>/dev/nul
+        if [[ $? == 0 ]]; then y="Downloaded: $sh"; else y="Not found : $sh"; fi
+        echo "$y"; echo "$y" >> $logFILE
+    done
+dtm=$(date +"%Y-%m-%d %T")
+echo "Ended at $dtm" >> $logFILE
+# ==========================================================================================
 
-# Final msg ------------------------------------------.
-echo "All of the tm6 files and functions downloaded." |
-echo                                                  |
-echo "You need to edit the .env file NOW."            |
-# ----------------------------------------------------.
+# Final msg ------------------------------------------
+echo -e "\n\nAll of the tm6 files and functions downloaded."
+echo
+echo "You need to edit the .env file NOW."
+# ----------------------------------------------------
