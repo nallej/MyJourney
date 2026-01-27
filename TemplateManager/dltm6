@@ -1,3 +1,4 @@
+# ----------------------------------------------------.
 #!/usr/bin/env bash
 #
 #
@@ -7,22 +8,47 @@
 
 # This script will download all the files needed for tm6
 
-clear
-cd /tank/tm  # Replace tank with your directory of choise
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/.env 2>/dev/null 
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/tm6 2>/dev/null
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/init 2>/dev/null
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/showGuide 2>/dev/null
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/guestfs 2>/dev/null
+# Set environment  -------------------.
+clear                                 |
+rm -rf tm func                        |
+#-------------------------------------.
 
-cd ../func
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/setLOG 2>/dev/null
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/useColors 2>/dev/null
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/spinner 2>/dev/null
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/runSpinner 2>/dev/null
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/setRoot 2>/dev/null
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/stopNotRoot 2>/dev/null
-wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/askLicence 2>/dev/null
+# Initilaise -------------------------.
+dtm=$(date +"%Y-%m-%d %T")            |
+logFILE="LOG-$(date +"%Y-%m-%d").log" |
+mkdir tm func                         |
+#-------------------------------------.
 
-echo "The tm6 files and functions downloaded."
-echo "You need to edit the .env file now."
+# The TemplateManager 6 ===================================================================.
+cd tm                                                                                      |
+echo "Started at $dtm" > $logFILE                                                          |
+scripts=(".env" "header" "tm6" "init" "showGuide" "guestfs")                               |
+    for sh in "${scripts[@]}"; do                                                          |
+	wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/$sh 2>/dev/nul         |
+	if [[ $? == 0 ]]; then y="$sh downloaded"; else y="$sh not found"; fi                    |
+	echo "Processed: $sh – $y"                                                               |
+	echo "$y" >> $logFILE                                                                    |
+    done                                                                                   |
+dtm=$(date +"%Y-%m-%d %T")                                                                 |
+echo "Ended at $dtm" >> $logFILE                                                           |
+# =========================================================================================.
+
+# Generic Support Files ===================================================================.
+cd ../func                                                                                 |
+echo "Started at $dtm" > $logFILE                                                          |
+scripts=("setLOG" "useColors" "spinner" "runSpinner" "setRoot" "stopNotRoot" "askLicense") |
+    for sh in "${scripts[@]}"; do                                                          |
+        wget https://github.com/nallej/MyJourney/raw/main/TemplateManager/$sh 2>/dev/nul   |
+        if [[ $? == 0 ]]; then y="$sh downloaded"; else y="$sh not found"; fi              |
+        echo "$sh: $?-$y"                                                                  |
+        echo "$y" >> $logFILE                                                              |
+    done                                                                                   |
+dtm=$(date +"%Y-%m-%d %T")                                                                 |
+echo "Ended at $dtm" >> $logFILE                                                           |
+# =========================================================================================.
+
+# Final msg ------------------------------------------.
+echo "All of the tm6 files and functions downloaded." |
+echo                                                  |
+echo "You need to edit the .env file NOW."            |
+# ----------------------------------------------------.
