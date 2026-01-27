@@ -36,4 +36,4 @@ askLicens() {
   whiptail --backtitle "$backTEXT" --title "Version History" --msgbox "$versionHISTORY" 18 78
 }
 
-export -f askLicence
+export -f askLicense
