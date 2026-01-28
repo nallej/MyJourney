@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# Author: Nalle (CasaUrsus)
+# Date: January 05, 2023
+# License: MIT
+
+# Function to install Guest OS
+guestfs() {
+    # Install the needed libguestfs-tools if it'smissing -------------------------#
+    if dpkg -s libguestfs-tools &>/dev/null; then
+        echo -e "${okcm}${magb} The libguestfs-tools was found"  >> $logFILE
+      else
+        echo -e "\b  ${nocm} Missing libguestfs-tools"
+        echo -e "\b  ${dlcm}${cyn} downloading and installing libguestfs-tools ...${end}"
+        apt-get update && apt-get install -y libguestfs-tools  &> /dev/null
+        echo -e "\b  ${okcm} Installed the libguestfs-tools"
+        echo "${okcm}${cyn} libguestfs-tools installed  $(date +"%T") ${end}" >> $logFILE
+    fi
+}
