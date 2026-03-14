@@ -1,5 +1,9 @@
-#!/bin/sh -eu
+#!/usr/bin/env bash
 #Check for x86-64-v2, v3, v4 support
+
+clear
+printf "\e[1;36mYour Server stats\n\e[0m"
+hostnamectl
 
 flags=$(cat /proc/cpuinfo | grep flags | head -n 1 | cut -d: -f2)
 
@@ -9,6 +13,6 @@ supports_v4='awk "/avx512f/&&/avx512bw/&&/avx512cd/&&/avx512dq/&&/avx512vl/ {fou
 
 echo "No x86-64-v2 -3 -4 support"
 
-echo -e "\e[1A\e[K$flags" | eval $supports_v2 || exit 2 && echo -e "\e[1A\e[KYour CPU supports x86-64-v2"
-echo -e "\e[1A\e[K$flags" | eval $supports_v3 || exit 3 && echo -e "\e[1A\e[KYour CPU supports x86-64-v3"
-echo -e "\e[1A\e[K$flags" | eval $supports_v4 || exit 4 && echo -e "\e[1A\e[KYour CPU supports x86-64-v4"
+echo -e "\e[1A\e[K$flags" | eval $supports_v2 || exit 2 && echo -e "\e[1A\e[K\e[1;34mThe CPU supports:\e[0m x86-64-v2"
+echo -e "\e[1A\e[K$flags" | eval $supports_v3 || exit 3 && echo -e "\e[1A\e[K\e[1;34mThe CPU supports:\e[0m x86-64-v3"
+echo -e "\e[1A\e[K$flags" | eval $supports_v4 || exit 4 && echo -e "\e[1A\e[K\e[1;34mThe CPU supports:\e[0m x86-64-v4"
