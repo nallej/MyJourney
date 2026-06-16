@@ -1,6 +1,39 @@
-# Some more aliases use in .bash_aliases or .bashrc-personal 
+#### Some more aliases, use in .bash_aliases or .bashrc-personal 
 # restart by source .bashrc or restart
 # restart by . ~/.bash_aliases
+
+# Basic systemctl commands =========================
+alias ctlsp="systemctl stop"
+alias ctlst="systemctl start"
+alias ctlrt="systemctl restart"
+alias ctls="systemctl status"
+alias ctle='systemctl enable'
+alias ctld='systemctl disable'
+
+# Start and then view status of service
+ctlsts () {
+	systemctl start "$1"
+    systemctl status "$1"
+}
+
+# Restart and then view status of service
+ctlrts () {
+	systemctl restart "$1"
+    systemctl status "$1"
+}
+
+# Masking/Unmasking Units to disabling/enabling them
+alias ctlmask='systemctl mask'
+alias ctlunmask='systemctl unmask'
+
+# List failed units and reset systemd system status
+alias ctlfailed='systemctl --failed --all'
+alias ctlrf='systemctl reset-failed'
+
+# Reaload the daemon
+alias ctldrd="systemctl daemon-reload"
+# End of systemctl commans ========================
+
 
 ### Functions go here. Use as any ALIAS ###
 # make a directory and jump into it 
@@ -68,6 +101,9 @@ alias dcup='docker-compose up -d'
 alias dcupl='docker-compose up -d && docker-compose logs -f'
 alias dcr='docker-compose restart'
 alias dcd='docker-compose down'
+
+# Lookup iptables chain
+alias lookup="iptables --line-numbers -nvL"
 
 ## ssh keys
 alias newkey='ssh-keygen -t ed25519 -C "user@example.com" -f ${1}'
@@ -149,7 +185,28 @@ ex ()
   fi
 }
 
-# Use Personal Prompt
+## Archiving/Unarchiving commands
+# Archive without compressing
+tarw () {
+    tar -cvf "$1.tar.gz" "$2"
+}
+
+# Archive with compressing (gzip)
+targz () {
+    tar -zcvf "$1.tar.gz" "$2"
+}
+
+# Unarchive in folder with archive name
+untar () {
+    tar -xvf "$1"
+}
+
+# Unarchive to specified path
+untarto () {
+    tar -xvf "$1" -C "$2"
+}
+
+# Use a Personal Prompt
 [[ -f ~/.bash_prompt ]] && source ~/.bash_prompt
 
 
