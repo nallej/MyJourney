@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Callable Function, use by: source setRoot
+
+setRoot() { # Function I am root ---------------------------------------------#
+    if [[ "$EUID" -ne 0 ]]; then  # 0 = I am root
+        sudo -k
+        if sudo true ; then       # Correct password
+            return
+          else
+            echo "${redb} Wrong password! Execution halted"
+            exit                  #exit if 3 times wrong
+        fi
+    fi
+    }
