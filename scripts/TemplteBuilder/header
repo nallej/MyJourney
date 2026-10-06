@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Function to print CasaUrsus. figlet -f standard CasaUrsus
+header() {
+  clear
+  cat <<"EOF"
+
+              ____                _   _
+             / ___|__ _ ___  __ _| | | |_ __ ___ _   _ ___
+            | |   / _` / __|/ _` | | | | '__/ __| | | / __|
+            | |__| (_| \__ \ (_| | |_| | |  \__ \ |_| \__ \
+             \____\__,_|___/\__,_|\___/|_|  |___/\__,_|___/
+EOF
+}
