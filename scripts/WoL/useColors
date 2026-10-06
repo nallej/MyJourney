@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Callable Function, use by: source useColor
+
+useColors() { # Function to define colors ------------------------------------#
+    # color code   color as bold
+    red=$'\e[31m'; redb=$'\e[1;31m' # call red with $red and bold as $redb
+    grn=$'\e[32m'; grnb=$'\e[1;32m' # call as green $grn as bold green $grnb
+    yel=$'\e[33m'; yelb=$'\e[1;33m' # call as yellow $yel as bold yellow $yelb
+    blu=$'\e[34m'; blub=$'\e[1;34m' # call as blue $blu as bold blue $blub
+    mag=$'\e[35m'; magb=$'\e[1;35m' # call as magenta $mag as bold magenta $magb
+    cyn=$'\e[36m'; cynb=$'\e[1;36m' # call as cyan $cyn as cyan bold $cynb
+    end=$'\e[0m'
+    }
