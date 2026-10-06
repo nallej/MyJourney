@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Function setting the log files
+setLOG(){
+    if [ -f "$logFILE" ]; then
+       if (whiptail --backtitle "$backTEXT"  --title "Log File Dialog" --defaultno --yesno \
+            "\n⚠️   You have a log file: $logFILE \
+            \n- Do you like to proceed by Overwright it or Append to it" \
+            8 78 --no-button "Append" --yes-button "Overwright"); then
+            echo "${blub}>>>> Started the Install  $(date +"%F %T") ${end}" > $logFILE
+        else
+            echo "${blub}>>>> Started the Install  $(date +"%F %T") ${end}" >> $logFILE
+        fi
+    else
+        echo "${blub}>>>> Started the Install  $(date +"%F %T") ${end}" > $logFILE
+    fi
+}
