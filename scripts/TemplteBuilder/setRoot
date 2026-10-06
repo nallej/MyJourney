@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Function set I'm root
+setRoot() { 
+if [[ "$EUID" = 0 ]]; then
+    echo -e "\n${okcm} Initialaizing: $pgrm version $pver"          # I am root
+else
+    sudo -k                             # ask for sudo password
+    if sudo true; then                  # Correct password
+        clear
+        echo -e "\n${yelb}Start $pgrm version $pver${end}"
+        echo -e "\n${okcm}Initialaizing...${end}"
+    else
+        echo "${redb}wrong password!${end}"
+        exit                            #exit if 3 times wrong
+    fi
+fi
+}
