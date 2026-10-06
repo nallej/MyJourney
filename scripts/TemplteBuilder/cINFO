@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Function that prints the Copyright statement
+
+cINFO() { 
+  clear
+  cat <<"EOF"
+
+  Copyright (c) 2021-$(date +%Y) CasaUrsus
+  Author: nallej (CasaUrsus)
+  License: MIT
+  https://github.com/nallej/MyJourney/raw/main/LICENSE
+
+  This is Free and Open Sourse Software; you are free to change and redistribute it.\n\
+  \nSee the LICENSE file or the link for details.\n \
+   - There is NO WARRANTY, read the code befor using it.\n \
+   - Part of the My Journey Project @ homelab.casaursus.net\n"
+EOF
+}
