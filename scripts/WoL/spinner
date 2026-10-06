@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Callable Function, use by: source spinner and selecting your array
+
+spinner() { # Function to display an animated spinner Choose a array -------------------#
+    local array1=("◐" "◓" "◑" "◒")
+    local array2=("░" "▒" "▓" "█")
+    local array3=("╔" "╗" "╝" "╚")
+    local array4=("┌" "┐" "┘" "└")
+    local array5=("▄" "█" "▀" "█")
+    local array6=("⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏")
+    local array7=("܀" " " "܀")
+    local array8=(" " "٠" " " "٠" " " "܀" "܀")
+    local array9=("🌑" "🌒" "🌓" "🌔" "🌕" "🌖" "🌘") #running moon
+
+    local delays=0.3 # Delay between each character 
+    tput civis       # Hide cursor
+    while :; do
+        for character in "${array6[@]}"; do # Which Array to Use
+            printf "%s" "$character"
+            sleep "$delays"
+            printf "\b"  # Move the cursor back
+        done
+    done
+    }
